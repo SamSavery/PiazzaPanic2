@@ -2,6 +2,7 @@ package com.team3gdx.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -58,6 +60,8 @@ public class GameScreen implements Screen {
 	Texture ESC;
 	Texture MENU;
 	Texture BACKTOMAINSCREEN;
+	Texture TUTORIAL;
+	Texture TUTORIALSCREEN;
 	Texture RESUME;
 	Texture AUDIO;
 	Texture audioEdit;
@@ -66,6 +70,8 @@ public class GameScreen implements Screen {
 	Button mn;
 	Button rs;
 	Button ad;
+	Button st;
+	Button ts;
 	Button btms;
 	public static CollisionTile[][] CLTiles;
 	Viewport uiViewport;
@@ -165,6 +171,8 @@ public class GameScreen implements Screen {
 		MENU = new Texture(Gdx.files.internal("uielements/settings.png"));
 		ESC = new Texture(Gdx.files.internal("uielements/background.png"));
 		BACKTOMAINSCREEN = new Texture(Gdx.files.internal("uielements/exitmenu.png"));
+		TUTORIAL = new Texture(Gdx.files.internal("uielements/ShowTutorial.png"));
+		TUTORIALSCREEN = new Texture(Gdx.files.internal("uielements/PP2TutorialPage.jpg"));
 		RESUME = new Texture(Gdx.files.internal("uielements/resume.png"));
 		AUDIO = new Texture(Gdx.files.internal("uielements/audio2.png"));
 		audioEdit = new Texture(Gdx.files.internal("uielements/background.png"));
@@ -172,6 +180,8 @@ public class GameScreen implements Screen {
 		mn = new Button(new TextureRegionDrawable(MENU));
 		ad = new Button(new TextureRegionDrawable(AUDIO));
 		rs = new Button(new TextureRegionDrawable(RESUME));
+		st = new Button(new TextureRegionDrawable(TUTORIAL));
+		ts = new Button(new TextureRegionDrawable(TUTORIALSCREEN));
 		btms = new Button(new TextureRegionDrawable(BACKTOMAINSCREEN));
 		// ======================================POSITION=AND=SCALE=BUTTONS==============================================
 		mn.setPosition(gameResolutionX / 40.0f, 18 * gameResolutionY / 20.0f);
@@ -180,8 +190,13 @@ public class GameScreen implements Screen {
 		rs.setSize(buttonwidth, buttonheight);
 		ad.setPosition(rs.getX() + rs.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), rs.getY());
 		ad.setSize(buttonwidth, buttonheight);
-		btms.setPosition(ad.getX() + ad.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
+		st.setPosition(ad.getX() + ad.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
 				ad.getY());
+		st.setSize(buttonwidth, buttonheight);
+		ts.setFillParent(true);
+		ts.setVisible(false);
+		btms.setPosition(st.getX() + st.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
+				st.getY());
 		btms.setSize(buttonwidth, buttonheight);
 		// ======================================ADD=LISTENERS=TO=BUTTONS================================================
 		mn.addListener(new ClickListener() {
@@ -202,6 +217,19 @@ public class GameScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
+		st.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+				ts.setVisible(true);
+			}
+		});
+		ts.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+				ts.setVisible(false);
+
+			}
+		});
 		btms.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				state1 = STATE.main;
@@ -210,10 +238,11 @@ public class GameScreen implements Screen {
 		});
 		// ======================================ADD=BUTTONS=TO=STAGES===================================================
 		stage.addActor(mn);
+		stage2.addActor(st);
 		stage2.addActor(rs);
 		stage2.addActor(btms);
 		stage2.addActor(ad);
-
+		stage2.addActor(ts);
 	}
 
 	ShapeRenderer selectedPlayerBox = new ShapeRenderer();
@@ -509,7 +538,7 @@ public class GameScreen implements Screen {
 
 		this.optionsBackground = new Rectangle();
 		optionsBackground.setPosition(gameResolutionX / 50.0f, 35 * gameResolutionY / 40.0f);
-		optionsBackground.width = 3 * (buttonwidth + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f));
+		optionsBackground.width = 4 * (buttonwidth + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f));
 		optionsBackground.height = 4 * gameResolutionY / 40.0f;
 
 		this.audioBackground = new Rectangle();

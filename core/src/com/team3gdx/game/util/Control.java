@@ -16,18 +16,18 @@ public class Control extends InputAdapter implements InputProcessor {
 	@Override
 	public boolean keyDown(int keyCode) {
 		switch (keyCode) {
-		case Keys.DOWN:
-			down = true;
-			break;
-		case Keys.UP:
-			up = true;
-			break;
-		case Keys.LEFT:
-			left = true;
-			break;
-		case Keys.RIGHT:
-			right = true;
-			break;
+//		case Keys.DOWN:
+//			down = true;
+//			break;
+//		case Keys.UP:
+//			up = true;
+//			break;
+//		case Keys.LEFT:
+//			left = true;
+//			break;
+//		case Keys.RIGHT:
+//			right = true;
+//			break;
 		case Keys.W:
 			up = true;
 			break;
@@ -50,17 +50,17 @@ public class Control extends InputAdapter implements InputProcessor {
 	@Override
 	public boolean keyUp(int keycode) {
 		switch (keycode) {
-		case Keys.DOWN:
-			down = false;
-			break;
-		case Keys.UP:
-			up = false;
-			break;
+//		case Keys.DOWN:
+//			down = false;
+//			break;
+//		case Keys.UP:
+//			up = false;
+//			break;
 		case Keys.LEFT:
-			left = false;
+			tab = true;
 			break;
 		case Keys.RIGHT:
-			right = false;
+			shift = true;
 			break;
 		case Keys.W:
 			up = false;
@@ -82,15 +82,15 @@ public class Control extends InputAdapter implements InputProcessor {
 		case Keys.E:
 			drop = true;
 			break;
-		case Keys.F:
+		case Keys.SPACE:
 			flip = true;
 			break;
-		case Keys.TAB:
-			tab = true;
-			break;
-		case Keys.SHIFT_LEFT:
-			shift = true;
-			break;
+//		case Keys.TAB:
+//			tab = true;
+//			break;
+//		case Keys.SHIFT_LEFT:
+//			shift = true;
+//			break;
 		case Keys.ESCAPE:
 			break;
 		}
