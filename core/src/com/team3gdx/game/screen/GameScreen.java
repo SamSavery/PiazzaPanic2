@@ -171,10 +171,10 @@ public class GameScreen implements Screen {
 		MENU = new Texture(Gdx.files.internal("uielements/settings.png"));
 		ESC = new Texture(Gdx.files.internal("uielements/background.png"));
 		BACKTOMAINSCREEN = new Texture(Gdx.files.internal("uielements/exitmenu.png"));
-		TUTORIAL = new Texture(Gdx.files.internal("uielements/ShowTutorial.png"));
+		TUTORIAL = new Texture(Gdx.files.internal("uielements/homeScreenTutorial.png"));
 		TUTORIALSCREEN = new Texture(Gdx.files.internal("uielements/PP2TutorialPage.jpg"));
 		RESUME = new Texture(Gdx.files.internal("uielements/resume.png"));
-		AUDIO = new Texture(Gdx.files.internal("uielements/audio2.png"));
+		AUDIO = new Texture(Gdx.files.internal("uielements/audio.png"));
 		audioEdit = new Texture(Gdx.files.internal("uielements/background.png"));
 		// ======================================CREATE=BUTTONS==========================================================
 		mn = new Button(new TextureRegionDrawable(MENU));
@@ -186,7 +186,7 @@ public class GameScreen implements Screen {
 		// ======================================POSITION=AND=SCALE=BUTTONS==============================================
 		mn.setPosition(gameResolutionX / 40.0f, 18 * gameResolutionY / 20.0f);
 		mn.setSize(buttonwidth, buttonheight);
-		rs.setPosition(gameResolutionX / 40.0f, 18 * gameResolutionY / 20.0f);
+		rs.setPosition(gameResolutionX / 40.0f + 1, 18 * gameResolutionY / 20.0f);
 		rs.setSize(buttonwidth, buttonheight);
 		ad.setPosition(rs.getX() + rs.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), rs.getY());
 		ad.setSize(buttonwidth, buttonheight);
@@ -227,7 +227,6 @@ public class GameScreen implements Screen {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				super.touchUp(event, x, y, pointer, button);
 				ts.setVisible(false);
-
 			}
 		});
 		btms.addListener(new ClickListener() {
@@ -429,8 +428,8 @@ public class GameScreen implements Screen {
 			thenTime = System.currentTimeMillis() - timeOnStartup;
 			Gdx.input.setInputProcessor(stage2);
 			game.batch.begin();
-			game.batch.draw(ESC, optionsBackground.getX(), optionsBackground.getY(), optionsBackground.getWidth(),
-					optionsBackground.getHeight());
+			game.batch.draw(ESC, optionsBackground.getX(), optionsBackground.getY() + 15, optionsBackground.getWidth(),
+					optionsBackground.getHeight() - 30);
 			game.batch.end();
 			stage2.act();
 			stage2.draw();
@@ -442,8 +441,8 @@ public class GameScreen implements Screen {
 
 			Gdx.input.setInputProcessor(stage2);
 			game.batch.begin();
-			game.batch.draw(ESC, optionsBackground.getX(), optionsBackground.getY(), optionsBackground.getWidth(),
-					optionsBackground.getHeight());
+			game.batch.draw(ESC, optionsBackground.getX(), optionsBackground.getY() + 15, optionsBackground.getWidth(),
+					optionsBackground.getHeight() - 30);
 			game.batch.end();
 			stage2.act();
 			stage2.draw();
