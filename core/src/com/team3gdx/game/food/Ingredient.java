@@ -1,5 +1,6 @@
 package com.team3gdx.game.food;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -24,7 +25,7 @@ public class Ingredient extends Entity {
 	private int idealSlices;
 	private float cookedTime = 0;
 	private float idealCookedTime;
-
+	private BitmapFont font;
 	public Status status = Status.RAW;
 
 	/**
@@ -59,7 +60,8 @@ public class Ingredient extends Entity {
 		this.texture = new Texture("items/" + name + ".png");
 		this.idealSlices = idealSlices;
 		this.idealCookedTime = idealCookedTime;
-
+		this.font = new BitmapFont(Gdx.files.internal("uielements/font.fnt"), Gdx.files.internal("uielements/font.png"),
+				false);
 	}
 
 	/**
@@ -79,6 +81,7 @@ public class Ingredient extends Entity {
 		this.slices = ingredient.slices;
 		this.flipped = ingredient.flipped;
 		this.status = ingredient.status;
+		this.font = ingredient.font;
 	}
 
 	/**
@@ -112,9 +115,8 @@ public class Ingredient extends Entity {
 		}
 
 		batch.begin();
-		(new BitmapFont()).draw(batch, String.valueOf(slices), pos.x * 64 + 64 + 8, pos.y * 64 + 64 + 16);
+		font.draw(batch, String.valueOf(slices), pos.x * 64 + 64 + 8, pos.y * 64 + 64 + 16);
 		batch.end();
-
 		draw(batch);
 		return false;
 	}
@@ -156,7 +158,8 @@ public class Ingredient extends Entity {
 	 * Draw a status bar.
 	 * 
 	 * @param percentage The current progress of the status bar.
-	 * @param optimum    The optimal status to reach (shown by a black bar).
+	 * @param optimumLower   The bottom of the optimal status to reach bar (shown by a black bar).
+	 * @param optimumUpper   The top of the optimal status to reach bar (shown by a black bar).
 	 */
 	private void drawStatusBar(float percentage, float optimumLower, float optimumUpper) {
 		shapeRenderer.begin(ShapeType.Filled);

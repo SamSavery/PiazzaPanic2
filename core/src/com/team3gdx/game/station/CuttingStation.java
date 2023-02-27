@@ -21,7 +21,7 @@ public class CuttingStation extends Station {
 	 * Slices the ingredient in slot if cook is interacting.
 	 * 
 	 * @param batch
-	 * @param time
+	 * @param dT
 	 */
 	public void interact(SpriteBatch batch, float dT) {
 		currentCutTime += dT;
