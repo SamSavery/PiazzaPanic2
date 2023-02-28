@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.team3gdx.game.screen.GameScreen;
 
 /**
  * Represents a recipe (combination of ingredients and states).
@@ -40,7 +40,6 @@ public class Recipe extends Ingredient {
 	 * How much the menu item will cost.
 	 */
 	public float cost;
-
 	/**
 	 * Sets the appropriate recipe properties.
 	 * 
@@ -80,38 +79,37 @@ public class Recipe extends Ingredient {
 	 * @param pos   The (x, y) coordinates for the first instruction.
 	 */
 	public void displayRecipe(SpriteBatch batch, Vector2 pos) {
-		String completeRecipe = initialSteps + "\n\n";
-		int i = -1;
-		if (initialIngredient != null) {
-			i = 0;
-			Ingredient initial = new Ingredient(initialIngredient);
-			initial.pos = new Vector2(pos);
-			initial.pos.x -= 48;
-			initial.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
-			initial.draw(batch);
-		}
-		for (Ingredient ingredient : ingredientInstructions.keySet()) {
-			completeRecipe += ingredientInstructions.get(ingredient) + " " + ingredient.name + "\n\n";
-			ingredient.pos = new Vector2(pos);
-			ingredient.pos.x -= 48;
-			ingredient.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
-			ingredient.draw(batch);
-
-		}
-
-		Ingredient result = new Ingredient(this);
-		result.pos = new Vector2(pos);
-		result.pos.x -= 48;
-		result.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
-		result.draw(batch);
-
-		completeRecipe += finalSteps;
-
-		// Display the instructions.
-		batch.begin();
-		(new BitmapFont()).draw(batch, completeRecipe, pos.x - 16, pos.y);
-		batch.end();
-
+//		String completeRecipe = initialSteps + "\n\n";
+//		int i = -1;
+//		if (initialIngredient != null) {
+//			i = 0;
+//			Ingredient initial = new Ingredient(initialIngredient);
+//			initial.pos = new Vector2(pos);
+//			initial.pos.x -= 48;
+//			initial.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
+//			initial.draw(batch);
+//		}
+//		for (Ingredient ingredient : ingredientInstructions.keySet()) {
+//			completeRecipe += ingredientInstructions.get(ingredient) + " " + ingredient.name + "\n\n";
+//			ingredient.pos = new Vector2(pos);
+//			ingredient.pos.x -= 48;
+//			ingredient.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
+//			ingredient.draw(batch);
+//
+//		}
+//
+//		Ingredient result = new Ingredient(this);
+//		result.pos = new Vector2(pos);
+//		result.pos.x -= 48;
+//		result.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
+//		result.draw(batch);
+//
+//		completeRecipe += finalSteps;
+//
+//		// Display the instructions.
+//		batch.begin();
+//		(new BitmapFont()).draw(batch, completeRecipe, pos.x - 16, pos.y);
+//		batch.end();
 	}
 
 	/**
@@ -156,8 +154,6 @@ public class Recipe extends Ingredient {
 				return true;
 			}
 		}
-
 		return false;
 	}
-
 }

@@ -44,6 +44,7 @@ public class ServingStation extends Station {
 			if (waitingCustomer == GameScreen.currentWaitingCustomer && !slots.empty()
 					&& slots.peek().equals(Menu.RECIPES.get(waitingCustomer.order))) {
 				slots.pop();
+				GameScreen.clearRecipes();
 				GameScreen.cc.delCustomer(waitingCustomer);
 				if (GameScreen.currentWave < GameScreen.NUMBER_OF_WAVES){
 					GameScreen.cc.spawnCustomer();

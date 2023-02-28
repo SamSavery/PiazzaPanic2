@@ -25,7 +25,7 @@ public class Customer {
 
 	private long arrivalTime;
 
-	public String order = "";
+	public static String order = "";
 
 	/**
 	 * Constructor for customer class
@@ -52,6 +52,10 @@ public class Customer {
 		posy = y * 64;
 		startposx = posx;
 		locked = false;
+	}
+
+	public static String getOrder(Customer currentWaitingCustomer) {
+		return currentWaitingCustomer.order;
 	}
 
 	/**
