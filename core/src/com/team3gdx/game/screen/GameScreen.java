@@ -38,6 +38,7 @@ import com.team3gdx.game.entity.Customer;
 import com.team3gdx.game.entity.CustomerController;
 import com.team3gdx.game.entity.Entity;
 import com.team3gdx.game.food.Menu;
+import com.team3gdx.game.food.Recipe;
 import com.team3gdx.game.station.StationManager;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
@@ -67,6 +68,10 @@ public class GameScreen implements Screen {
 	Texture audioEdit;
 	Texture vControl;
 	Texture vButton;
+	Texture saladRecipe;
+	Texture burgerRecipe;
+	public static Image sr;
+	public static Image br;
 	Button mn;
 	Button rs;
 	Button ad;
@@ -176,13 +181,17 @@ public class GameScreen implements Screen {
 		RESUME = new Texture(Gdx.files.internal("uielements/resume.png"));
 		AUDIO = new Texture(Gdx.files.internal("uielements/audio.png"));
 		audioEdit = new Texture(Gdx.files.internal("uielements/background.png"));
-		// ======================================CREATE=BUTTONS==========================================================
+		saladRecipe = new Texture(Gdx.files.internal("uielements/SaladRecipe.png"));
+		burgerRecipe = new Texture(Gdx.files.internal("uielements/BurgerRecipe.png"));
+		// ======================================CREATE=BUTTONS=AND=IMAGES===============================================
 		mn = new Button(new TextureRegionDrawable(MENU));
 		ad = new Button(new TextureRegionDrawable(AUDIO));
 		rs = new Button(new TextureRegionDrawable(RESUME));
 		st = new Button(new TextureRegionDrawable(TUTORIAL));
 		ts = new Button(new TextureRegionDrawable(TUTORIALSCREEN));
 		btms = new Button(new TextureRegionDrawable(BACKTOMAINSCREEN));
+		sr = new Image(new TextureRegionDrawable(saladRecipe));
+		br = new Image(new TextureRegionDrawable(burgerRecipe));
 		// ======================================POSITION=AND=SCALE=BUTTONS==============================================
 		mn.setPosition(gameResolutionX / 40.0f, 18 * gameResolutionY / 20.0f);
 		mn.setSize(buttonwidth, buttonheight);
@@ -195,6 +204,12 @@ public class GameScreen implements Screen {
 		st.setSize(buttonwidth, buttonheight);
 		ts.setFillParent(true);
 		ts.setVisible(false);
+		sr.setPosition(gameResolutionX/120.0f, gameResolutionY/60.0f);
+		sr.setSize(buttonwidth * 2 + 128, buttonheight * 5 - 10);
+		sr.setVisible(false);
+		br.setPosition(gameResolutionX/120.0f, gameResolutionY/60.0f);
+		br.setSize(buttonwidth * 2 + 128, buttonheight * 4);
+		br.setVisible(false);
 		btms.setPosition(st.getX() + st.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
 				st.getY());
 		btms.setSize(buttonwidth, buttonheight);
@@ -236,12 +251,15 @@ public class GameScreen implements Screen {
 			}
 		});
 		// ======================================ADD=BUTTONS=TO=STAGES===================================================
+		stage.addActor(sr);
+		stage.addActor(br);
 		stage.addActor(mn);
 		stage2.addActor(st);
 		stage2.addActor(rs);
 		stage2.addActor(btms);
 		stage2.addActor(ad);
 		stage2.addActor(ts);
+
 	}
 
 	ShapeRenderer selectedPlayerBox = new ShapeRenderer();
@@ -346,7 +364,22 @@ public class GameScreen implements Screen {
      */
 	private void drawUI() {
 		if (currentWaitingCustomer != null && currentWaitingCustomer.waitTime() < MAX_WAIT_TIME) {
-			Menu.RECIPES.get(currentWaitingCustomer.order).displayRecipe(game.batch, new Vector2(64, 256));
+			if (Customer.getOrder(currentWaitingCustomer) == null) {
+				sr.setVisible(false);
+				br.setVisible(false);
+			}
+			else {
+				switch (Customer.getOrder(currentWaitingCustomer)) {
+					case "Salad":
+						sr.setVisible(true);
+						br.setVisible(false);
+						break;
+					case "Burger":
+						br.setVisible(true);
+						sr.setVisible(false);
+						break;
+				}
+			}
 		}
 		for (int i = 0; i < cooks.length; i++) {
 			if (i == currentCookIndex) {
@@ -658,7 +691,10 @@ public class GameScreen implements Screen {
 	public void resetStatic() {
 		currentWave = 0;
 	}
-
+	public static void clearRecipes(){
+		sr.setVisible(false);
+		br.setVisible(false);
+	}
 	/**
 	 * Resize game screen - Not used in fullscreen mode
 	 * 
