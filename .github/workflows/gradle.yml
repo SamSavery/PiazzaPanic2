@@ -121,10 +121,8 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
-      - name: echo workspace
-        run: echo $GITHUB_WORKSPACE
       - name: Run unit tests
-        run: /home/runner/work/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
+        run: /Users/runner/work/PiazzaPanic2/PiazzaPanic2 gradlew :tests:test --tests "com.team3gdx.tests.*"
   discord-notification:
     runs-on: windows-latest
     needs: [windows-unit-tests,ubuntu-unit-tests,macos-unit-tests]
