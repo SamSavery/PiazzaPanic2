@@ -50,5 +50,4 @@ jobs:
         with:
           arguments: build
       - name: Run unit tests
-        run: pwd && echo "$GITHUB_WORKSPACE" && dir
-#        run: cd $GITHUB_WORKSPACE && ./gradlew :tests:test --tests "com.team3gdx.tests.*"
+        run: D:/a/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
