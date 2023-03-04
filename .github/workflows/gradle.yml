@@ -50,4 +50,4 @@ jobs:
         with:
           arguments: build
       - name: Run unit tests
-        run: cd $GITHUB_WORKSPACE && gradlew :tests:test --tests "com.team3gdx.tests.*"
+        run: cd $GITHUB_WORKSPACE && ./gradlew :tests:test --tests "com.team3gdx.tests.*"
