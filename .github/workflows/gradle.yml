@@ -69,7 +69,7 @@ jobs:
         with:
           arguments: build
   unit-tests:
-    needs: windows-build
+    needs: [windows-build,ubuntu-build,macos-build]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
