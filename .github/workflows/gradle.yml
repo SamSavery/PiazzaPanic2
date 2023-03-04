@@ -68,8 +68,8 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
-  unit-tests:
-    needs: [windows-build,ubuntu-build,macos-build]
+  windows-unit-tests:
+    needs: windows-build
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -87,3 +87,48 @@ jobs:
           arguments: build
       - name: Run unit tests
         run: D:/a/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
+  ubuntu-unit-tests:
+    needs: ubuntu-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          architecture: 'x64'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: build
+      - name: Run unit tests
+        run: /home/runner/work/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
+  macos-unit-tests:
+    needs: macos-build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          architecture: 'x64'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: build
+      - name: Run unit tests
+        run: /home/runner/work/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
+  this-i-like:
+    needs: [windows-unit-tests,ubuntu-unit-tests,macos-unit-tests]
+    env:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+    uses: "Ilshidur/action-discord@0.3.2"
+    with:
+      args: 'Jackpot! All unit tests across all platforms are passing - this, I like!'
