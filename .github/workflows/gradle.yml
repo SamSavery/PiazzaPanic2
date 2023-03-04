@@ -125,10 +125,12 @@ jobs:
           arguments: build
       - name: Run unit tests
         run: /home/runner/work/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
-  this-i-like:
+  discord-notification:
     needs: [windows-unit-tests,ubuntu-unit-tests,macos-unit-tests]
-    env:
-      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-    uses: "Ilshidur/action-discord@0.3.2"
-    with:
-      args: 'Jackpot! All unit tests across all platforms are passing - this, I like!'
+    steps:
+      - name: This, I like!
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: "Ilshidur/action-discord@0.3.2"
+        with:
+          args: 'Jackpot! All unit tests across all platforms are passing - this, I like!'
