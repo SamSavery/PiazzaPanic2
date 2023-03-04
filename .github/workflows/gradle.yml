@@ -126,6 +126,7 @@ jobs:
       - name: Run unit tests
         run: /home/runner/work/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
   discord-notification:
+    runs-on: windows-latest
     needs: [windows-unit-tests,ubuntu-unit-tests,macos-unit-tests]
     steps:
       - name: This, I like!
