@@ -50,4 +50,4 @@ jobs:
         with:
           arguments: build
       - name: Run unit tests
-        run: D:/a/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
+        run: D:/a/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
