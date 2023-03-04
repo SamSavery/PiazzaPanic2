@@ -35,7 +35,6 @@ jobs:
       - name: Run unit tests
         run: D:/a/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
   ubuntu-build:
-    needs: windows-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -52,7 +51,6 @@ jobs:
         with:
           arguments: build
   macos-build:
-    needs: windows-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
