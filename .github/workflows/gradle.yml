@@ -32,8 +32,6 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
-      - name: Run unit tests
-        run: D:/a/PiazzaPanic2/PiazzaPanic2/gradlew :tests:test --tests "com.team3gdx.tests.*"
   ubuntu-build:
     runs-on: ubuntu-latest
     steps:
