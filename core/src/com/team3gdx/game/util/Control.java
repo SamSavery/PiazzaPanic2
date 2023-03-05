@@ -85,9 +85,9 @@ public class Control extends InputAdapter implements InputProcessor {
 		case Keys.SPACE:
 			flip = true;
 			break;
-//		case Keys.TAB:
-//			tab = true;
-//			break;
+		case Keys.TAB:
+			tab = true;
+			break;
 //		case Keys.SHIFT_LEFT:
 //			shift = true;
 //			break;
