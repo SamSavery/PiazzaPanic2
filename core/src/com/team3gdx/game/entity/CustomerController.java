@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapProperties;
@@ -114,7 +115,7 @@ public class CustomerController {
 	public void spawnCustomer() {
 		for (int i = 0; i < this.customers.length; i++) {
 			if (customers[i] == null) {
-				customers[i] = new Customer(this.xCoordinate, this.bottom, this.top - i, 3);
+				customers[i] = new Customer(this.xCoordinate, this.bottom, this.top - i, ThreadLocalRandom.current().nextInt(1,5+1));
 				amountActiveCustomers += 1;
 				break;
 			}
