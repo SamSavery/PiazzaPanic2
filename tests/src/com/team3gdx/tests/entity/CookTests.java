@@ -2,7 +2,6 @@ package com.team3gdx.tests.entity;
 
 import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.entity.Cook;
-import com.team3gdx.game.food.Ingredient;
 import org.junit.Test;
 import com.team3gdx.tests.GdxTestRunner;
 import org.junit.runner.RunWith;
@@ -10,7 +9,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(GdxTestRunner.class)
-public class CookTest {
+public class CookTests {
 
     @Test
     public void full() {
