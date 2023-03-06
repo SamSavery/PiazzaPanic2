@@ -88,6 +88,8 @@ public class StationManager {
 		case "Onions":
 			takeIngredientStation(pos, Ingredients.onion);
 			break;
+		case "Flour":
+			takeIngredientStation(pos,Ingredients.flour); // added flour ingredient
 		case "Frying":
 			checkStationExists(pos, new FryingStation(pos));
 			((CookingStation) stations.get(pos)).checkCookingStation(batch);
@@ -105,7 +107,7 @@ public class StationManager {
 			break;
 		case "Chopping":
 			if (!stations.containsKey(pos)) {
-				stations.put(pos, new CuttingStation(pos, 1));
+				stations.put(pos, new CuttingStation(pos));
 			}
 
 			placeIngredientStation(pos);
@@ -118,6 +120,11 @@ public class StationManager {
 			((CookingStation) stations.get(pos)).checkCookingStation(batch);
 			((CookingStation) stations.get(pos)).lockCook();
 			break;
+		case "Mixing":
+			checkStationExists(pos, new MixingStation(pos));
+			placeIngredientStation(pos);
+			MixingStation mixingStation= (MixingStation) stations.get(pos); // essentiall if mixing case then use checkStationExists to check for mixing station, add etc
+			mixingStation.lockCook(); //this way we can have multiple instances of mixing station but the station at specified location now locks cook.
 		case "Service":
 			if (!stations.containsKey(pos)) {
 				stations.put(pos, new ServingStation(pos));

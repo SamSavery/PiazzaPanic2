@@ -16,12 +16,12 @@ public class Menu {
 	 */
 	private static final Map<Ingredient, String> BURGER_STEPS = new HashMap<Ingredient, String>();
 	static {
-		BURGER_STEPS.put(Ingredients.cooked_bun, "Toast");
+		BURGER_STEPS.put(Ingredients.cooked_bun, "Toast"); // cooked bun ingredient consists of non-cooked bun ingredient
 		BURGER_STEPS.put(Ingredients.cookedPatty, "Fry");
 	}
 	private static final Map<Ingredient, String> BURGER_BURNED_STEPS = new HashMap<Ingredient, String>();
 	static {
-		BURGER_BURNED_STEPS.put(Ingredients.cooked_bun, "Toast");
+		BURGER_BURNED_STEPS.put(Ingredients.cooked_bun, "Toast"); // so if this happens then burnt patty occurs
 		BURGER_BURNED_STEPS.put(Ingredients.burnedPatty, "Fry");
 	}
 	private static final Map<Ingredient, String> SALAD_STEPS = new HashMap<Ingredient, String>();
@@ -41,6 +41,7 @@ public class Menu {
 		RECIPES.put("Burned burger", new Recipe("Form patty", Ingredients.unformedPatty, BURGER_BURNED_STEPS,
 				"serve together", "burger_burned", false, null, 32, 32, 0));
 		RECIPES.put("Salad", new Recipe("", null, SALAD_STEPS, "serve together", "salad", false, null, 32, 32, 0));
+
 	}
 
 	/**
@@ -50,6 +51,8 @@ public class Menu {
 	public static final Map<Ingredient, Ingredient> INGREDIENT_PREP = new HashMap<Ingredient, Ingredient>();
 	static {
 		INGREDIENT_PREP.put(Ingredients.unformedPatty, Ingredients.formedPatty);
+
+		//INGREDIENT_PREP.put(Ingredients.flour , Ingredients.dough)
 
 	}
 }

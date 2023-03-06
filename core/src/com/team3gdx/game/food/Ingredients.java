@@ -11,6 +11,8 @@ public class Ingredients {
 	// Meats.
 	public static Ingredient unformedPatty = new Ingredient(null, 32, 32, "unformed_patty", 0, .5f);
 	public static Ingredient formedPatty = new Ingredient(null, 32, 32, "patty", 0, .5f);
+
+
 	public static Ingredient cookedPatty = new Ingredient(null, 32, 32, "patty", 0, .5f);
 	// Cooked meats.
 	static {
@@ -49,5 +51,10 @@ public class Ingredients {
 		cooked_bun.status = Status.COOKED;
 		cooked_bun.flipped = true;
 	}
-
+	public static Ingredient flour = new Ingredient(null, 32, 32, "flour", 0, 0);
+	public static Ingredient dough=  new Ingredient(null, 32, 32, "flour", 0, 0);
+	static{
+		dough.status= Status.MIXED;
+	}
+	// Toasted breads.
 }
