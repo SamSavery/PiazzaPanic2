@@ -129,16 +129,7 @@ public class Ingredient extends Entity {
 		return false;
 	}
 
-	//public boolean mix(SpriteBatch batch , float dT){
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	// }
+
 
 	BitmapFont flipText = new BitmapFont();
 

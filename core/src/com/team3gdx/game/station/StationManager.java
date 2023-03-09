@@ -52,6 +52,9 @@ public class StationManager {
 						((CuttingStation) station).interact(batch, .1f);
 						station.interactSound();
 					}
+					if(station instanceof MixingStation && currentIngredient.mixing){
+						((MixingStation) station).interact(batch, .1f);
+					}
 
 					if (currentIngredient.cooking && station instanceof CookingStation) {
 						((CookingStation) station).drawParticles(batch, i);
@@ -90,6 +93,7 @@ public class StationManager {
 			break;
 		case "Flour":
 			takeIngredientStation(pos,Ingredients.flour); // added flour ingredient
+			break;
 		case "Frying":
 			checkStationExists(pos, new FryingStation(pos));
 			((CookingStation) stations.get(pos)).checkCookingStation(batch);
@@ -115,24 +119,21 @@ public class StationManager {
 			cutStation.lockCook();
 
 			break;
-		case "Baking":
-			checkStationExists(pos, new BakingStation(pos));
-			((CookingStation) stations.get(pos)).checkCookingStation(batch);
-			((CookingStation) stations.get(pos)).lockCook();
-			break;
 		case "Mixing":
 			checkStationExists(pos, new MixingStation(pos));
 			placeIngredientStation(pos);
 			MixingStation mixingStation= (MixingStation) stations.get(pos); // essentiall if mixing case then use checkStationExists to check for mixing station, add etc
 			mixingStation.lockCook(); //this way we can have multiple instances of mixing station but the station at specified location now locks cook.
+			break;
+		case "Baking":
+			checkStationExists(pos, new BakingStation(pos));
+			((CookingStation) stations.get(pos)).checkCookingStation(batch);
+			((CookingStation) stations.get(pos)).lockCook();
+			break;
 		case "Service":
-			if (!stations.containsKey(pos)) {
-				stations.put(pos, new ServingStation(pos));
-			}
-
+			checkStationExists(pos, new ServingStation(pos));
 			((ServingStation) stations.get(pos)).serveCustomer();
 			placeIngredientStation(pos);
-
 			break;
 		case "Bin":
 			if (!GameScreen.cook.heldItems.empty()) {
@@ -199,7 +200,6 @@ public class StationManager {
 	private void takeIngredientStation(Vector2 pos, Ingredient ingredient) {
 		checkStationExists(pos, new IngredientStation(pos, ingredient));
 		stations.get(pos).drawTakeText(batch);
-
 		if (GameScreen.control.interact) {
 			GameScreen.cook.pickUpItem(stations.get(pos).take());
 		}
