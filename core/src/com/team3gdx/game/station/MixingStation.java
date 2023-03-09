@@ -7,7 +7,7 @@ import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.screen.GameScreen;
 
 public class MixingStation extends Station {
-    private final static Ingredient[] ALLOWED_INGREDIENTS = {Ingredients.flour, Ingredients.dough};
+    private final static Ingredient[] ALLOWED_INGREDIENTS = {Ingredients.flour};
 
     public float currentMixTime;
 
