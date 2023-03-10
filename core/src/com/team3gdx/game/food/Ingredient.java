@@ -18,6 +18,7 @@ import com.team3gdx.game.screen.GameScreen.STATE;
  */
 public class Ingredient extends Entity {
 
+
 	/**
 	 * Represents internal states of ingredient.
 	 */
@@ -109,7 +110,7 @@ public class Ingredient extends Entity {
 	 * 
 	 * @param batch {@link SpriteBatch} to render texture and status.
 	 * @param dT    The amount of time to increment by when slicing.
-	 * @return A boolean representing if item has been mixed
+	 * @return A boolean representing if item has been sliced
 	 */
 	public boolean slice(SpriteBatch batch, float dT) {
 
@@ -163,6 +164,13 @@ public class Ingredient extends Entity {
 		draw(batch);
 		return cookedTime;
 	}
+	/**
+	 * Begin process of slicing ingredient and show status.
+	 *
+	 * @param batch {@link SpriteBatch} to render texture and status.
+	 * @param dT    The amount of time to increment by when slicing.
+	 * @return A boolean representing if item has been mixed
+	 */
 	public boolean mix(SpriteBatch batch, float dT) {
 
 		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
@@ -224,6 +232,6 @@ public class Ingredient extends Entity {
 }
 
 enum Status {
-	RAW, COOKED, BURNED , MIXED
+	RAW, COOKED, BURNED, MIXED
 
 }

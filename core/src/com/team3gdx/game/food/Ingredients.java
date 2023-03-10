@@ -7,12 +7,9 @@ import com.badlogic.gdx.math.Vector2;
  * 
  */
 public class Ingredients {
-
 	// Meats.
 	public static Ingredient unformedPatty = new Ingredient(null, 32, 32, "unformed_patty", 0, .5f);
 	public static Ingredient formedPatty = new Ingredient(null, 32, 32, "patty", 0, .5f);
-
-
 	public static Ingredient cookedPatty = new Ingredient(null, 32, 32, "patty", 0, .5f);
 	// Cooked meats.
 	static {
@@ -24,7 +21,6 @@ public class Ingredients {
 		burnedPatty.status = Status.BURNED;
 		burnedPatty.flipped = true;
 	}
-
 	// Vegetables.
 	public static Ingredient lettuce = new Ingredient(null, 32, 32, "lettuce", 1, 0);
 	public static Ingredient tomato = new Ingredient(null, 32, 32, "tomato", 1, 0);
@@ -42,7 +38,6 @@ public class Ingredients {
 	static {
 		onionChopped.slices = 1;
 	}
-
 	// Breads.
 	public static Ingredient bun = new Ingredient(new Vector2(0, 0), 32, 32, "burger_bun", 0, .5f);
 	// Toasted breads.
@@ -57,4 +52,6 @@ public class Ingredients {
 		dough.status= Status.MIXED;
 	}
 	// Toasted breads.
+	//dairy
+	public static Ingredient cheese = new Ingredient(null, 32, 32, "cheese", 0, 0);
 }

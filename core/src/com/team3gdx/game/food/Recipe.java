@@ -114,7 +114,6 @@ public class Recipe extends Ingredient {
 
 	/**
 	 * Check if there is a recipe with the given ingredients.So that it can be assembled.
-	 * 
 	 * @param givenIngredients A Stack of ingredients to compare to recipes.
 	 * @return A boolean to indicate if a recipe exists with the given ingredients.
 	 */

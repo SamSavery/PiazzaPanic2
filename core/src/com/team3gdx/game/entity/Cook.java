@@ -133,8 +133,8 @@ public class Cook extends Entity {
 	}
 
 	/**
-	 * checks if cook can hold more items
-	 * @return false if it can hold more, true if it cant
+	 * Checks if cook can hold more items.
+	 * @return boolean : false if it can hold more, true if it cannot.
 	 */
 	public boolean full() {
 		return heldItems.size() >= MAX_STACK_SIZE;
