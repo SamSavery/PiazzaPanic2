@@ -18,7 +18,6 @@ import com.team3gdx.game.screen.GameScreen.STATE;
  */
 public class Ingredient extends Entity {
 
-
 	/**
 	 * Represents internal states of ingredient.
 	 */
@@ -28,11 +27,6 @@ public class Ingredient extends Entity {
 	private float idealCookedTime;
 	private BitmapFont font;
 	public Status status = Status.RAW;
-
-
-
-
-
 
 	/**
 	 * Represents ongoing states of the ingredient.
@@ -71,8 +65,6 @@ public class Ingredient extends Entity {
 		this.font = new BitmapFont(Gdx.files.internal("uielements/font.fnt"), Gdx.files.internal("uielements/font.png"),
 				false);
 	}
-
-	//overload constructor so we can define idealMixTime only if necessary
 
 	/**
 	 * Creates a new instance with identical properties.
@@ -130,8 +122,6 @@ public class Ingredient extends Entity {
 		return false;
 	}
 
-
-
 	BitmapFont flipText = new BitmapFont();
 
 	/**
@@ -164,6 +154,7 @@ public class Ingredient extends Entity {
 		draw(batch);
 		return cookedTime;
 	}
+
 	/**
 	 * Begin process of slicing ingredient and show status.
 	 *
@@ -185,7 +176,6 @@ public class Ingredient extends Entity {
 		draw(batch);
 		return false;
 	}
-
 
 	/**
 	 * Draw a status bar.
@@ -215,7 +205,6 @@ public class Ingredient extends Entity {
 				2 * height / 5);
 		shapeRenderer.end();
 	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Ingredient))
@@ -230,7 +219,6 @@ public class Ingredient extends Entity {
 	}
 
 }
-
 enum Status {
 	RAW, COOKED, BURNED, MIXED
 
