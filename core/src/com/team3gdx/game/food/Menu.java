@@ -30,6 +30,12 @@ public class Menu {
 		SALAD_STEPS.put(Ingredients.tomatoChopped, "Cut");
 		SALAD_STEPS.put(Ingredients.onionChopped, "Cut");
 	}
+	private static final Map<Ingredient , String> RAW_PIZZA_STEPS = new HashMap<>();
+	static {
+		RAW_PIZZA_STEPS.put(Ingredients.tomatoChopped, "Cut");
+		RAW_PIZZA_STEPS.put(Ingredients.cheese,"NonCut");
+		RAW_PIZZA_STEPS.put(Ingredients.dough, "Mix");
+	}
 
 	/**
 	 * Map of recipes
@@ -41,6 +47,7 @@ public class Menu {
 		RECIPES.put("Burned burger", new Recipe("Form patty", Ingredients.unformedPatty, BURGER_BURNED_STEPS,
 				"serve together", "burger_burned", false, null, 32, 32, 0));
 		RECIPES.put("Salad", new Recipe("", null, SALAD_STEPS, "serve together", "salad", false, null, 32, 32, 0));
+		RECIPES.put("Raw Pizza", new Recipe("", null, RAW_PIZZA_STEPS, "Dont serve", "raw_pizza", false, null, 32, 32, 0));
 	}
 
 	/**
@@ -50,6 +57,5 @@ public class Menu {
 	public static final Map<Ingredient, Ingredient> INGREDIENT_PREP = new HashMap<Ingredient, Ingredient>();
 	static {
 		INGREDIENT_PREP.put(Ingredients.unformedPatty, Ingredients.formedPatty);
-
 	}
 }

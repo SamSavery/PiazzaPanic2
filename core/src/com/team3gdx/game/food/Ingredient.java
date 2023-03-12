@@ -34,6 +34,7 @@ public class Ingredient extends Entity {
 	public boolean cooking = false;
 	public boolean slicing = false;
 	public boolean flipped = false;
+	public boolean mixing = false;
 
 	/**
 	 * Name of ingredient to get texture.
@@ -100,7 +101,7 @@ public class Ingredient extends Entity {
 	 * 
 	 * @param batch {@link SpriteBatch} to render texture and status.
 	 * @param dT    The amount of time to increment by when slicing.
-	 * @return A boolean representing if a complete slice has occurred.
+	 * @return A boolean representing if current slicing action is complete.
 	 */
 	public boolean slice(SpriteBatch batch, float dT) {
 
@@ -110,10 +111,9 @@ public class Ingredient extends Entity {
 			drawStatusBar(dT / width, 0, 1);
 		} else {
 			slices++;
-			texture = new Texture("items/" + name + "_chopped.png");
+			texture = new Texture("items/" + name + "_chopped.png"); // changes texture when slicing action is complete
 			return true;
 		}
-
 		batch.begin();
 		font.draw(batch, String.valueOf(slices), pos.x * 64 + 64 + 8, pos.y * 64 + 64 + 16);
 		batch.end();
@@ -152,6 +152,27 @@ public class Ingredient extends Entity {
 
 		draw(batch);
 		return cookedTime;
+	}
+
+	/**
+	 * Begin process of slicing ingredient and show status.
+	 *
+	 * @param batch {@link SpriteBatch} to render texture and status.
+	 * @param dT    The amount of time to increment by when slicing.
+	 * @return A boolean representing if current mixing action is complete
+	 */
+	public boolean mix(SpriteBatch batch, float dT) {
+		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+
+		if (dT / width * width <= width) {
+			drawStatusBar(dT / width, 0, 1);
+		} else {
+			status = Status.MIXED;
+			texture = new Texture("items/dough.png"); // changes texture when status is full
+			return true;
+		}
+		draw(batch);
+		return false;
 	}
 
 	/**
@@ -199,5 +220,5 @@ public class Ingredient extends Entity {
 }
 
 enum Status {
-	RAW, COOKED, BURNED
+	RAW, COOKED, BURNED, MIXED
 }

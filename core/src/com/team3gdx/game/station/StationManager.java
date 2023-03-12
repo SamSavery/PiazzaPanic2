@@ -53,6 +53,10 @@ public class StationManager {
 						station.interactSound();
 					}
 
+					if (station instanceof MixingStation && currentIngredient.mixing){
+						((MixingStation) station).interact(batch, .1f);
+					}
+
 					if (currentIngredient.cooking && station instanceof CookingStation) {
 						((CookingStation) station).drawParticles(batch, i);
 						currentIngredient.cook(.0005f, batch);
@@ -88,6 +92,12 @@ public class StationManager {
 		case "Onions":
 			takeIngredientStation(pos, Ingredients.onion);
 			break;
+		case "Flour":
+			takeIngredientStation(pos, Ingredients.flour);
+			break;
+		case "Cheese":
+			takeIngredientStation(pos, Ingredients.cheese);
+			break;
 		case "Frying":
 			checkStationExists(pos, new FryingStation(pos));
 			((CookingStation) stations.get(pos)).checkCookingStation(batch);
@@ -105,7 +115,7 @@ public class StationManager {
 			break;
 		case "Chopping":
 			if (!stations.containsKey(pos)) {
-				stations.put(pos, new CuttingStation(pos, 1));
+				stations.put(pos, new CuttingStation(pos));
 			}
 
 			placeIngredientStation(pos);
@@ -113,19 +123,21 @@ public class StationManager {
 			cutStation.lockCook();
 
 			break;
+		case "Mixing":
+			checkStationExists(pos, new MixingStation(pos));
+			placeIngredientStation(pos);
+			MixingStation mixingStation= (MixingStation) stations.get(pos);
+			mixingStation.lockCook();
+			break;
 		case "Baking":
 			checkStationExists(pos, new BakingStation(pos));
 			((CookingStation) stations.get(pos)).checkCookingStation(batch);
 			((CookingStation) stations.get(pos)).lockCook();
 			break;
 		case "Service":
-			if (!stations.containsKey(pos)) {
-				stations.put(pos, new ServingStation(pos));
-			}
-
+			checkStationExists(pos, new ServingStation(pos));
 			((ServingStation) stations.get(pos)).serveCustomer();
 			placeIngredientStation(pos);
-
 			break;
 		case "Bin":
 			if (!GameScreen.cook.heldItems.empty()) {
@@ -192,7 +204,6 @@ public class StationManager {
 	private void takeIngredientStation(Vector2 pos, Ingredient ingredient) {
 		checkStationExists(pos, new IngredientStation(pos, ingredient));
 		stations.get(pos).drawTakeText(batch);
-
 		if (GameScreen.control.interact) {
 			GameScreen.cook.pickUpItem(stations.get(pos).take());
 		}

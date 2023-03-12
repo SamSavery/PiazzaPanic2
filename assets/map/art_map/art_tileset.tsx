@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.2" name="art_tileset" tilewidth="128" tileheight="64" tilecount="27" columns="0">
+<tileset version="1.9" tiledversion="1.9.2" name="art_tileset" tilewidth="128" tileheight="64" tilecount="30" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
+ <properties>
+  <property name="Station" value=""/>
+ </properties>
  <tile id="0">
   <image width="64" height="64" source="art_images/cnr.png"/>
  </tile>
@@ -129,5 +132,23 @@
    <property name="Station" value="Baking"/>
   </properties>
   <image width="64" height="64" source="art_images/emptygrill.png"/>
+ </tile>
+ <tile id="34">
+  <properties>
+   <property name="Station" value="Mixing"/>
+  </properties>
+  <image width="128" height="64" source="art_images/mixingstation.png"/>
+ </tile>
+ <tile id="35">
+  <properties>
+   <property name="Station" value="Flour"/>
+  </properties>
+  <image width="64" height="64" source="art_images/flourcrate.png"/>
+ </tile>
+ <tile id="36">
+  <properties>
+   <property name="Station" value="Cheese"/>
+  </properties>
+  <image width="64" height="64" source="art_images/cheesebox.png"/>
  </tile>
 </tileset>
