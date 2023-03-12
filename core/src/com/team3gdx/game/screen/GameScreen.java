@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
 	OrthographicCamera uiCamera;
 	public static OrthographicCamera worldCamera;
 
-	public static Customer currentWaitingCustomer = null;
+	public static Customer currentWaitingCustomer;
 
 	public enum STATE {
 		Pause, Continue, main, audio
@@ -113,12 +113,12 @@ public class GameScreen implements Screen {
 	public static Control control;
 	TiledMapRenderer tiledMapRenderer;
 	public TiledMap map1;
-	public static Cook[] cooks = { new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3) };
-	public static int currentCookIndex = 0;
-	public static Cook cook = cooks[currentCookIndex];
+	public static Cook[] cooks;
+	public static int currentCookIndex;
+	public static Cook cook;
 	public static CustomerController cc;
 	InputMultiplexer multi;
-	StationManager stationManager = new StationManager();
+	StationManager stationManager;
 
 	/**
 	 * Constructor to initialise game screen;
@@ -130,6 +130,7 @@ public class GameScreen implements Screen {
 		this.game = game;
 		this.ms = ms;
 		this.calculateBoxMaths();
+		currentWaitingCustomer = null;
 		control = new Control();
 		// map = new TmxMapLoader().load("map/art_map/prototype_map.tmx");
 		map1 = new TmxMapLoader().load("map/art_map/customertest.tmx");
@@ -137,6 +138,10 @@ public class GameScreen implements Screen {
 		constructCollisionData(map1);
 		cc = new CustomerController(map1);
 		cc.spawnCustomer();
+		cooks = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
+		currentCookIndex = 0;
+		cook = cooks[currentCookIndex];
+		stationManager = new StationManager();
 	}
 
 	/**

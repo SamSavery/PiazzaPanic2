@@ -23,9 +23,13 @@ public class StationManager {
 	/**
 	 * A Map representing every station and its (x, y) coordinates.
 	 */
-	public static Map<Vector2, Station> stations = new HashMap<Vector2, Station>();
+	public static Map<Vector2, Station> stations;
 
 	SpriteBatch batch;
+
+	public StationManager() {
+		stations = new HashMap<Vector2, Station>();
+	}
 
 	/**
 	 * Checks every station for ingredients and updates them accordingly.
