@@ -52,7 +52,8 @@ public class StationManager {
 						((CuttingStation) station).interact(batch, .1f);
 						station.interactSound();
 					}
-					if(station instanceof MixingStation && currentIngredient.mixing){
+
+					if (station instanceof MixingStation && currentIngredient.mixing){
 						((MixingStation) station).interact(batch, .1f);
 					}
 
@@ -92,10 +93,10 @@ public class StationManager {
 			takeIngredientStation(pos, Ingredients.onion);
 			break;
 		case "Flour":
-			takeIngredientStation(pos,Ingredients.flour);
+			takeIngredientStation(pos, Ingredients.flour);
 			break;
 		case "Cheese":
-			takeIngredientStation(pos,Ingredients.cheese);
+			takeIngredientStation(pos, Ingredients.cheese);
 			break;
 		case "Frying":
 			checkStationExists(pos, new FryingStation(pos));
@@ -126,7 +127,7 @@ public class StationManager {
 			checkStationExists(pos, new MixingStation(pos));
 			placeIngredientStation(pos);
 			MixingStation mixingStation= (MixingStation) stations.get(pos);
-			mixingStation.lockCook(); //this way we can have multiple instances of mixing station but the station at specified location now locks cook.
+			mixingStation.lockCook();
 			break;
 		case "Baking":
 			checkStationExists(pos, new BakingStation(pos));

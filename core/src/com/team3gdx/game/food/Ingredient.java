@@ -34,7 +34,6 @@ public class Ingredient extends Entity {
 	public boolean cooking = false;
 	public boolean slicing = false;
 	public boolean flipped = false;
-
 	public boolean mixing = false;
 
 	/**
@@ -54,7 +53,7 @@ public class Ingredient extends Entity {
 	 * @param idealSlices     The ideal number of times to slice the ingredient.
 	 * @param idealCookedTime The ideal length of time to cook the ingredient.
 	 */
-	public Ingredient(Vector2 pos, float width, float height, String name, int idealSlices, float idealCookedTime ) {
+	public Ingredient(Vector2 pos, float width, float height, String name, int idealSlices, float idealCookedTime) {
 		this.pos = pos;
 		this.width = width;
 		this.height = height;
@@ -102,7 +101,7 @@ public class Ingredient extends Entity {
 	 * 
 	 * @param batch {@link SpriteBatch} to render texture and status.
 	 * @param dT    The amount of time to increment by when slicing.
-	 * @return A boolean representing if item has been sliced
+	 * @return A boolean representing if current slicing action is complete.
 	 */
 	public boolean slice(SpriteBatch batch, float dT) {
 
@@ -112,7 +111,7 @@ public class Ingredient extends Entity {
 			drawStatusBar(dT / width, 0, 1);
 		} else {
 			slices++;
-			texture = new Texture("items/" + name + "_chopped.png"); // changes texture when status is full
+			texture = new Texture("items/" + name + "_chopped.png"); // changes texture when slicing action is complete
 			return true;
 		}
 		batch.begin();
@@ -160,16 +159,15 @@ public class Ingredient extends Entity {
 	 *
 	 * @param batch {@link SpriteBatch} to render texture and status.
 	 * @param dT    The amount of time to increment by when slicing.
-	 * @return A boolean representing if item has been mixed
+	 * @return A boolean representing if current mixing action is complete
 	 */
 	public boolean mix(SpriteBatch batch, float dT) {
-
 		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 
 		if (dT / width * width <= width) {
 			drawStatusBar(dT / width, 0, 1);
 		} else {
-			status= Status.MIXED;
+			status = Status.MIXED;
 			texture = new Texture("items/dough.png"); // changes texture when status is full
 			return true;
 		}
@@ -205,6 +203,7 @@ public class Ingredient extends Entity {
 				2 * height / 5);
 		shapeRenderer.end();
 	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Ingredient))
@@ -219,7 +218,7 @@ public class Ingredient extends Entity {
 	}
 
 }
+
 enum Status {
 	RAW, COOKED, BURNED, MIXED
-
 }

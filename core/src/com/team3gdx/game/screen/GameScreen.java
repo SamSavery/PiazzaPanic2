@@ -183,7 +183,6 @@ public class GameScreen implements Screen {
 		audioEdit = new Texture(Gdx.files.internal("uielements/background.png"));
 		saladRecipe = new Texture(Gdx.files.internal("uielements/SaladRecipe.png"));
 		burgerRecipe = new Texture(Gdx.files.internal("uielements/BurgerRecipe.png"));
-
 		// ======================================CREATE=BUTTONS=AND=IMAGES===============================================
 		mn = new Button(new TextureRegionDrawable(MENU));
 		ad = new Button(new TextureRegionDrawable(AUDIO));
