@@ -82,7 +82,7 @@ public class Control extends InputAdapter implements InputProcessor {
 		case Keys.E:
 			drop = true;
 			break;
-		case Keys.SPACE:
+		case Keys.F:
 			flip = true;
 			break;
 		case Keys.TAB:
