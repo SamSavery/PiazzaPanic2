@@ -7,10 +7,10 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Java PR CI (Gradle, Temurin, JDK 11)
+name: Java Push CI (Gradle, Temurin, JDK 11)
 
 on:
-  pull_request:
+  push:
     branches: master
 
 jobs:
@@ -35,3 +35,13 @@ jobs:
           arguments: build
       - name: Run unit tests
         run: ./gradlew :tests:test --tests "com.team3gdx.tests.*"
+  discord-notification:
+    runs-on: ubuntu-latest
+    needs: [tests]
+    steps:
+      - name: This, I like!
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: "Ilshidur/action-discord@0.3.2"
+        with:
+          args: 'Jackpot! All unit tests across all platforms are passing - this, I like!'
