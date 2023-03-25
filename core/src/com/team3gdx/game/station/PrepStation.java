@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.food.Ingredient;
+import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.Recipe;
 import com.team3gdx.game.screen.GameScreen;
@@ -13,7 +14,6 @@ import com.team3gdx.game.screen.GameScreen;
 public class PrepStation extends Station {
 
 	public float progress = 0;
-
 	public PrepStation(Vector2 pos) {
 		super(pos, 5, false, null, null);
 	}
@@ -30,7 +30,12 @@ public class PrepStation extends Station {
 				if (progress == 1) {
 //					progress = 0;
 					slots.clear();
-					slots.add(recipe);
+					if(recipe.name=="pizza"){
+							slots.add(new Ingredient(Ingredients.raw_pizza));
+					}
+					else {
+						slots.add(recipe);
+					}
 				}
 				return true;
 			}
@@ -114,7 +119,7 @@ public class PrepStation extends Station {
 	private Ingredient ingredientMatch(Ingredient toMatch) {
 		for (Ingredient ingredient : Menu.INGREDIENT_PREP.keySet()) {
 			if (ingredient.equals(toMatch)) {
-				return Menu.INGREDIENT_PREP.get(ingredient);
+				return new Ingredient(Menu.INGREDIENT_PREP.get(ingredient));//generates a new instance based on static instance;
 			}
 		}
 
