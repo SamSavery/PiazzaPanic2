@@ -677,6 +677,17 @@ public class GameScreen implements Screen {
 				stationManager.checkInteractedTile("", new Vector2(checkCellX, checkCellY));
 			}
 		}
+		Cell viewedTile2 = ((TiledMapTileLayer) map1.getLayers().get(0)).getCell(checkCellX, checkCellY);
+		if (viewedTile2 != null) {
+			Object stationType = viewedTile2.getTile().getProperties().get("Station");
+			if (stationType != null) {
+				stationManager.checkInteractedTile((String) viewedTile2.getTile().getProperties().get("Station"),
+						new Vector2(checkCellX, checkCellY));
+			} else {
+				stationManager.checkInteractedTile("", new Vector2(checkCellX, checkCellY));
+			}
+		}
+
 		sr.begin(ShapeRenderer.ShapeType.Line);
 		sr.setColor(new Color(1, 0, 1, 1));
 		sr.rect(checkCellX * 64, checkCellY * 64, 64, 64);

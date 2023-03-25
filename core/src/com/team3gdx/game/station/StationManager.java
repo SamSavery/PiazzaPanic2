@@ -111,7 +111,6 @@ public class StationManager {
 			if (!stations.containsKey(pos)) {
 				stations.put(pos, new PrepStation(pos));
 			}
-
 			placeIngredientStation(pos);
 			PrepStation station = ((PrepStation) stations.get(pos));
 			station.lockCook();
@@ -121,11 +120,9 @@ public class StationManager {
 			if (!stations.containsKey(pos)) {
 				stations.put(pos, new CuttingStation(pos));
 			}
-
 			placeIngredientStation(pos);
 			CuttingStation cutStation = ((CuttingStation) stations.get(pos));
 			cutStation.lockCook();
-
 			break;
 		case "Mixing":
 			checkStationExists(pos, new MixingStation(pos));
@@ -143,6 +140,10 @@ public class StationManager {
 			((ServingStation) stations.get(pos)).serveCustomer();
 			placeIngredientStation(pos);
 			break;
+		case "Oven":
+			checkStationExists(pos, new OvenStation(pos));
+			((CookingStation) stations.get(pos)).checkCookingStation(batch);
+			break;
 		case "Bin":
 			if (!GameScreen.cook.heldItems.empty()) {
 				batch.begin();
@@ -153,7 +154,7 @@ public class StationManager {
 				}
 			}
 			break;
-		default:
+		case "Table_Surface":
 			placeIngredientStation(pos);
 			break;
 		}
