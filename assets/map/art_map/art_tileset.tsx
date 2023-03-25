@@ -5,15 +5,24 @@
   <property name="Station" value=""/>
  </properties>
  <tile id="0">
+  <properties>
+   <property name="Station" value="Table_Surface"/>
+  </properties>
   <image width="64" height="64" source="art_images/cnr.png"/>
  </tile>
  <tile id="1">
   <image width="64" height="64" source="art_images/ctrfr.png"/>
  </tile>
  <tile id="2">
+  <properties>
+   <property name="Station" value="Table_Surface"/>
+  </properties>
   <image width="64" height="64" source="art_images/ctrtl.png"/>
  </tile>
  <tile id="3">
+  <properties>
+   <property name="Station" value="Table_Surface"/>
+  </properties>
   <image width="64" height="64" source="art_images/ctrtr.png"/>
  </tile>
  <tile id="7">
@@ -23,6 +32,9 @@
   <image width="64" height="64" source="art_images/lettuce.png"/>
  </tile>
  <tile id="8">
+  <properties>
+   <property name="Station" value="Table_Surface"/>
+  </properties>
   <image width="64" height="64" source="art_images/linectr.png"/>
  </tile>
  <tile id="11">
@@ -35,15 +47,24 @@
   <image width="64" height="64" source="art_images/tomato.png"/>
  </tile>
  <tile id="14">
+  <properties>
+   <property name="Station" value="Table_Surface"/>
+  </properties>
   <image width="64" height="64" source="art_images/Top Counter.png"/>
  </tile>
  <tile id="15">
   <image width="64" height="64" source="art_images/Top Oven.png"/>
  </tile>
  <tile id="17">
+  <properties>
+   <property name="Station" value="Oven"/>
+  </properties>
   <image width="64" height="64" source="art_images/ovenbotcln.png"/>
  </tile>
  <tile id="18">
+  <properties>
+   <property name="Station" value="Oven"/>
+  </properties>
   <image width="64" height="64" source="art_images/ovenbotmes.png"/>
  </tile>
  <tile id="19">
