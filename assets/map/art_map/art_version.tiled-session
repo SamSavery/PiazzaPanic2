@@ -23,10 +23,10 @@
         },
         "customertest.tmx": {
             "scale": 1,
-            "selectedLayer": 1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 767,
-                "y": 582.5
+                "x": 765,
+                "y": 439.5
             }
         },
         "prototype_map.tmx": {
@@ -49,7 +49,7 @@
             "dynamicWrapping": false
         }
     },
-    "last.imagePath": "C:/Users/james/Documents/GitHub/project_eng1_team3/assets/map/art_map/art_images",
+    "last.imagePath": "D:/GitHub/PiazzaPanic2/assets/map/art_map/art_images",
     "map.height": 15,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 64,
@@ -57,17 +57,15 @@
     "map.width": 20,
     "openFiles": [
         "art_tileset.tsx",
-        "testmap.tmx",
-        "prototype_map.tmx",
         "customertest.tmx"
     ],
     "project": "art_version.tiled-project",
     "property.type": "string",
     "recentFiles": [
         "art_tileset.tsx",
+        "customertest.tmx",
         "testmap.tmx",
         "prototype_map.tmx",
-        "customertest.tmx",
         "64pxshittytiles.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
