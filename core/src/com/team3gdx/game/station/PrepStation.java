@@ -30,12 +30,7 @@ public class PrepStation extends Station {
 				if (progress == 1) {
 //					progress = 0;
 					slots.clear();
-					if(recipe.name=="pizza"){
-							slots.add(new Ingredient(Ingredients.raw_pizza));
-					}
-					else {
-						slots.add(recipe);
-					}
+					slots.add(recipe);
 				}
 				return true;
 			}
@@ -119,7 +114,7 @@ public class PrepStation extends Station {
 	private Ingredient ingredientMatch(Ingredient toMatch) {
 		for (Ingredient ingredient : Menu.INGREDIENT_PREP.keySet()) {
 			if (ingredient.equals(toMatch)) {
-				return new Ingredient(Menu.INGREDIENT_PREP.get(ingredient));//generates a new instance based on static instance;
+				return Menu.INGREDIENT_PREP.get(ingredient);
 			}
 		}
 

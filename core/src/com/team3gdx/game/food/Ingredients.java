@@ -52,7 +52,7 @@ public class Ingredients {
 		cooked_bun.status = Status.COOKED;
 		cooked_bun.flipped = true;
 	}
-	public static Ingredient cooked_pizza = new Ingredient(new Vector2(0, 0), 32, 32, "pizza_cooked", 0, .5f);
+	public static Ingredient cooked_pizza = new Ingredient(new Vector2(0, 0), 32, 32, "pizza", 0, .5f);
 	static {
 		cooked_pizza.status = Status.COOKED;
 	}

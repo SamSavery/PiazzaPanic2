@@ -56,5 +56,6 @@ public class Menu {
 	public static final Map<Ingredient, Ingredient> INGREDIENT_PREP = new HashMap<Ingredient, Ingredient>();
 	static {
 		INGREDIENT_PREP.put(Ingredients.unformedPatty, Ingredients.formedPatty);
+		INGREDIENT_PREP.put(Ingredients.raw_pizza, Ingredients.cooked_pizza);
 	}
 }
