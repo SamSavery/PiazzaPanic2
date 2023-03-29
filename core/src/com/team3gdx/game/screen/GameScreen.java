@@ -677,6 +677,7 @@ public class GameScreen implements Screen {
 				stationManager.checkInteractedTile("", new Vector2(checkCellX, checkCellY));
 			}
 		}
+
 		sr.begin(ShapeRenderer.ShapeType.Line);
 		sr.setColor(new Color(1, 0, 1, 1));
 		sr.rect(checkCellX * 64, checkCellY * 64, 64, 64);

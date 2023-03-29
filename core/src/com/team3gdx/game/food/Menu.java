@@ -47,15 +47,15 @@ public class Menu {
 		RECIPES.put("Burned burger", new Recipe("Form patty", Ingredients.unformedPatty, BURGER_BURNED_STEPS,
 				"serve together", "burger_burned", false, null, 32, 32, 0));
 		RECIPES.put("Salad", new Recipe("", null, SALAD_STEPS, "serve together", "salad", false, null, 32, 32, 0));
-		RECIPES.put("Raw Pizza", new Recipe("", null, RAW_PIZZA_STEPS, "Dont serve", "raw_pizza", false, null, 32, 32, 0));
+		RECIPES.put("Raw_pizza", new Recipe("", null, RAW_PIZZA_STEPS, "Dont serve", "pizza", false, null, 32, 32, 0));
 	}
 
 	/**
-	 * Map of ingredient transformations on preparation station (ingredient ->
-	 * ingredient)
+	 * Map of ingredient transformations on preparation station (ingredient -> ingredient)
 	 */
 	public static final Map<Ingredient, Ingredient> INGREDIENT_PREP = new HashMap<Ingredient, Ingredient>();
 	static {
 		INGREDIENT_PREP.put(Ingredients.unformedPatty, Ingredients.formedPatty);
+		INGREDIENT_PREP.put(Ingredients.raw_pizza, Ingredients.cooked_pizza);
 	}
 }

@@ -52,14 +52,22 @@ public class Ingredients {
 		cooked_bun.status = Status.COOKED;
 		cooked_bun.flipped = true;
 	}
+	public static Ingredient cooked_pizza = new Ingredient(new Vector2(0, 0), 32, 32, "pizza", 0, .5f);
+	static {
+		cooked_pizza.status = Status.COOKED;
+	}
+	public static Ingredient raw_pizza = new Ingredient(new Vector2(0, 0), 32, 32, "pizza", 0, .5f);
+	public static Ingredient burnt_pizza = new Ingredient(new Vector2(0, 0), 32, 32, "pizza_burned", 0, .5f);
+	static {
+		cooked_pizza.status = Status.BURNED;
+	}
 	public static Ingredient flour = new Ingredient(null, 32, 32, "flour", 0, 0);
 	public static Ingredient dough = new Ingredient(null, 32, 32, "flour", 0, 0);
-	static{
-		dough.status= Status.MIXED;
+	static {
+		dough.status = Status.MIXED;
 	}
 
-	// Toasted breads.
-
-	// Dairy
+	//Dairy
 	public static Ingredient cheese = new Ingredient(null, 32, 32, "cheese", 0, 0);
 }
+

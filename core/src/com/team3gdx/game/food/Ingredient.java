@@ -21,27 +21,27 @@ public class Ingredient extends Entity {
 	/**
 	 * Represents internal states of ingredient.
 	 */
-	public int slices = 0;
+	public int slices;
 	private int idealSlices;
-	private float cookedTime = 0;
+	private float cookedTime;
 	private float idealCookedTime;
 	private BitmapFont font;
-	public Status status = Status.RAW;
+	public Status status;
 
 	/**
 	 * Represents ongoing states of the ingredient.
 	 */
-	public boolean cooking = false;
-	public boolean slicing = false;
-	public boolean flipped = false;
-	public boolean mixing = false;
+	public boolean cooking;
+	public boolean slicing;
+	public boolean flipped;
+	public boolean mixing;
 
 	/**
 	 * Name of ingredient to get texture.
 	 */
 	public String name;
 
-	private static ShapeRenderer shapeRenderer = new ShapeRenderer();
+	private static ShapeRenderer shapeRenderer;
 
 	/**
 	 * Sets the appropriate properties.
@@ -63,6 +63,15 @@ public class Ingredient extends Entity {
 		this.idealCookedTime = idealCookedTime;
 		this.font = new BitmapFont(Gdx.files.internal("uielements/font.fnt"), Gdx.files.internal("uielements/font.png"),
 				false);
+
+		this.slices = 0;
+		this.cookedTime = 0;
+		this.status = Status.RAW;
+		this.cooking = false;
+		this.slicing = false;
+		this.flipped = false;
+		this.mixing = false;
+		this.shapeRenderer = new ShapeRenderer();
 	}
 
 	/**

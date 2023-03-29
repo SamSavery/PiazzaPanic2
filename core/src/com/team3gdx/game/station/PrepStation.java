@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.food.Ingredient;
+import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.Recipe;
 import com.team3gdx.game.screen.GameScreen;
@@ -13,7 +14,6 @@ import com.team3gdx.game.screen.GameScreen;
 public class PrepStation extends Station {
 
 	public float progress = 0;
-
 	public PrepStation(Vector2 pos) {
 		super(pos, 5, false, null, null);
 	}
