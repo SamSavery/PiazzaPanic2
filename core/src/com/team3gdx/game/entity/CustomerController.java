@@ -14,13 +14,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
+import com.team3gdx.game.screen.GameScreen;
 
 public class CustomerController {
 	int lockout;
-	int amountActiveCustomers;
 	ArrayList<ArrayList<Integer>> customerCells;
-	Customer[] customers = new Customer[5];
-	Customer[] leavingcustomers = new Customer[5];
+	Customer[] customers = new Customer[GameScreen.NUMBER_OF_WAVES];
+	Customer[] leavingcustomers = new Customer[GameScreen.NUMBER_OF_WAVES];
 	TiledMap gameMap;
 	int top;
 	int bottom;
@@ -29,7 +29,6 @@ public class CustomerController {
 	public CustomerController(TiledMap map) {
 		this.gameMap = map;
 		computeCustomerZone(gameMap);
-		amountActiveCustomers = 0;
 		lockout = 0;
 	}
 
@@ -116,7 +115,6 @@ public class CustomerController {
 		for (int i = 0; i < this.customers.length; i++) {
 			if (customers[i] == null) {
 				customers[i] = new Customer(this.xCoordinate, this.bottom, this.top - i, ThreadLocalRandom.current().nextInt(1,5+1));
-				amountActiveCustomers += 1;
 				break;
 			}
 		}
@@ -124,7 +122,6 @@ public class CustomerController {
 
 	public void delCustomer(int num) {
 		if (this.customers[num].locked) {
-			amountActiveCustomers -= 1;
 			this.leavingcustomers[num] = this.customers[num];
 			this.leavingcustomers[num].setTargetsquare(-1);
 			this.customers[num] = null;

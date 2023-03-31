@@ -55,6 +55,7 @@ public class Recipe extends Ingredient {
 	 * @param width                  The recipe's texture width.
 	 * @param height                 The recipe's texture height.
 	 * @param cost                   How much the menu item will cost.
+	 * @param maxWaitTime			 How long (in ms) before order times out and reputation is lost.
 	 */
 	public Recipe(String initialSteps, Ingredient initialIngredient, Map<Ingredient, String> ingredientInstructions,
 			String finalSteps, String name, boolean shouldBeOrdered, Vector2 pos, float width, float height,

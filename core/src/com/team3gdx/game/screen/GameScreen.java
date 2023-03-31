@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -30,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team3gdx.game.MainGameClass;
@@ -38,10 +40,13 @@ import com.team3gdx.game.entity.Customer;
 import com.team3gdx.game.entity.CustomerController;
 import com.team3gdx.game.entity.Entity;
 import com.team3gdx.game.food.Menu;
+import com.team3gdx.game.food.OrderCard;
 import com.team3gdx.game.food.Recipe;
 import com.team3gdx.game.station.StationManager;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
+
+import java.util.*;
 
 public class GameScreen implements Screen {
 
@@ -51,7 +56,12 @@ public class GameScreen implements Screen {
 	final MainScreen ms;
 
 	public static int currentWave = 0;
-
+	public static int reputation = 3;
+	public static Queue<OrderCard> orderCards = new LinkedList<>();
+	public float spawnInterval = 5.0f;
+	public float spawnTime = 0.0f;
+	public float targetTime = 0.0f;
+	public boolean timerRunning = false;
 	Rectangle volSlideBackgr;
 	Rectangle volSlide;
 	Rectangle musSlideBackgr;
@@ -68,11 +78,20 @@ public class GameScreen implements Screen {
 	Texture audioEdit;
 	Texture vControl;
 	Texture vButton;
-	Texture saladRecipe;
-	Texture burgerRecipe;
-	public static Image sr;
-	public static Image br;
+	Texture oneRep;
+	Texture twoRep;
+	Texture fullRep;
+	Texture RECIPEMENU;
+	Texture RECIPEMENUICON;
+	Texture GAMEOVER;
+	Image lowRep;
+	Image medRep;
+	Image maxRep;
+	Image  mb;
 	Button mn;
+	Button lm;
+	Button go;
+	Button rms;
 	Button rs;
 	Button ad;
 	Button st;
@@ -85,8 +104,6 @@ public class GameScreen implements Screen {
 	Stage stage2;
 	OrthographicCamera uiCamera;
 	public static OrthographicCamera worldCamera;
-
-	public static Customer currentWaitingCustomer;
 
 	public enum STATE {
 		Pause, Continue, main, audio
@@ -130,14 +147,27 @@ public class GameScreen implements Screen {
 		this.game = game;
 		this.ms = ms;
 		this.calculateBoxMaths();
-		currentWaitingCustomer = null;
 		control = new Control();
 		// map = new TmxMapLoader().load("map/art_map/prototype_map.tmx");
 		map1 = new TmxMapLoader().load("map/art_map/customertest.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(map1);
 		constructCollisionData(map1);
 		cc = new CustomerController(map1);
-		cc.spawnCustomer();
+		Timer.schedule(new Timer.Task() {
+			public void run() {
+				if (!timerRunning) {
+					targetTime = (float) (Math.random() * 30000 + 1000);
+					spawnTime = 0.0f;
+					timerRunning = true;
+				} else {
+					spawnTime += spawnInterval * 1000;
+					if (spawnTime >= targetTime) {
+						cc.spawnCustomer();
+						timerRunning = false;
+					}
+				}
+			}
+		}, 0, spawnInterval);
 		cooks = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
 		currentCookIndex = 0;
 		cook = cooks[currentCookIndex];
@@ -186,20 +216,38 @@ public class GameScreen implements Screen {
 		RESUME = new Texture(Gdx.files.internal("uielements/resume.png"));
 		AUDIO = new Texture(Gdx.files.internal("uielements/audio.png"));
 		audioEdit = new Texture(Gdx.files.internal("uielements/background.png"));
-		saladRecipe = new Texture(Gdx.files.internal("uielements/SaladRecipe.png"));
-		burgerRecipe = new Texture(Gdx.files.internal("uielements/BurgerRecipe.png"));
+		oneRep = new Texture(Gdx.files.internal("uielements/OneRep.png"));
+		twoRep = new Texture(Gdx.files.internal("uielements/TwoRep.png"));
+		fullRep = new Texture(Gdx.files.internal("uielements/fullRep.png"));
+		RECIPEMENU = new Texture(Gdx.files.internal("uielements/recipeMenu.png"));
+		RECIPEMENUICON = new Texture(Gdx.files.internal("uielements/recipeMenuIcon.png"));
+		GAMEOVER = new Texture(Gdx.files.internal("uielements/GameOver.png"));
 		// ======================================CREATE=BUTTONS=AND=IMAGES===============================================
 		mn = new Button(new TextureRegionDrawable(MENU));
+		lm = new Button(new TextureRegionDrawable(RECIPEMENUICON));
+		go = new Button(new TextureRegionDrawable(GAMEOVER));
+		rms = new Button(new TextureRegionDrawable(RECIPEMENU));
 		ad = new Button(new TextureRegionDrawable(AUDIO));
 		rs = new Button(new TextureRegionDrawable(RESUME));
 		st = new Button(new TextureRegionDrawable(TUTORIAL));
 		ts = new Button(new TextureRegionDrawable(TUTORIALSCREEN));
 		btms = new Button(new TextureRegionDrawable(BACKTOMAINSCREEN));
-		sr = new Image(new TextureRegionDrawable(saladRecipe));
-		br = new Image(new TextureRegionDrawable(burgerRecipe));
+		lowRep = new Image(new TextureRegionDrawable(oneRep));
+		medRep = new Image(new TextureRegionDrawable(twoRep));
+		maxRep = new Image(new TextureRegionDrawable(fullRep));
+		mb = new Image(new TextureRegionDrawable(ESC));
+
+
 		// ======================================POSITION=AND=SCALE=BUTTONS==============================================
 		mn.setPosition(gameResolutionX / 40.0f, 18 * gameResolutionY / 20.0f);
 		mn.setSize(buttonwidth, buttonheight);
+		mb.setPosition(optionsBackground.getX(), optionsBackground.getY() + 15);
+		mb.setSize(optionsBackground.getWidth(), optionsBackground.getHeight() - 30);
+		lm.setPosition(mn.getX(), mn.getY() - 4 * buttonheight);
+		lm.setSize(7*(buttonheight/3) + 30, 7*(buttonheight/2));
+		rms.setPosition(gameResolutionX/6, 10);
+		rms.setSize(3*(gameResolutionX - optionsBackground.getHeight())/4, gameResolutionY - optionsBackground.getHeight() - 30);
+		rms.setVisible(false);
 		rs.setPosition(gameResolutionX / 40.0f + 1, 18 * gameResolutionY / 20.0f);
 		rs.setSize(buttonwidth, buttonheight);
 		ad.setPosition(rs.getX() + rs.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), rs.getY());
@@ -209,12 +257,15 @@ public class GameScreen implements Screen {
 		st.setSize(buttonwidth, buttonheight);
 		ts.setFillParent(true);
 		ts.setVisible(false);
-		sr.setPosition(gameResolutionX/120.0f, gameResolutionY/60.0f);
-		sr.setSize(buttonwidth * 2 + 128, buttonheight * 5 - 10);
-		sr.setVisible(false);
-		br.setPosition(gameResolutionX/120.0f, gameResolutionY/60.0f);
-		br.setSize(buttonwidth * 2 + 128, buttonheight * 4);
-		br.setVisible(false);
+		lowRep.setPosition(gameResolutionX/2.0f - 40, 19*gameResolutionY/20.0f - 110);
+		lowRep.setSize(300, 80);
+		medRep.setPosition(lowRep.getX(), lowRep.getY());
+		medRep.setSize(lowRep.getWidth(), lowRep.getHeight());
+		maxRep.setPosition(lowRep.getX(), lowRep.getY());
+		maxRep.setSize(lowRep.getWidth(), lowRep.getHeight());
+		go.setPosition(lowRep.getX() - lowRep.getX()/6, lowRep.getY()/5);
+		go.setSize(2*lowRep.getWidth(), 9*lowRep.getHeight());
+		go.setVisible(false);
 		btms.setPosition(st.getX() + st.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
 				st.getY());
 		btms.setSize(buttonwidth, buttonheight);
@@ -223,6 +274,40 @@ public class GameScreen implements Screen {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				state1 = STATE.Pause;
 				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		lm.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				state1 = STATE.Pause;
+				super.touchUp(event, x, y, pointer, button);
+				for (Actor actor : stage2.getActors()) {
+					if (actor != rms){
+						actor.setVisible(false);
+					}
+				}
+				lm.setVisible(false);
+				rms.setVisible(true);
+			}
+		});
+		rms.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				state1 = STATE.Continue;
+				super.touchUp(event, x, y, pointer, button);
+				for (Actor actor : stage2.getActors()) {
+					if (actor != rms){
+						actor.setVisible(true);
+					}
+				}
+				lm.setVisible(true);
+				rms.setVisible(false);
+			}
+		});
+		go.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+				game.gameMusic.dispose();
+				game.resetGameScreen();
+				game.setScreen(game.getMainScreen());
 			}
 		});
 		rs.addListener(new ClickListener() {
@@ -256,9 +341,14 @@ public class GameScreen implements Screen {
 			}
 		});
 		// ======================================ADD=BUTTONS=TO=STAGES===================================================
-		stage.addActor(sr);
-		stage.addActor(br);
+		stage.addActor(lowRep);
+		stage.addActor(medRep);
+		stage.addActor(maxRep);
 		stage.addActor(mn);
+		stage.addActor(lm);
+		stage2.addActor(mb);
+		stage2.addActor(rms);
+		stage2.addActor(go);
 		stage2.addActor(st);
 		stage2.addActor(rs);
 		stage2.addActor(btms);
@@ -368,23 +458,40 @@ public class GameScreen implements Screen {
      * Draw UI elements
      */
 	private void drawUI() {
-		if (currentWaitingCustomer != null && currentWaitingCustomer.waitTime() < MAX_WAIT_TIME) {
-			if (Customer.getOrder(currentWaitingCustomer) == null) {
-				sr.setVisible(false);
-				br.setVisible(false);
-			}
-			else {
-				switch (Customer.getOrder(currentWaitingCustomer)) {
-					case "Salad":
-						sr.setVisible(true);
-						br.setVisible(false);
-						break;
-					case "Burger":
-						br.setVisible(true);
-						sr.setVisible(false);
-						break;
+		if (orderCards.size() != 0) {
+			game.batch.begin();
+			float x = orderCards.peek().getX();
+			float y = orderCards.peek().getY();
+			//stupid verbose for-loop to prevent concurrentModification errors
+			for (Iterator<OrderCard> iterator = orderCards.iterator(); iterator.hasNext();) {
+				OrderCard order = iterator.next();
+				float recordedSize = orderCards.size();
+				if(order.hasExpired()){
+					iterator.remove();
+					switch (reputation) {
+						case 3:
+							reputation -= 1;
+							maxRep.setVisible(false);
+							break;
+						case 2:
+							reputation -= 1;
+							medRep.setVisible(false);
+						case 1:
+							lowRep.setVisible(false);
+							state1 = STATE.Pause;
+							for (Actor actor : stage2.getActors()) {
+								actor.setVisible(false);
+							}
+							go.setVisible(true);
+					}
+				}
+				game.batch.draw(order.getTexture(), x, y, order.getWidth(), order.getHeight());
+				x += 110;
+				if (orderCards.size() < recordedSize){
+					x -= 110 * (recordedSize - orderCards.size());
 				}
 			}
+			game.batch.end();
 		}
 		for (int i = 0; i < cooks.length; i++) {
 			if (i == currentCookIndex) {
@@ -465,10 +572,6 @@ public class GameScreen implements Screen {
 		if (state1 == STATE.Pause) {
 			thenTime = System.currentTimeMillis() - timeOnStartup;
 			Gdx.input.setInputProcessor(stage2);
-			game.batch.begin();
-			game.batch.draw(ESC, optionsBackground.getX(), optionsBackground.getY() + 15, optionsBackground.getWidth(),
-					optionsBackground.getHeight() - 30);
-			game.batch.end();
 			stage2.act();
 			stage2.draw();
 		}
@@ -695,10 +798,6 @@ public class GameScreen implements Screen {
 
 	public void resetStatic() {
 		currentWave = 0;
-	}
-	public static void clearRecipes(){
-		sr.setVisible(false);
-		br.setVisible(false);
 	}
 	/**
 	 * Resize game screen - Not used in fullscreen mode
