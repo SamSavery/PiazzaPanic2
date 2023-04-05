@@ -294,7 +294,7 @@ public class GameScreen implements Screen {
 				state1 = STATE.Continue;
 				super.touchUp(event, x, y, pointer, button);
 				for (Actor actor : stage2.getActors()) {
-					if (actor != rms){
+					if (actor != go){
 						actor.setVisible(true);
 					}
 				}
