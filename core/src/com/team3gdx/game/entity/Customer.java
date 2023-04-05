@@ -25,8 +25,6 @@ public class Customer {
 
 	private long arrivalTime;
 
-	public static String order = "";
-
 	/**
 	 * Constructor for customer class
 	 * @param x - x starting pixel coordinate
@@ -54,23 +52,11 @@ public class Customer {
 		locked = false;
 	}
 
-	public static String getOrder(Customer currentWaitingCustomer) {
-		return currentWaitingCustomer.order;
-	}
-
 	/**
 	 * Set arrival time as cook has arrived
 	 */
 	public void arrived() {
 		arrivalTime = System.currentTimeMillis();
-	}
-
-	/**
-	 * Check amount of time waited in ms
-	 * @return amount of time waited in ms
-	 */
-	public long waitTime() {
-		return System.currentTimeMillis() - arrivalTime;
 	}
 
 	/**

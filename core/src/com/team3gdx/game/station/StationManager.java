@@ -137,7 +137,8 @@ public class StationManager {
 			break;
 		case "Service":
 			checkStationExists(pos, new ServingStation(pos));
-			((ServingStation) stations.get(pos)).serveCustomer();
+			((ServingStation) stations.get(pos)).takeCustomerOrder();
+			((ServingStation) stations.get(pos)).serveOrder();
 			placeIngredientStation(pos);
 			break;
 		case "Oven":
