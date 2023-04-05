@@ -55,7 +55,6 @@ public class Recipe extends Ingredient {
 	 * @param width                  The recipe's texture width.
 	 * @param height                 The recipe's texture height.
 	 * @param cost                   How much the menu item will cost.
-	 * @param maxWaitTime			 How long (in ms) before order times out and reputation is lost.
 	 */
 	public Recipe(String initialSteps, Ingredient initialIngredient, Map<Ingredient, String> ingredientInstructions,
 			String finalSteps, String name, boolean shouldBeOrdered, Vector2 pos, float width, float height,
@@ -71,48 +70,6 @@ public class Recipe extends Ingredient {
 	}
 
 	ShapeRenderer shapeRenderer = new ShapeRenderer();
-
-	/**
-	 * Show the recipe as a list of instructions with the corresponding ingredient
-	 * texture displayed next to it.
-	 * 
-	 * @param batch The {@link SpriteBatch} to render the textures.
-	 * @param pos   The (x, y) coordinates for the first instruction.
-	 */
-	public void displayRecipe(SpriteBatch batch, Vector2 pos) {
-//		String completeRecipe = initialSteps + "\n\n";
-//		int i = -1;
-//		if (initialIngredient != null) {
-//			i = 0;
-//			Ingredient initial = new Ingredient(initialIngredient);
-//			initial.pos = new Vector2(pos);
-//			initial.pos.x -= 48;
-//			initial.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
-//			initial.draw(batch);
-//		}
-//		for (Ingredient ingredient : ingredientInstructions.keySet()) {
-//			completeRecipe += ingredientInstructions.get(ingredient) + " " + ingredient.name + "\n\n";
-//			ingredient.pos = new Vector2(pos);
-//			ingredient.pos.x -= 48;
-//			ingredient.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
-//			ingredient.draw(batch);
-//
-//		}
-//
-//		Ingredient result = new Ingredient(this);
-//		result.pos = new Vector2(pos);
-//		result.pos.x -= 48;
-//		result.pos.y += --i * 2 * new BitmapFont().getLineHeight() + new BitmapFont().getLineHeight();
-//		result.draw(batch);
-//
-//		completeRecipe += finalSteps;
-//
-//		// Display the instructions.
-//		batch.begin();
-//		(new BitmapFont()).draw(batch, completeRecipe, pos.x - 16, pos.y);
-//		batch.end();
-	}
-
 	/**
 	 * Check if there is a recipe with the given ingredients so that it can be assembled.
 	 *
