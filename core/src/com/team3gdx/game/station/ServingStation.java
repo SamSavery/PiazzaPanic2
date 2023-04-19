@@ -1,5 +1,7 @@
 package com.team3gdx.game.station;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
@@ -7,12 +9,12 @@ import com.team3gdx.game.entity.Customer;
 import com.team3gdx.game.food.Ingredient;
 import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.Recipe;
+import com.team3gdx.game.food.OrderCard;
 import com.team3gdx.game.screen.GameScreen;
 
 public class ServingStation extends Station {
-
-	String[] possibleOrders = new String[] { "Burger", "Salad" };
-
+	public String name = "ServingStation";
+	String[] possibleOrders = new String[] { "burger", "salad" };
 	/**
 	 * Configure allowed ingredient to be those on the menu.
 	 */
@@ -30,32 +32,31 @@ public class ServingStation extends Station {
 	}
 
 	/**
-	 * Check if there is a customer waiting, get their order and check if the
-	 * serving station contains it.
+	 * Check if there is a customer waiting, add their order to the orderCards and check if the
+	 * serving station contains any active orders.
 	 */
-	public void serveCustomer() {
+	public void takeCustomerOrder() {
 		Customer waitingCustomer = GameScreen.cc.isCustomerAtPos(new Vector2(pos.x - 1, pos.y));
 		if (waitingCustomer != null && waitingCustomer.locked) {
-			if (GameScreen.currentWaitingCustomer == null) {
-				waitingCustomer.order = possibleOrders[new Random().nextInt(possibleOrders.length)];
+			if (GameScreen.orderCards.isEmpty() || GameScreen.orderCards.size() < GameScreen.NUMBER_OF_WAVES) {
+				GameScreen.orderCards.add(new OrderCard(possibleOrders[new Random().nextInt(possibleOrders.length)]));
 				waitingCustomer.arrived();
-				GameScreen.currentWaitingCustomer = waitingCustomer;
-			}
-			if (waitingCustomer == GameScreen.currentWaitingCustomer && !slots.empty()
-					&& slots.peek().equals(Menu.RECIPES.get(waitingCustomer.order))) {
-				slots.pop();
-				GameScreen.clearRecipes();
 				GameScreen.cc.delCustomer(waitingCustomer);
-				if (GameScreen.currentWave < GameScreen.NUMBER_OF_WAVES){
-					GameScreen.cc.spawnCustomer();
-				}
-				GameScreen.currentWave++;
-				waitingCustomer.locked = false;
-				GameScreen.currentWaitingCustomer = null;
 			}
-
 		}
-
 	}
-	
+	public void serveOrder(){
+		if (!slots.empty()) {
+			//Stupid more verbose for-loop to prevent concurrentModification errors.
+			for (Iterator<OrderCard> iterator = GameScreen.orderCards.iterator(); iterator.hasNext();) {
+				OrderCard order = iterator.next();
+				if (!slots.isEmpty() && slots.peek().equals(Menu.RECIPES.get(order.getName().substring(0,1).toUpperCase() + order.getName().substring(1)))){
+					iterator.remove();
+					slots.pop();
+				}
+			}
+			GameScreen.currentWave++;
+		}
+	}
+
 }
