@@ -114,7 +114,8 @@ public class PrepStation extends Station {
 	private Ingredient ingredientMatch(Ingredient toMatch) {
 		for (Ingredient ingredient : Menu.INGREDIENT_PREP.keySet()) {
 			if (ingredient.equals(toMatch)) {
-				return Menu.INGREDIENT_PREP.get(ingredient);
+				Ingredient matchedIngredient = new Ingredient(Menu.INGREDIENT_PREP.get(ingredient));
+				return matchedIngredient;
 			}
 		}
 

@@ -69,5 +69,15 @@ public class Ingredients {
 
 	//Dairy
 	public static Ingredient cheese = new Ingredient(null, 32, 32, "cheese", 0, 0);
+	public static Ingredient potato = new Ingredient(null, 32, 32, "potato", 0, .5f);
+	public static Ingredient potato_cooked = new Ingredient(null, 32, 32, "potato", 0, .5f);
+	static{
+		potato_cooked.status=Status.COOKED;
+	}
+	public static Ingredient potato_burned = new Ingredient(null, 32, 32, "potato", 0, .5f);
+	static{
+		potato_burned.status=Status.BURNED;
+	}
+
 }
 

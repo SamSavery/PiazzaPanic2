@@ -8,7 +8,7 @@ import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.screen.GameScreen;
 
 public class OvenStation extends CookingStation {
-    private final static Ingredient[] ALLOWED_INGREDIENTS = {Ingredients.cooked_pizza, Ingredients.burnt_pizza, Ingredients.raw_pizza};
+    private final static Ingredient[] ALLOWED_INGREDIENTS = {Ingredients.cooked_pizza, Ingredients.burnt_pizza, Ingredients.raw_pizza , Ingredients.potato , Ingredients.potato_cooked , Ingredients.potato_burned};
 
     public OvenStation(Vector2 pos) {
         super(pos, 1, ALLOWED_INGREDIENTS, "particles/smokes.party", "audio/soundFX/frying.mp3");
