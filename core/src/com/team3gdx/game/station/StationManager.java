@@ -102,6 +102,10 @@ public class StationManager {
 		case "Cheese":
 			takeIngredientStation(pos, Ingredients.cheese);
 			break;
+		case "Potato":
+			takeIngredientStation(pos, Ingredients.potato);
+			break;
+
 		case "Frying":
 			checkStationExists(pos, new FryingStation(pos));
 			((CookingStation) stations.get(pos)).checkCookingStation(batch);
