@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -42,6 +43,7 @@ import com.team3gdx.game.entity.Entity;
 import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.OrderCard;
 import com.team3gdx.game.food.Recipe;
+import com.team3gdx.game.station.ServingStation;
 import com.team3gdx.game.station.StationManager;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
@@ -84,6 +86,8 @@ public class GameScreen implements Screen {
 	Texture RECIPEMENU;
 	Texture RECIPEMENUICON;
 	Texture GAMEOVER;
+	Texture FULLSCREEN;
+	Texture SAVEDATA;
 	Image lowRep;
 	Image medRep;
 	Image maxRep;
@@ -97,6 +101,13 @@ public class GameScreen implements Screen {
 	Button st;
 	Button ts;
 	Button btms;
+	Button fs;
+	TextButton ss1;
+	TextButton ss2;
+	TextButton ss3;
+	TextButton ls1;
+	TextButton ls2;
+	TextButton ls3;
 	public static CollisionTile[][] CLTiles;
 	Viewport uiViewport;
 	Viewport worldViewport;
@@ -153,6 +164,30 @@ public class GameScreen implements Screen {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(map1);
 		constructCollisionData(map1);
 		cc = new CustomerController(map1);
+		//difficulty is tied to the number of customers generated and how frequently.
+		//As difficulty increases, the maximum number of customers permitted onscreen increases
+		//and the interval between spawning customers is shortened dramatically.
+		switch(difficulty){
+			case 0:
+				this.scenarioLimit = 5;
+				this.CUSTOMER_SPAWNCAP = 1;
+				this.upperSpawnInterval *= 1.25;
+				this.lowerSpawnInterval *= 1.25;
+				this.spawnInterval *= 1.25;
+				break;
+			case 1: //Moderate mode keeps the default settings above
+				this.scenarioLimit = 7;
+				this.CUSTOMER_SPAWNCAP = 2;
+				break;
+			case 2: //Good luck!
+				this.scenarioLimit = 1;
+				this.CUSTOMER_SPAWNCAP = 3;
+				this.upperSpawnInterval *= 0.5;
+				this.lowerSpawnInterval *= 0.5;
+				this.spawnInterval *= 0.75;
+				break;
+		}
+		//Handles the spawning of customers at semi-regular intervals
 		Timer.schedule(new Timer.Task() {
 			public void run() {
 				if (!timerRunning) {
@@ -222,7 +257,10 @@ public class GameScreen implements Screen {
 		RECIPEMENU = new Texture(Gdx.files.internal("uielements/recipeMenu.png"));
 		RECIPEMENUICON = new Texture(Gdx.files.internal("uielements/recipeMenuIcon.png"));
 		GAMEOVER = new Texture(Gdx.files.internal("uielements/GameOver.png"));
+		FULLSCREEN = new Texture(Gdx.files.internal("uielements/FullscreenButton.png"));
+		SAVEDATA = new Texture(Gdx.files.internal("uielements/SaveDataButton.png"));
 		// ======================================CREATE=BUTTONS=AND=IMAGES===============================================
+
 		mn = new Button(new TextureRegionDrawable(MENU));
 		lm = new Button(new TextureRegionDrawable(RECIPEMENUICON));
 		go = new Button(new TextureRegionDrawable(GAMEOVER));
@@ -231,6 +269,16 @@ public class GameScreen implements Screen {
 		rs = new Button(new TextureRegionDrawable(RESUME));
 		st = new Button(new TextureRegionDrawable(TUTORIAL));
 		ts = new Button(new TextureRegionDrawable(TUTORIALSCREEN));
+		fs = new Button(new TextureRegionDrawable(FULLSCREEN));
+		TextButton.TextButtonStyle tbStyle = new TextButton.TextButtonStyle();
+		tbStyle.font = game.font;
+		tbStyle.up = new TextureRegionDrawable(SAVEDATA);
+		ss1= new TextButton("Save Slot 1", tbStyle);
+		ss2= new TextButton("Save Slot 2", tbStyle);
+		ss3= new TextButton("Save Slot 3", tbStyle);
+		ls1= new TextButton("Load Slot 1", tbStyle);
+		ls2= new TextButton("Load Slot 2", tbStyle);
+		ls3= new TextButton("Load Slot 3", tbStyle);
 		btms = new Button(new TextureRegionDrawable(BACKTOMAINSCREEN));
 		lowRep = new Image(new TextureRegionDrawable(oneRep));
 		medRep = new Image(new TextureRegionDrawable(twoRep));
@@ -252,22 +300,37 @@ public class GameScreen implements Screen {
 		rs.setSize(buttonwidth, buttonheight);
 		ad.setPosition(rs.getX() + rs.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), rs.getY());
 		ad.setSize(buttonwidth, buttonheight);
-		st.setPosition(ad.getX() + ad.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
-				ad.getY());
+		fs.setPosition(ad.getX() + ad.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), ad.getY());
+		fs.setSize(buttonwidth, buttonheight);
+		st.setPosition(fs.getX() + fs.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
+				fs.getY());
 		st.setSize(buttonwidth, buttonheight);
+
 		ts.setFillParent(true);
 		ts.setVisible(false);
+
 		lowRep.setPosition(gameResolutionX/2.0f - 40, 19*gameResolutionY/20.0f - 110);
 		lowRep.setSize(300, 80);
 		medRep.setPosition(lowRep.getX(), lowRep.getY());
 		medRep.setSize(lowRep.getWidth(), lowRep.getHeight());
 		maxRep.setPosition(lowRep.getX(), lowRep.getY());
 		maxRep.setSize(lowRep.getWidth(), lowRep.getHeight());
+		ss1.setPosition(gameResolutionX / 40.0f, 9 * gameResolutionY / 20.0f);
+		ss1.setSize(2*buttonwidth, 3*buttonheight);
+		ss2.setPosition(ss1.getX(), ss1.getY() - ss1.getHeight());
+		ss2.setSize(ss1.getWidth(), ss1.getHeight());
+		ss3.setPosition(ss2.getX(), ss2.getY() - ss2.getHeight());
+		ss3.setSize(ss1.getWidth(), ss1.getHeight());
+		ls1.setPosition(ss1.getX() + ss1.getWidth() , ss1.getY());
+		ls1.setSize(ss1.getWidth(), ss1.getHeight());
+		ls2.setPosition(ss2.getX() + ss2.getWidth(), ss2.getY());
+		ls2.setSize(ss1.getWidth(), ss1.getHeight());
+		ls3.setPosition(ss3.getX() + ss3.getWidth(), ss3.getY());
+		ls3.setSize(ss1.getWidth(), ss1.getHeight());
 		go.setPosition(lowRep.getX() - lowRep.getX()/6, lowRep.getY()/5);
 		go.setSize(2*lowRep.getWidth(), 9*lowRep.getHeight());
 		go.setVisible(false);
-		btms.setPosition(st.getX() + st.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
-				st.getY());
+		btms.setPosition(st.getX() + st.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), st.getY());
 		btms.setSize(buttonwidth, buttonheight);
 		// ======================================ADD=LISTENERS=TO=BUTTONS================================================
 		mn.addListener(new ClickListener() {
@@ -340,6 +403,43 @@ public class GameScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
+		//fullscreen button handler
+		fs.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		//Save and Load button handlers
+		ss1.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ss2.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ss3.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ls1.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ls2.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ls3.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
 		// ======================================ADD=BUTTONS=TO=STAGES===================================================
 		stage.addActor(lowRep);
 		stage.addActor(medRep);
@@ -351,10 +451,16 @@ public class GameScreen implements Screen {
 		stage2.addActor(go);
 		stage2.addActor(st);
 		stage2.addActor(rs);
+		stage2.addActor(fs);
+		stage2.addActor(ss1);
+		stage2.addActor(ss2);
+		stage2.addActor(ss3);
+		stage2.addActor(ls1);
+		stage2.addActor(ls2);
+		stage2.addActor(ls3);
 		stage2.addActor(btms);
 		stage2.addActor(ad);
 		stage2.addActor(ts);
-
 	}
 
 	ShapeRenderer selectedPlayerBox = new ShapeRenderer();
@@ -678,7 +784,7 @@ public class GameScreen implements Screen {
 
 		this.optionsBackground = new Rectangle();
 		optionsBackground.setPosition(gameResolutionX / 50.0f, 35 * gameResolutionY / 40.0f);
-		optionsBackground.width = 4 * (buttonwidth + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f));
+		optionsBackground.width = 5 * (buttonwidth + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f));
 		optionsBackground.height = 4 * gameResolutionY / 40.0f;
 
 		this.audioBackground = new Rectangle();
@@ -812,7 +918,6 @@ public class GameScreen implements Screen {
 		worldViewport.update(width, height);
 		uiViewport.update(width, height);
 	}
-
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
