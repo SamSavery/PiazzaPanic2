@@ -12,9 +12,10 @@ public class OrderCard {
     private long creationTime;
     private float maxWaitTime;
     private HashMap<String, Integer> dishWaitTimes = new HashMap<>(){{
-        put("salad", 60000);
-        put("burger", 100000);
-        put("pizza", 150000);
+        put("salad", 50000);
+        put("burger", 75000);
+        put("pizza", 100000);
+        put("jacket_potato", 40000);
     }};
     private float orderCardWidth;
     private float orderCardHeight;

@@ -11,7 +11,7 @@ import com.team3gdx.game.screen.GameScreen;
 
 public class ServingStation extends Station {
 	public String name = "ServingStation";
-	String[] possibleOrders = new String[] { "burger", "salad" };
+	String[] possibleOrders = new String[] {"salad", "burger" };
 	/**
 	 * Configure allowed ingredient to be those on the menu.
 	 */
@@ -37,11 +37,8 @@ public class ServingStation extends Station {
 	public void takeCustomerOrder() {
 		Customer waitingCustomer = GameScreen.cc.isCustomerAtPos(new Vector2(pos.x - 1, pos.y));
 		if (waitingCustomer != null && waitingCustomer.locked) {
-			if (GameScreen.orderCards.isEmpty() || GameScreen.orderCards.size() < GameScreen.NUMBER_OF_WAVES) {
-				GameScreen.orderCards.add(new OrderCard(possibleOrders[new Random().nextInt(possibleOrders.length)]));
-				waitingCustomer.arrived();
-				GameScreen.cc.delCustomer(waitingCustomer);
-			}
+			GameScreen.orderCards.add(new OrderCard(possibleOrders[new Random().nextInt(possibleOrders.length)]));
+			GameScreen.cc.delCustomer(waitingCustomer);
 		}
 	}
 	public void serveOrder(){
@@ -49,12 +46,29 @@ public class ServingStation extends Station {
 			//Stupid more verbose for-loop to prevent concurrentModification errors.
 			for (Iterator<OrderCard> iterator = GameScreen.orderCards.iterator(); iterator.hasNext();) {
 				OrderCard order = iterator.next();
+				//For each ordercard, the station checks whether there exists an item in its slots that matches it.
+				//It does this by matching the ordercard name to its relative recipe in Menu.RECIPES.
 				if (!slots.isEmpty() && slots.peek().equals(Menu.RECIPES.get(order.getName().substring(0,1).toUpperCase() + order.getName().substring(1)))){
+					switch (order.getName()){
+						case "salad":
+							GameScreen.addScore(150);
+							break;
+						case "burger":
+							GameScreen.addScore(200);
+							break;
+						case "pizza":
+							GameScreen.addScore(300);
+							break;
+						case "jacket_potato":
+							GameScreen.addScore(100);
+							break;
+					}
 					iterator.remove();
 					slots.pop();
+					GameScreen.orderJustServed = true;
+					GameScreen.customersServed += 1;
 				}
 			}
-			GameScreen.currentWave++;
 		}
 	}
 
