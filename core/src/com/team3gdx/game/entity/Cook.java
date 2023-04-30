@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.food.Ingredient;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
+import com.team3gdx.game.util.Power;
 
 public class Cook extends Entity {
 
@@ -51,6 +52,13 @@ public class Cook extends Entity {
 	}
 
 	/**
+	 * method for setting cook speed, by pranshu dhungana
+	 * @param multiplier
+	 */
+	public void setSpeed(Float multiplier){
+		this.speed=speed*multiplier;
+	}
+	/**
 	 * Update cook using user input
 	 * @param control - Control input handling object
 	 * @param dt - some change in time
@@ -88,6 +96,12 @@ public class Cook extends Entity {
 			direction.x = 1;
 			direction.y = 1;
 			direction = new Vector2(1, 0);
+		}
+		if(control.power){
+			//GameScreen.power then set gamescreen power
+			Power.usePower();
+			control.power=false;
+
 		}
 		if (dirX != 0 || dirY != 0) {
 			stateTime += Gdx.graphics.getDeltaTime() / 8;
