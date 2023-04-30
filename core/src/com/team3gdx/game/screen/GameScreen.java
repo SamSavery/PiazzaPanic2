@@ -48,21 +48,26 @@ import com.team3gdx.game.station.StationManager;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
 
+import java.awt.geom.FlatteningPathIterator;
 import java.util.*;
 
 public class GameScreen implements Screen {
 
-	public static final int NUMBER_OF_WAVES = 5;
-
+	public static int scenarioLimit;
+	public static String gameMode;
+	public static int customersServed;
+	public static int CUSTOMER_SPAWNCAP;
 	final MainGameClass game;
 	final MainScreen ms;
 
-	public static int currentWave = 0;
-	public static int reputation = 3;
-	public static Queue<OrderCard> orderCards = new LinkedList<>();
-	public float spawnInterval = 5.0f;
-	public float spawnTime = 0.0f;
-	public float targetTime = 0.0f;
+	public static int reputation;
+	public static boolean orderJustServed;
+	public static Queue<OrderCard> orderCards;
+	public static float spawnInterval;
+	public static float upperSpawnInterval;
+	public static float lowerSpawnInterval;
+	public float spawnTime;
+	public float targetTime;
 	public boolean timerRunning = false;
 	Rectangle volSlideBackgr;
 	Rectangle volSlide;
@@ -150,11 +155,23 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Constructor to initialise game screen;
-	 * 
+	 *
 	 * @param game - Main entry point class
 	 * @param ms   - Title screen class
 	 */
 	public GameScreen(MainGameClass game, MainScreen ms) {
+		gameMode = "";
+		scenarioLimit = 1;
+		CUSTOMER_SPAWNCAP = 0;
+		customersServed = 0;
+		reputation = 3;
+		spawnInterval = 5.0f;
+		upperSpawnInterval = 30000f;
+		lowerSpawnInterval = 1000f;
+		spawnTime = 0.0f;
+		targetTime = 0.0f;
+		orderJustServed = false;
+		orderCards = new LinkedList<>();
 		this.game = game;
 		this.ms = ms;
 		this.calculateBoxMaths();
@@ -164,45 +181,6 @@ public class GameScreen implements Screen {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(map1);
 		constructCollisionData(map1);
 		cc = new CustomerController(map1);
-		//difficulty is tied to the number of customers generated and how frequently.
-		//As difficulty increases, the maximum number of customers permitted onscreen increases
-		//and the interval between spawning customers is shortened dramatically.
-		switch(difficulty){
-			case 0:
-				this.scenarioLimit = 5;
-				this.CUSTOMER_SPAWNCAP = 1;
-				this.upperSpawnInterval *= 1.25;
-				this.lowerSpawnInterval *= 1.25;
-				this.spawnInterval *= 1.25;
-				break;
-			case 1: //Moderate mode keeps the default settings above
-				this.scenarioLimit = 7;
-				this.CUSTOMER_SPAWNCAP = 2;
-				break;
-			case 2: //Good luck!
-				this.scenarioLimit = 1;
-				this.CUSTOMER_SPAWNCAP = 3;
-				this.upperSpawnInterval *= 0.5;
-				this.lowerSpawnInterval *= 0.5;
-				this.spawnInterval *= 0.75;
-				break;
-		}
-		//Handles the spawning of customers at semi-regular intervals
-		Timer.schedule(new Timer.Task() {
-			public void run() {
-				if (!timerRunning) {
-					targetTime = (float) (Math.random() * 30000 + 1000);
-					spawnTime = 0.0f;
-					timerRunning = true;
-				} else {
-					spawnTime += spawnInterval * 1000;
-					if (spawnTime >= targetTime) {
-						cc.spawnCustomer();
-						timerRunning = false;
-					}
-				}
-			}
-		}, 0, spawnInterval);
 		cooks = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
 		currentCookIndex = 0;
 		cook = cooks[currentCookIndex];
@@ -370,7 +348,14 @@ public class GameScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 				game.gameMusic.dispose();
 				game.resetGameScreen();
-				game.setScreen(game.getMainScreen());
+				if (gameMode == "scenario") {
+					game.setScreen(game.getMainScreen());
+				}
+				else{
+					game.getLeaderBoardScreen().addLeaderBoardData("PLAYER1",
+							(int) Math.floor((startTime - timeOnStartup) / 1000f));
+					game.setScreen(game.getLeaderBoardScreen());
+				}
 			}
 		});
 		rs.addListener(new ClickListener() {
@@ -461,13 +446,29 @@ public class GameScreen implements Screen {
 		stage2.addActor(btms);
 		stage2.addActor(ad);
 		stage2.addActor(ts);
+		//Handles the spawning of customers at semi-regular intervals
+		Timer.schedule(new Timer.Task() {
+			public void run() {
+				if (!timerRunning) {
+					targetTime = (float) (Math.random() * upperSpawnInterval + lowerSpawnInterval);
+					spawnTime = 0.0f;
+					timerRunning = true;
+				} else {
+					spawnTime += spawnInterval * 1000;
+					if (spawnTime >= targetTime) {
+						cc.spawnCustomer();
+						timerRunning = false;
+					}
+				}
+			}
+		}, 0, spawnInterval);
 	}
 
 	ShapeRenderer selectedPlayerBox = new ShapeRenderer();
 
 	/**
 	 * Render method for main game
-	 * 
+	 *
 	 * @param delta - some change in time
 	 */
 
@@ -531,9 +532,22 @@ public class GameScreen implements Screen {
 		game.batch.setProjectionMatrix(worldCamera.combined);
 
 		checkCookSwitch();
+		// ====================================CHECK=CUSTOMER=WAIT=TIMES=================================================
+		for (int i = 0; i < cc.customers.length; i++) {
+			if (cc.customers[i] != null && cc.customers[i].locked) {
+				System.out.println("Customer " + cc.customers[i]);
+				if (cc.customers[i].hasExpired()) {
+					System.out.println("Customer has expired " + System.currentTimeMillis()/1000);
+					cc.delCustomer(cc.customers[i]);
+					updateRep();
+				}
+			}
+		}
 		// =========================================CHECK=GAME=OVER======================================================
-		checkGameOver();
-
+		if (orderJustServed == true){
+			checkGameOver();
+			orderJustServed = false;
+		}
 	}
 
     /**
@@ -558,7 +572,7 @@ public class GameScreen implements Screen {
 		control.shift = false;
 	}
 
-	public static final float MAX_WAIT_TIME = 1000000; //Customer wait time in ms
+	public static final float MAX_WAIT_TIME = 20000; //Customer wait time in ms
 
     /**
      * Draw UI elements
@@ -574,22 +588,7 @@ public class GameScreen implements Screen {
 				float recordedSize = orderCards.size();
 				if(order.hasExpired()){
 					iterator.remove();
-					switch (reputation) {
-						case 3:
-							reputation -= 1;
-							maxRep.setVisible(false);
-							break;
-						case 2:
-							reputation -= 1;
-							medRep.setVisible(false);
-						case 1:
-							lowRep.setVisible(false);
-							state1 = STATE.Pause;
-							for (Actor actor : stage2.getActors()) {
-								actor.setVisible(false);
-							}
-							go.setVisible(true);
-					}
+					updateRep();
 				}
 				game.batch.draw(order.getTexture(), x, y, order.getWidth(), order.getHeight());
 				x += 110;
@@ -665,7 +664,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Changes game window state
-	 * 
+	 *
 	 * @param state1 - the state to change to
 	 */
 	public void changeScreen(STATE state1) {
@@ -819,7 +818,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Construct an array of CollisionTile objects for collision detection
-	 * 
+	 *
 	 * @param mp- game tilemap
 	 */
 	private void constructCollisionData(TiledMap mp) {
@@ -862,7 +861,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Check the tile the cook is looking at for interaction
-	 * 
+	 *
 	 * @param ck - Selected cook
 	 * @param sr - ShapeRenderer to draw the coloured box
 	 */
@@ -894,21 +893,49 @@ public class GameScreen implements Screen {
 	}
 
 	public void checkGameOver() {
-		if (currentWave == NUMBER_OF_WAVES + 1) {
-			game.getLeaderBoardScreen().addLeaderBoardData("PLAYER1",
-					(int) Math.floor((startTime - timeOnStartup) / 1000f));
-			game.resetGameScreen();
-			this.resetStatic();
-			game.setScreen(game.getLeaderBoardScreen());
+		if (Objects.equals(gameMode, "Scenario")) {
+			if (customersServed >= scenarioLimit) {
+				game.getLeaderBoardScreen().addLeaderBoardData("PLAYER1",
+						(int) Math.floor((startTime - timeOnStartup) / 1000f));
+				game.resetGameScreen();
+				this.resetStatic();
+				game.setScreen(game.getLeaderBoardScreen());
+			}
 		}
 	}
 
+public void updateRep(){
+	switch (reputation) {
+		case 3:
+			reputation -= 1;
+			maxRep.setVisible(false);
+			break;
+		case 2:
+			reputation -= 1;
+			medRep.setVisible(false);
+		case 1:
+			lowRep.setVisible(false);
+			state1 = STATE.Pause;
+			for (Actor actor : stage2.getActors()) {
+				actor.setVisible(false);
+			}
+			go.setVisible(true);
+	}
+}
 	public void resetStatic() {
-		currentWave = 0;
+		customersServed = 0;
+		reputation = 3;
+		orderCards = new LinkedList<>();
+		spawnInterval = 5.0f;
+		upperSpawnInterval = 30000;
+		lowerSpawnInterval = 1000;
+		this.spawnTime = 0.0f;
+		this.targetTime = 0.0f;
+		this.timerRunning = false;
 	}
 	/**
 	 * Resize game screen - Not used in fullscreen mode
-	 * 
+	 *
 	 * @param width  - width to resize to
 	 * @param height - height to resize to
 	 */

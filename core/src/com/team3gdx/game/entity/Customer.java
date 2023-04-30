@@ -24,7 +24,7 @@ public class Customer {
 	public boolean readyfordeletion;
 
 	private long arrivalTime;
-
+	public static long maxWaitTime;
 	/**
 	 * Constructor for customer class
 	 * @param x - x starting pixel coordinate
@@ -50,15 +50,25 @@ public class Customer {
 		posy = y * 64;
 		startposx = posx;
 		locked = false;
+		maxWaitTime = 15000;
 	}
 
 	/**
-	 * Set arrival time as cook has arrived
+	 * Set arrival time as when customer reaches serving station
 	 */
-	public void arrived() {
-		arrivalTime = System.currentTimeMillis();
-	}
+	public void arrived() {arrivalTime = 18000 + System.currentTimeMillis();}
 
+	/**
+	 * Checks if customer has been waiting too long, returns true if so.
+	 */
+	public Boolean hasExpired(){
+		System.out.println("Arrival time: "+ arrivalTime);
+		System.out.println("Waiting time: " + (System.currentTimeMillis() - arrivalTime));
+		if (System.currentTimeMillis() - arrivalTime >= maxWaitTime){
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * Render top of customer
 	 * @param b - spritebatch to render with

@@ -38,11 +38,8 @@ public class ServingStation extends Station {
 	public void takeCustomerOrder() {
 		Customer waitingCustomer = GameScreen.cc.isCustomerAtPos(new Vector2(pos.x - 1, pos.y));
 		if (waitingCustomer != null && waitingCustomer.locked) {
-			if (GameScreen.orderCards.isEmpty() || GameScreen.orderCards.size() < GameScreen.NUMBER_OF_WAVES) {
-				GameScreen.orderCards.add(new OrderCard(possibleOrders[new Random().nextInt(possibleOrders.length)]));
-				waitingCustomer.arrived();
-				GameScreen.cc.delCustomer(waitingCustomer);
-			}
+			GameScreen.orderCards.add(new OrderCard(possibleOrders[new Random().nextInt(possibleOrders.length)]));
+			GameScreen.cc.delCustomer(waitingCustomer);
 		}
 	}
 	public void serveOrder(){
@@ -53,9 +50,10 @@ public class ServingStation extends Station {
 				if (!slots.isEmpty() && slots.peek().equals(Menu.RECIPES.get(order.getName().substring(0,1).toUpperCase() + order.getName().substring(1)))){
 					iterator.remove();
 					slots.pop();
+					GameScreen.orderJustServed = true;
+					GameScreen.customersServed += 1;
 				}
 			}
-			GameScreen.currentWave++;
 		}
 	}
 

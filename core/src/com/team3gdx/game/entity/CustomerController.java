@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -19,8 +20,8 @@ import com.team3gdx.game.screen.GameScreen;
 public class CustomerController {
 	int lockout;
 	ArrayList<ArrayList<Integer>> customerCells;
-	Customer[] customers = new Customer[GameScreen.NUMBER_OF_WAVES];
-	Customer[] leavingcustomers = new Customer[GameScreen.NUMBER_OF_WAVES];
+	public Customer[] customers;
+	public Customer[] leavingcustomers;
 	TiledMap gameMap;
 	int top;
 	int bottom;
@@ -28,6 +29,8 @@ public class CustomerController {
 
 	public CustomerController(TiledMap map) {
 		this.gameMap = map;
+		customers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
+		leavingcustomers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
 		computeCustomerZone(gameMap);
 		lockout = 0;
 	}
@@ -114,7 +117,8 @@ public class CustomerController {
 	public void spawnCustomer() {
 		for (int i = 0; i < this.customers.length; i++) {
 			if (customers[i] == null) {
-				customers[i] = new Customer(this.xCoordinate, this.bottom, this.top - i, ThreadLocalRandom.current().nextInt(1,5+1));
+				customers[i] = new Customer(this.xCoordinate, this.bottom, this.top - i, ThreadLocalRandom.current().nextInt(1, 5 + 1));
+				customers[i].arrived();
 				break;
 			}
 		}
@@ -135,7 +139,6 @@ public class CustomerController {
 				return;
 			}
 		}
-
 	}
 
 	/**
@@ -197,8 +200,13 @@ public class CustomerController {
 	public Customer isCustomerAtPos(Vector2 pos) {
 		for (Customer customer : customers)
 			if (customer != null && Math.ceil(customer.posx / 64f) == pos.x && Math.ceil(customer.posy / 64f) == pos.y
-					&& customer.locked)
+					&& customer.locked) {
 				return customer;
+			}
 		return null;
+	}
+	public void reInitCustArr(){
+		customers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
+		leavingcustomers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
 	}
 }
