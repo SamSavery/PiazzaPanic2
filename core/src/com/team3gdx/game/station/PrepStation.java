@@ -6,14 +6,20 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.food.Ingredient;
-import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.Recipe;
 import com.team3gdx.game.screen.GameScreen;
+import com.team3gdx.game.util.Power;
+
+import java.util.Random;
 
 public class PrepStation extends Station {
 
 	public float progress = 0;
+	SpriteBatch batch;
+
+	private Random rand = new Random();
+
 	public PrepStation(Vector2 pos) {
 		super(pos, 5, false, null, null);
 	}
@@ -21,15 +27,16 @@ public class PrepStation extends Station {
 	/**
 	 * Check if the current ingredients are part of a recipe or an ingredient can be
 	 * formed to another begin progress on creating it.
-	 * 
+	 * Implemented by pranshu dhungana
 	 * @return A boolean representing whether the transformation happens.
 	 */
 	public boolean slotsToRecipe() {
 		for (Recipe recipe : Menu.RECIPES.values()) {
 			if (recipe.matches(slots)) {
 				if (progress == 1) {
-//					progress = 0;
+					progress = 0;
 					slots.clear();
+					generatePower(150);
 					slots.add(recipe);
 				}
 				return true;
@@ -39,10 +46,11 @@ public class PrepStation extends Station {
 
 		if (ingredientMatch(slots.peek()) != null) {
 			if (progress == 1) {
-//				progress = 0;
+				progress = 0;
+				generatePower(300);
+
 				slots.add(ingredientMatch(slots.pop()));
 			}
-
 			return true;
 		}
 
@@ -50,6 +58,23 @@ public class PrepStation extends Station {
 		slots.peek().slicing = false;
 
 		return false;
+	}
+
+	/**
+	 * generates a power randomly
+	 */
+	private void generatePower(int chance) {
+		int randomNumber = rand.nextInt(chance) + 1; // generate a random number between 1-chance and if its below 100 then we use the tasks
+		if (randomNumber <= 20) {
+			System.out.println("Generated random number "+ randomNumber);
+			Power.addPower(3, batch); // add 3 to PowerStack
+		} else if (randomNumber <= 60) {
+			System.out.println("Generated random number "+ randomNumber);
+			Power.addPower(2, batch); // add 2 to PowerStack
+		} else if (randomNumber<=100){
+			System.out.println("Generated random number "+ randomNumber);
+			Power.addPower(1, batch); // add 1 to PowerStack
+		}
 	}
 
 	/**
