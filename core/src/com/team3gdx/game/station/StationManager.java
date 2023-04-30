@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.food.Ingredient;
 import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.screen.GameScreen;
+import com.team3gdx.game.util.Power;
 
 /**
  * 
@@ -24,8 +25,10 @@ public class StationManager {
 	 * A Map representing every station and its (x, y) coordinates.
 	 */
 	public static Map<Vector2, Station> stations;
-
+	public Power power;
 	SpriteBatch batch;
+
+	private Boolean temp= false;
 
 	public StationManager() {
 		stations = new HashMap<Vector2, Station>();
@@ -54,17 +57,31 @@ public class StationManager {
 
 					if (station instanceof CuttingStation && currentIngredient.slicing) {
 						((CuttingStation) station).interact(batch, .1f);
+						currentIngredient.PowerChecker();
 						station.interactSound();
 					}
 
 					if (station instanceof MixingStation && currentIngredient.mixing){
+						currentIngredient.PowerChecker();
 						((MixingStation) station).interact(batch, .1f);
 					}
 
 					if (currentIngredient.cooking && station instanceof CookingStation) {
 						((CookingStation) station).drawParticles(batch, i);
-						currentIngredient.cook(.0005f, batch);
+						currentIngredient.PowerChecker();
+
+						double temp = currentIngredient.cook(.0005f, batch);
 						station.interactSound();
+						/**
+						 * instantly generates ingredient and adds it to held items stack.
+						 */
+						if(temp==1 && Power.getCurrentPower()=="Instant"){
+							if (!station.slots.empty() && !GameScreen.cook.full()) {
+								if (station.slots.peek().flipped) {
+									GameScreen.cook.pickUpItem(station.take());
+								}
+							}
+						}
 					} else {
 						currentIngredient.draw(batch);
 					}
@@ -122,7 +139,7 @@ public class StationManager {
 			break;
 		case "Chopping":
 			if (!stations.containsKey(pos)) {
-				stations.put(pos, new CuttingStation(pos));
+				stations.put(pos, new CuttingStation(pos ));
 			}
 			placeIngredientStation(pos);
 			CuttingStation cutStation = ((CuttingStation) stations.get(pos));
