@@ -9,11 +9,14 @@ public class Control extends InputAdapter implements InputProcessor {
 
 	public boolean up, down, left, right;
 	public boolean del;
-
+	private long lastZKeyPressTime = 0; // added this by pranshu dhungana to handle delay between using powers.
 	public boolean interact, drop, flip;
 	public boolean tab, shift;
-
+	public boolean power;
 	@Override
+	/**
+	 * used to set controls, set certain attributes to determine action when key is pressed
+	 */
 	public boolean keyDown(int keyCode) {
 		switch (keyCode) {
 //		case Keys.DOWN:
@@ -28,25 +31,33 @@ public class Control extends InputAdapter implements InputProcessor {
 //		case Keys.RIGHT:
 //			right = true;
 //			break;
-		case Keys.W:
-			up = true;
-			break;
-		case Keys.A:
-			left = true;
-			break;
-		case Keys.S:
-			down = true;
-			break;
-		case Keys.D:
-			right = true;
-			break;
-		case Keys.DEL:
-			del = true;
-			break;
+			case Keys.W:
+				up = true;
+				break;
+			case Keys.A:
+				left = true;
+				break;
+			case Keys.S:
+				down = true;
+				break;
+			case Keys.D:
+				right = true;
+				break;
+			case Keys.DEL:
+				del = true;
+				break;
+			case Keys.Z: // set up by pranshu dhungana
+				if (System.currentTimeMillis() - lastZKeyPressTime > 500) { //if its been 0.5 seconds then can press z
+					power = true;
+					lastZKeyPressTime = System.currentTimeMillis();
+				}
+				break;
 		}
 		return false;
 	}
-
+	/**
+	 * used to reset/set control attributes when key is released.
+	 */
 	@Override
 	public boolean keyUp(int keycode) {
 		switch (keycode) {
@@ -93,9 +104,13 @@ public class Control extends InputAdapter implements InputProcessor {
 //			break;
 		case Keys.ESCAPE:
 			break;
+		case Keys.Z: // added by pranshu dhungana
+			power=false;
+			break;
 		}
 		return false;
 	}
+
 
 	@Override
 	public boolean keyTyped(char character) {
