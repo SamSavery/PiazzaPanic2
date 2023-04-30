@@ -2,7 +2,6 @@ package com.team3gdx.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -36,15 +35,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team3gdx.game.MainGameClass;
 import com.team3gdx.game.entity.Cook;
-import com.team3gdx.game.entity.Customer;
 import com.team3gdx.game.entity.CustomerController;
 import com.team3gdx.game.entity.Entity;
-import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.OrderCard;
-import com.team3gdx.game.food.Recipe;
 import com.team3gdx.game.station.StationManager;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
+import com.team3gdx.game.util.Power;
+import com.team3gdx.game.util.PowerUnit;
 
 import java.util.*;
 
@@ -83,6 +81,10 @@ public class GameScreen implements Screen {
 	Texture fullRep;
 	Texture RECIPEMENU;
 	Texture RECIPEMENUICON;
+	Texture POWERICON1;
+	Texture POWERICON2;
+	Texture POWERICON3;
+
 	Texture GAMEOVER;
 	Image lowRep;
 	Image medRep;
@@ -139,9 +141,10 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Constructor to initialise game screen;
-	 * 
-	 * @param game - Main entry point class
-	 * @param ms   - Title screen class
+	 *
+	 * @param game           - Main entry point class
+	 * @param ms             - Title screen class
+	 *
 	 */
 	public GameScreen(MainGameClass game, MainScreen ms) {
 		this.game = game;
@@ -405,6 +408,7 @@ public class GameScreen implements Screen {
 		game.batch.setProjectionMatrix(uiMatrix);
 		// =====================================DRAW=UI=ELEMENTS=========================================================
 		drawUI();
+		drawPower();
 		// =====================================SET=MATRIX=BACK=TO=GAME=MATRIX===========================================
 
 		setCameraLerp(delta);
@@ -427,10 +431,28 @@ public class GameScreen implements Screen {
 		checkCookSwitch();
 		// =========================================CHECK=GAME=OVER======================================================
 		checkGameOver();
-
+		//=========CHECK=POWERS=======//
 	}
 
-    /**
+	/**
+	 * implemented by pranshu dhungana , used to draw powers depending on power stack.
+	 * @return
+	 */
+	private boolean drawPower() {
+		if (!Power.isPowerEmpty()) {
+			game.batch.begin();
+			for (PowerUnit powerUnit : Power.getPowerStack()) {
+				if (powerUnit.isVisible()) {
+					powerUnit.render(game.batch);
+				}
+			}
+			game.batch.end();
+			return true;
+		}
+		return false;
+	}
+
+	/**
      * Change selected cook
      */
 	private void checkCookSwitch() {
@@ -492,6 +514,9 @@ public class GameScreen implements Screen {
 				}
 			}
 			game.batch.end();
+		}
+		if (!Power.isPowerEmpty() && !Power.isPowerFull()){
+
 		}
 		for (int i = 0; i < cooks.length; i++) {
 			if (i == currentCookIndex) {
