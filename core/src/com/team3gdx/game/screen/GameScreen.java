@@ -131,7 +131,7 @@ public class GameScreen implements Screen {
 	long tempTime, tempThenTime;
 	public static Control control;
 	TiledMapRenderer tiledMapRenderer;
-	public TiledMap map1;
+	public static TiledMap map1;
 	public static Cook[] cooks;
 	public static int currentCookIndex;
 	public static Cook cook;
@@ -778,6 +778,15 @@ public class GameScreen implements Screen {
 			}
 		}
 	}
+	/**
+	 * return viewed tile at vector positions
+	 * @param  pos for positinos
+	 * @return cell object
+	 */
+	public static Cell returnCell(Vector2 pos) {
+		return ((TiledMapTileLayer) map1.getLayers().get(1)).getCell((int) pos.x, (int) pos.y);
+	}
+
 
 	/**
 	 * Check the tile the cook is looking at for interaction
