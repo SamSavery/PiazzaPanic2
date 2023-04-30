@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -42,25 +43,33 @@ import com.team3gdx.game.entity.Entity;
 import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.OrderCard;
 import com.team3gdx.game.food.Recipe;
+import com.team3gdx.game.station.ServingStation;
 import com.team3gdx.game.station.StationManager;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
 
+import java.awt.geom.FlatteningPathIterator;
 import java.util.*;
 
 public class GameScreen implements Screen {
 
-	public static final int NUMBER_OF_WAVES = 5;
-
+	public static long score;
+	public static long accumulatedScore;
+	public static int scenarioLimit;
+	public static String gameMode;
+	public static int customersServed;
+	public static int CUSTOMER_SPAWNCAP;
 	final MainGameClass game;
 	final MainScreen ms;
 
-	public static int currentWave = 0;
-	public static int reputation = 3;
-	public static Queue<OrderCard> orderCards = new LinkedList<>();
-	public float spawnInterval = 5.0f;
-	public float spawnTime = 0.0f;
-	public float targetTime = 0.0f;
+	public static int reputation;
+	public static boolean orderJustServed;
+	public static Queue<OrderCard> orderCards;
+	public static float spawnInterval;
+	public static float upperSpawnInterval;
+	public static float lowerSpawnInterval;
+	public float spawnTime;
+	public float targetTime;
 	public boolean timerRunning = false;
 	Rectangle volSlideBackgr;
 	Rectangle volSlide;
@@ -84,6 +93,8 @@ public class GameScreen implements Screen {
 	Texture RECIPEMENU;
 	Texture RECIPEMENUICON;
 	Texture GAMEOVER;
+	Texture FULLSCREEN;
+	Texture SAVEDATA;
 	Image lowRep;
 	Image medRep;
 	Image maxRep;
@@ -97,6 +108,13 @@ public class GameScreen implements Screen {
 	Button st;
 	Button ts;
 	Button btms;
+	Button fs;
+	TextButton ss1;
+	TextButton ss2;
+	TextButton ss3;
+	TextButton ls1;
+	TextButton ls2;
+	TextButton ls3;
 	public static CollisionTile[][] CLTiles;
 	Viewport uiViewport;
 	Viewport worldViewport;
@@ -139,11 +157,24 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Constructor to initialise game screen;
-	 * 
+	 *
 	 * @param game - Main entry point class
 	 * @param ms   - Title screen class
 	 */
 	public GameScreen(MainGameClass game, MainScreen ms) {
+		accumulatedScore = 0;
+		gameMode = "";
+		scenarioLimit = 1;
+		CUSTOMER_SPAWNCAP = 0;
+		customersServed = 0;
+		reputation = 3;
+		spawnInterval = 5.0f;
+		upperSpawnInterval = 30000f;
+		lowerSpawnInterval = 1000f;
+		spawnTime = 0.0f;
+		targetTime = 0.0f;
+		orderJustServed = false;
+		orderCards = new LinkedList<>();
 		this.game = game;
 		this.ms = ms;
 		this.calculateBoxMaths();
@@ -153,21 +184,6 @@ public class GameScreen implements Screen {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(map1);
 		constructCollisionData(map1);
 		cc = new CustomerController(map1);
-		Timer.schedule(new Timer.Task() {
-			public void run() {
-				if (!timerRunning) {
-					targetTime = (float) (Math.random() * 30000 + 1000);
-					spawnTime = 0.0f;
-					timerRunning = true;
-				} else {
-					spawnTime += spawnInterval * 1000;
-					if (spawnTime >= targetTime) {
-						cc.spawnCustomer();
-						timerRunning = false;
-					}
-				}
-			}
-		}, 0, spawnInterval);
 		cooks = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
 		currentCookIndex = 0;
 		cook = cooks[currentCookIndex];
@@ -222,7 +238,10 @@ public class GameScreen implements Screen {
 		RECIPEMENU = new Texture(Gdx.files.internal("uielements/recipeMenu.png"));
 		RECIPEMENUICON = new Texture(Gdx.files.internal("uielements/recipeMenuIcon.png"));
 		GAMEOVER = new Texture(Gdx.files.internal("uielements/GameOver.png"));
+		FULLSCREEN = new Texture(Gdx.files.internal("uielements/FullscreenButton.png"));
+		SAVEDATA = new Texture(Gdx.files.internal("uielements/SaveDataButton.png"));
 		// ======================================CREATE=BUTTONS=AND=IMAGES===============================================
+
 		mn = new Button(new TextureRegionDrawable(MENU));
 		lm = new Button(new TextureRegionDrawable(RECIPEMENUICON));
 		go = new Button(new TextureRegionDrawable(GAMEOVER));
@@ -231,6 +250,16 @@ public class GameScreen implements Screen {
 		rs = new Button(new TextureRegionDrawable(RESUME));
 		st = new Button(new TextureRegionDrawable(TUTORIAL));
 		ts = new Button(new TextureRegionDrawable(TUTORIALSCREEN));
+		fs = new Button(new TextureRegionDrawable(FULLSCREEN));
+		TextButton.TextButtonStyle tbStyle = new TextButton.TextButtonStyle();
+		tbStyle.font = game.font;
+		tbStyle.up = new TextureRegionDrawable(SAVEDATA);
+		ss1= new TextButton("Save Slot 1", tbStyle);
+		ss2= new TextButton("Save Slot 2", tbStyle);
+		ss3= new TextButton("Save Slot 3", tbStyle);
+		ls1= new TextButton("Load Slot 1", tbStyle);
+		ls2= new TextButton("Load Slot 2", tbStyle);
+		ls3= new TextButton("Load Slot 3", tbStyle);
 		btms = new Button(new TextureRegionDrawable(BACKTOMAINSCREEN));
 		lowRep = new Image(new TextureRegionDrawable(oneRep));
 		medRep = new Image(new TextureRegionDrawable(twoRep));
@@ -252,22 +281,37 @@ public class GameScreen implements Screen {
 		rs.setSize(buttonwidth, buttonheight);
 		ad.setPosition(rs.getX() + rs.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), rs.getY());
 		ad.setSize(buttonwidth, buttonheight);
-		st.setPosition(ad.getX() + ad.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
-				ad.getY());
+		fs.setPosition(ad.getX() + ad.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), ad.getY());
+		fs.setSize(buttonwidth, buttonheight);
+		st.setPosition(fs.getX() + fs.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
+				fs.getY());
 		st.setSize(buttonwidth, buttonheight);
+
 		ts.setFillParent(true);
 		ts.setVisible(false);
+
 		lowRep.setPosition(gameResolutionX/2.0f - 40, 19*gameResolutionY/20.0f - 110);
 		lowRep.setSize(300, 80);
 		medRep.setPosition(lowRep.getX(), lowRep.getY());
 		medRep.setSize(lowRep.getWidth(), lowRep.getHeight());
 		maxRep.setPosition(lowRep.getX(), lowRep.getY());
 		maxRep.setSize(lowRep.getWidth(), lowRep.getHeight());
+		ss1.setPosition(gameResolutionX / 40.0f, 9 * gameResolutionY / 20.0f);
+		ss1.setSize(2*buttonwidth, 3*buttonheight);
+		ss2.setPosition(ss1.getX(), ss1.getY() - ss1.getHeight());
+		ss2.setSize(ss1.getWidth(), ss1.getHeight());
+		ss3.setPosition(ss2.getX(), ss2.getY() - ss2.getHeight());
+		ss3.setSize(ss1.getWidth(), ss1.getHeight());
+		ls1.setPosition(ss1.getX() + ss1.getWidth() , ss1.getY());
+		ls1.setSize(ss1.getWidth(), ss1.getHeight());
+		ls2.setPosition(ss2.getX() + ss2.getWidth(), ss2.getY());
+		ls2.setSize(ss1.getWidth(), ss1.getHeight());
+		ls3.setPosition(ss3.getX() + ss3.getWidth(), ss3.getY());
+		ls3.setSize(ss1.getWidth(), ss1.getHeight());
 		go.setPosition(lowRep.getX() - lowRep.getX()/6, lowRep.getY()/5);
 		go.setSize(2*lowRep.getWidth(), 9*lowRep.getHeight());
 		go.setVisible(false);
-		btms.setPosition(st.getX() + st.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f),
-				st.getY());
+		btms.setPosition(st.getX() + st.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), st.getY());
 		btms.setSize(buttonwidth, buttonheight);
 		// ======================================ADD=LISTENERS=TO=BUTTONS================================================
 		mn.addListener(new ClickListener() {
@@ -307,7 +351,14 @@ public class GameScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 				game.gameMusic.dispose();
 				game.resetGameScreen();
-				game.setScreen(game.getMainScreen());
+				if (gameMode == "scenario") {
+					game.setScreen(game.getMainScreen());
+				}
+				else{
+					game.getLeaderBoardScreen().addLeaderBoardData("PLAYER1",
+							(int) Math.floor((startTime - timeOnStartup) / 1000f));
+					game.setScreen(game.getLeaderBoardScreen());
+				}
 			}
 		});
 		rs.addListener(new ClickListener() {
@@ -340,6 +391,43 @@ public class GameScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
+		//fullscreen button handler
+		fs.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		//Save and Load button handlers
+		ss1.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ss2.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ss3.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ls1.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ls2.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
+		ls3.addListener(new ClickListener() {
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
 		// ======================================ADD=BUTTONS=TO=STAGES===================================================
 		stage.addActor(lowRep);
 		stage.addActor(medRep);
@@ -351,17 +439,39 @@ public class GameScreen implements Screen {
 		stage2.addActor(go);
 		stage2.addActor(st);
 		stage2.addActor(rs);
+		stage2.addActor(fs);
+		stage2.addActor(ss1);
+		stage2.addActor(ss2);
+		stage2.addActor(ss3);
+		stage2.addActor(ls1);
+		stage2.addActor(ls2);
+		stage2.addActor(ls3);
 		stage2.addActor(btms);
 		stage2.addActor(ad);
 		stage2.addActor(ts);
-
+		//Handles the spawning of customers at semi-regular intervals
+		Timer.schedule(new Timer.Task() {
+			public void run() {
+				if (!timerRunning) {
+					targetTime = (float) (Math.random() * upperSpawnInterval + lowerSpawnInterval);
+					spawnTime = 0.0f;
+					timerRunning = true;
+				} else {
+					spawnTime += spawnInterval * 1000;
+					if (spawnTime >= targetTime) {
+						cc.spawnCustomer();
+						timerRunning = false;
+					}
+				}
+			}
+		}, 0, spawnInterval);
 	}
 
 	ShapeRenderer selectedPlayerBox = new ShapeRenderer();
 
 	/**
 	 * Render method for main game
-	 * 
+	 *
 	 * @param delta - some change in time
 	 */
 
@@ -425,9 +535,22 @@ public class GameScreen implements Screen {
 		game.batch.setProjectionMatrix(worldCamera.combined);
 
 		checkCookSwitch();
+		// ====================================CHECK=CUSTOMER=WAIT=TIMES=================================================
+		for (int i = 0; i < cc.customers.length; i++) {
+			if (cc.customers[i] != null && cc.customers[i].locked) {
+				System.out.println("Customer " + cc.customers[i]);
+				if (cc.customers[i].hasExpired()) {
+					System.out.println("Customer has expired " + System.currentTimeMillis()/1000);
+					cc.delCustomer(cc.customers[i]);
+					updateRep();
+				}
+			}
+		}
 		// =========================================CHECK=GAME=OVER======================================================
-		checkGameOver();
-
+		if (orderJustServed == true){
+			checkGameOver();
+			orderJustServed = false;
+		}
 	}
 
     /**
@@ -452,7 +575,7 @@ public class GameScreen implements Screen {
 		control.shift = false;
 	}
 
-	public static final float MAX_WAIT_TIME = 1000000; //Customer wait time in ms
+	public static final float MAX_WAIT_TIME = 20000; //Customer wait time in ms
 
     /**
      * Draw UI elements
@@ -468,22 +591,7 @@ public class GameScreen implements Screen {
 				float recordedSize = orderCards.size();
 				if(order.hasExpired()){
 					iterator.remove();
-					switch (reputation) {
-						case 3:
-							reputation -= 1;
-							maxRep.setVisible(false);
-							break;
-						case 2:
-							reputation -= 1;
-							medRep.setVisible(false);
-						case 1:
-							lowRep.setVisible(false);
-							state1 = STATE.Pause;
-							for (Actor actor : stage2.getActors()) {
-								actor.setVisible(false);
-							}
-							go.setVisible(true);
-					}
+					updateRep();
 				}
 				game.batch.draw(order.getTexture(), x, y, order.getWidth(), order.getHeight());
 				x += 110;
@@ -508,11 +616,10 @@ public class GameScreen implements Screen {
 					Gdx.graphics.getHeight() - 256));
 			game.batch.end();
 		}
-
+		score = (startTime - timeOnStartup) / 1000;
 		game.batch.begin();
-		game.font.draw(game.batch, Long.toString((startTime - timeOnStartup) / 1000),
-				gameResolutionX / 2f + gameResolutionX / 10f, 19 * gameResolutionY / 20f);
-		game.font.draw(game.batch, "Time in s:", gameResolutionX / 2f, 19 * gameResolutionY / 20f);
+		game.font.draw(game.batch, Long.toString(score + accumulatedScore),gameResolutionX / 2f + gameResolutionX / 10f, 19 * gameResolutionY / 20f);
+		game.font.draw(game.batch, "Score:", gameResolutionX / 2f, 19 * gameResolutionY / 20f);
 		game.batch.end();
 	}
 
@@ -559,7 +666,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Changes game window state
-	 * 
+	 *
 	 * @param state1 - the state to change to
 	 */
 	public void changeScreen(STATE state1) {
@@ -678,7 +785,7 @@ public class GameScreen implements Screen {
 
 		this.optionsBackground = new Rectangle();
 		optionsBackground.setPosition(gameResolutionX / 50.0f, 35 * gameResolutionY / 40.0f);
-		optionsBackground.width = 4 * (buttonwidth + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f));
+		optionsBackground.width = 5 * (buttonwidth + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f));
 		optionsBackground.height = 4 * gameResolutionY / 40.0f;
 
 		this.audioBackground = new Rectangle();
@@ -713,7 +820,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Construct an array of CollisionTile objects for collision detection
-	 * 
+	 *
 	 * @param mp- game tilemap
 	 */
 	private void constructCollisionData(TiledMap mp) {
@@ -756,7 +863,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Check the tile the cook is looking at for interaction
-	 * 
+	 *
 	 * @param ck - Selected cook
 	 * @param sr - ShapeRenderer to draw the coloured box
 	 */
@@ -788,21 +895,52 @@ public class GameScreen implements Screen {
 	}
 
 	public void checkGameOver() {
-		if (currentWave == NUMBER_OF_WAVES + 1) {
-			game.getLeaderBoardScreen().addLeaderBoardData("PLAYER1",
-					(int) Math.floor((startTime - timeOnStartup) / 1000f));
-			game.resetGameScreen();
-			this.resetStatic();
-			game.setScreen(game.getLeaderBoardScreen());
+		if (Objects.equals(gameMode, "Scenario")) {
+			if (customersServed >= scenarioLimit) {
+				game.getLeaderBoardScreen().addLeaderBoardData("PLAYER1",
+						(int) Math.floor((startTime - timeOnStartup) / 1000f));
+				game.resetGameScreen();
+				this.resetStatic();
+				game.setScreen(game.getLeaderBoardScreen());
+			}
 		}
 	}
+public static void addScore(long points){
+		accumulatedScore += points;
+}
 
+public void updateRep(){
+	switch (reputation) {
+		case 3:
+			reputation -= 1;
+			maxRep.setVisible(false);
+			break;
+		case 2:
+			reputation -= 1;
+			medRep.setVisible(false);
+		case 1:
+			lowRep.setVisible(false);
+			state1 = STATE.Pause;
+			for (Actor actor : stage2.getActors()) {
+				actor.setVisible(false);
+			}
+			go.setVisible(true);
+	}
+}
 	public void resetStatic() {
-		currentWave = 0;
+		customersServed = 0;
+		reputation = 3;
+		orderCards = new LinkedList<>();
+		spawnInterval = 5.0f;
+		upperSpawnInterval = 30000;
+		lowerSpawnInterval = 1000;
+		this.spawnTime = 0.0f;
+		this.targetTime = 0.0f;
+		this.timerRunning = false;
 	}
 	/**
 	 * Resize game screen - Not used in fullscreen mode
-	 * 
+	 *
 	 * @param width  - width to resize to
 	 * @param height - height to resize to
 	 */
@@ -812,7 +950,6 @@ public class GameScreen implements Screen {
 		worldViewport.update(width, height);
 		uiViewport.update(width, height);
 	}
-
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
