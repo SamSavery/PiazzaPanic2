@@ -53,6 +53,8 @@ import java.util.*;
 
 public class GameScreen implements Screen {
 
+	public static long score;
+	public static long accumulatedScore;
 	public static int scenarioLimit;
 	public static String gameMode;
 	public static int customersServed;
@@ -160,6 +162,7 @@ public class GameScreen implements Screen {
 	 * @param ms   - Title screen class
 	 */
 	public GameScreen(MainGameClass game, MainScreen ms) {
+		accumulatedScore = 0;
 		gameMode = "";
 		scenarioLimit = 1;
 		CUSTOMER_SPAWNCAP = 0;
@@ -613,11 +616,10 @@ public class GameScreen implements Screen {
 					Gdx.graphics.getHeight() - 256));
 			game.batch.end();
 		}
-
+		score = (startTime - timeOnStartup) / 1000;
 		game.batch.begin();
-		game.font.draw(game.batch, Long.toString((startTime - timeOnStartup) / 1000),
-				gameResolutionX / 2f + gameResolutionX / 10f, 19 * gameResolutionY / 20f);
-		game.font.draw(game.batch, "Time in s:", gameResolutionX / 2f, 19 * gameResolutionY / 20f);
+		game.font.draw(game.batch, Long.toString(score + accumulatedScore),gameResolutionX / 2f + gameResolutionX / 10f, 19 * gameResolutionY / 20f);
+		game.font.draw(game.batch, "Score:", gameResolutionX / 2f, 19 * gameResolutionY / 20f);
 		game.batch.end();
 	}
 
@@ -903,6 +905,9 @@ public class GameScreen implements Screen {
 			}
 		}
 	}
+public static void addScore(long points){
+		accumulatedScore += points;
+}
 
 public void updateRep(){
 	switch (reputation) {

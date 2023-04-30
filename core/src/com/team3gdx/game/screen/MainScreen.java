@@ -269,7 +269,7 @@ public class MainScreen implements Screen {
 				//Hard mode has customers generating ~50% faster and allows for groups of up to 3 customers
 				//to spawn at any given time. Customers are ~25% less patient in waiting to be served also.
 				//The required number of orders served in scenario mode is the raised by 5.
-				GameScreen.scenarioLimit = 1;
+				GameScreen.scenarioLimit = 15;
 				GameScreen.CUSTOMER_SPAWNCAP = 3;
 				GameScreen.cc.reInitCustArr();
 				Customer.maxWaitTime *= 0.75f;
