@@ -35,7 +35,7 @@ public class MixingStation extends Station {
      */
     public void interact(SpriteBatch batch, float dT) {
         currentMixTime += dT;
-        if (slots.peek().mix(batch , currentMixTime)) { // resets mix time counter after its mixed.
+        if (slots.peek().slice(batch , currentMixTime)) { // resets mix time counter after its mixed.
             currentMixTime = 0;
         }
     }
