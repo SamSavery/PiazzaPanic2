@@ -74,11 +74,6 @@ public class StationManager {
 						station.interactSound();
 					}
 
-					if (station instanceof MixingStation && currentIngredient.mixing){
-						currentIngredient.PowerChecker();
-						((MixingStation) station).interact(batch, .1f);
-					}
-
 					if (currentIngredient.cooking && station instanceof CookingStation) {
 						((CookingStation) station).drawParticles(batch, i);
 						currentIngredient.PowerChecker();
@@ -157,12 +152,6 @@ public class StationManager {
 			placeIngredientStation(pos);
 			CuttingStation cutStation = ((CuttingStation) stations.get(pos));
 			cutStation.lockCook();
-			break;
-		case "Mixing":
-			checkStationExists(pos, new MixingStation(pos));
-			placeIngredientStation(pos);
-			MixingStation mixingStation= (MixingStation) stations.get(pos);
-			mixingStation.lockCook();
 			break;
 		case "Baking":
 			checkStationExists(pos, new BakingStation(pos));
