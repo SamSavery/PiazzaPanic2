@@ -280,9 +280,9 @@ public class GameScreen implements Screen {
         ss1 = new TextButton("Save Slot 1", tbStyle);
         ss2 = new TextButton("Save Slot 2", tbStyle);
         ss3 = new TextButton("Save Slot 3", tbStyle);
-        ls1 = new TextButton("Load Slot 1", tbStyle);
-        ls2 = new TextButton("Load Slot 2", tbStyle);
-        ls3 = new TextButton("Load Slot 3", tbStyle);
+        ls1 = new TextButton("Load Slot 1\n" + ((int) slot1.getLong("score")) + " Score / " + slot1.getInteger("reputation") + " Rep", tbStyle);
+        ls2 = new TextButton("Load Slot 2\n" + ((int) slot2.getLong("score")) + " Score / " + slot2.getInteger("reputation") + " Rep", tbStyle);
+        ls3 = new TextButton("Load Slot 3\n" + ((int) slot3.getLong("score")) + " Score / " + slot3.getInteger("reputation") + " Rep", tbStyle);
         btms = new Button(new TextureRegionDrawable(BACKTOMAINSCREEN));
         lowRep = new Image(new TextureRegionDrawable(oneRep));
         medRep = new Image(new TextureRegionDrawable(twoRep));
