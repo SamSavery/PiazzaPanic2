@@ -28,7 +28,7 @@ public class MainGameClass extends Game {
 
     @Override
     public void create() {
-        // ====================================MUSIC=INITIALISATION======================================================
+        // Music Initialisation
         musicVolumeScale = 0.4f;
         gameVolumeScale = 0.4f;
         mainScreenMusic = Gdx.audio.newMusic(Gdx.files.internal("uielements/MainScreenMusic.ogg"));
@@ -37,19 +37,18 @@ public class MainGameClass extends Game {
         mainScreenMusic.setVolume(musicVolumeScale);
         gameMusic.setLooping(false);
         gameMusic.setVolume(musicVolumeScale);
-        // =================================SPRITEBATCH=AND=SHAPERENDERER================================================
+        // SpriteBatch and ShapeRenderer
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        // ==================================FONT=INITIALISATION=========================================================
+        // Font Initialisation
         font = new BitmapFont(Gdx.files.internal("uielements/font.fnt"), Gdx.files.internal("uielements/font.png"),
                 false);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        // ====================================GAME=SCREEN=INITIALISATION================================================
+        // GameScreen Initialisation
         mainScreen1 = new MainScreen(this);
         gameScreen1 = new GameScreen(this, mainScreen1, lateLoadSlot);
         leaderBoardScreen1 = new LeaderBoard(this, mainScreen1);
         this.setScreen(mainScreen1);
-        // ==============================================================================================================
     }
 
     public MainScreen getMainScreen() {

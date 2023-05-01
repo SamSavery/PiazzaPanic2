@@ -39,7 +39,6 @@ public class CustomerController {
      * @param gameMap - The game tilemap
      */
     private void computeCustomerZone(TiledMap gameMap) {
-        // ==============================================================================================================
         TiledMapTileLayer botlayer = (TiledMapTileLayer) gameMap.getLayers().get(0);
         customerCells = new ArrayList<>();
         int mapheight = botlayer.getHeight();
@@ -62,12 +61,12 @@ public class CustomerController {
             }
         }
         // ^Scan tilemap for Customer zone
-        // tile==========================================================================
+        // tile
         if (customerCells.size() == 0) {
             throw new IllegalArgumentException("No customer zone was included in the tile map");
         }
         // ^If no Customer zone tiles exist throw
-        // exception==============================================================
+        // exception
         Integer[] xvalues = new Integer[customerCells.size()];
         Integer[] yvalues = new Integer[customerCells.size()];
         int ctr = 0;
@@ -77,19 +76,19 @@ public class CustomerController {
             ctr++;
         }
         // ^Split x y pairs into 2 separate
-        // arrays=======================================================================
+        // arrays
         Set<Integer> uniquexvalues = new HashSet<>(Arrays.asList(xvalues));
         if (uniquexvalues.size() != 2) {
             throw new IllegalArgumentException("Customer zone must be a 2 wide rectangle leading to bottom of map");
         }
         // ^Throw exception if more than 2 unique x values exist - the rectangle is not
-        // 2 wide===========================
+        // 2 wide
         ArrayList<Integer> yvalueslist = new ArrayList<>(Arrays.asList(yvalues));
         if (!yvalueslist.contains(0)) {
             throw new IllegalArgumentException("Customer zone must extend to the bottom of the map");
         }
         // ^Throw exception if the customer zone tile list does not contain tiles at the
-        // bottom index====================
+        // bottom index
         int ymax = Collections.max(yvalueslist);
         Integer[] uniquexvaluesarray = uniquexvalues.toArray(new Integer[]{});
         for (Integer unx : uniquexvaluesarray) {
@@ -103,7 +102,7 @@ public class CustomerController {
             }
         }
         // ^Throw exception if the customer zone is not a filled rectangle. It does this
-        // by looking from the maximum=====
+        // by looking from the maximum
         // y value downwards to check if a tile exists all the way down to zero, on both
         // columns.
         this.top = ymax;

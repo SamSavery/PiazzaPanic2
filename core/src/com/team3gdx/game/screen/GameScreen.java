@@ -217,36 +217,36 @@ public class GameScreen implements Screen {
      * Things that should be done while the game screen is shown
      */
     public void show() {
-        // =======================================START=FRAME=TIMER======================================================
+        // Start Frame Timer
         startTime = System.currentTimeMillis();
         timeOnStartup = startTime;
         tempThenTime = startTime;
-        // =======================================SET=POSITIONS=OF=SLIDERS===============================================
+        // Set Positions of Sliders
         float currentMusicVolumeSliderX = (MainGameClass.musicVolumeScale * sliderWidth) + xSliderMin;
         float currentGameVolumeSliderX = (MainGameClass.gameVolumeScale * sliderWidth) + xSliderMin;
         musSlide.setPosition(currentMusicVolumeSliderX, audioBackgroundy + 4 * audioBackgroundHeight / 6
                 + musSlideBackgr.getHeight() / 2 - musSlide.getHeight() / 2);
         volSlide.setPosition(currentGameVolumeSliderX, audioBackgroundy + audioBackgroundHeight / 6
                 + volSlideBackgr.getHeight() / 2 - volSlide.getHeight() / 2);
-        // ======================================INHERIT=TEXTURES=FROM=MAIN=SCREEN=======================================
+        // Inherit Textures from MainScreen
         vButton = ms.vButton;
         vControl = ms.vControl;
-        // ======================================START=CAMERAS===========================================================
+        // Start Cameras
         uiCamera = new OrthographicCamera();
         worldCamera = new OrthographicCamera();
         uiCamera.setToOrtho(false, gameResolutionX, gameResolutionY);
         worldCamera.setToOrtho(false, gameResolutionX, gameResolutionY);
-        // ======================================SET=INITAL=STATE========================================================
+        // Set Initial State
         state1 = STATE.Continue;
-        // ======================================START=VIEWPORTS=========================================================
+        // Start Viewports
         worldViewport = new FitViewport(gameResolutionX, gameResolutionY, worldCamera);
         uiViewport = new FitViewport(gameResolutionX, gameResolutionY, uiCamera);
-        // ======================================START=STAGES============================================================
+        // Start Stages
         stage = new Stage(uiViewport);
         stage2 = new Stage(uiViewport);
-        // ======================================CREATE=INPUTMULTIPLEXER=================================================
+        // Create InputMultiplexer
         multi = new InputMultiplexer(stage, control);
-        // ======================================LOAD=TEXTURES===========================================================
+        // Load Textures
         MENU = new Texture(Gdx.files.internal("uielements/settings.png"));
         ESC = new Texture(Gdx.files.internal("uielements/background.png"));
         BACKTOMAINSCREEN = new Texture(Gdx.files.internal("uielements/exitmenu.png"));
@@ -263,7 +263,7 @@ public class GameScreen implements Screen {
         GAMEOVER = new Texture(Gdx.files.internal("uielements/GameOver.png"));
         FULLSCREEN = new Texture(Gdx.files.internal("uielements/FullscreenButton.png"));
         SAVEDATA = new Texture(Gdx.files.internal("uielements/SaveDataButton.png"));
-        // ======================================CREATE=BUTTONS=AND=IMAGES===============================================
+        // Create Buttons and Images
 
         mn = new Button(new TextureRegionDrawable(MENU));
         lm = new Button(new TextureRegionDrawable(RECIPEMENUICON));
@@ -290,7 +290,7 @@ public class GameScreen implements Screen {
         mb = new Image(new TextureRegionDrawable(ESC));
 
 
-        // ======================================POSITION=AND=SCALE=BUTTONS==============================================
+        // Position and Scale Buttons
         mn.setPosition(gameResolutionX / 40.0f, 18 * gameResolutionY / 20.0f);
         mn.setSize(buttonwidth, buttonheight);
         mb.setPosition(optionsBackground.getX(), optionsBackground.getY() + 15);
@@ -336,7 +336,7 @@ public class GameScreen implements Screen {
         go.setVisible(false);
         btms.setPosition(st.getX() + st.getWidth() + 2 * (gameResolutionX / 40.0f - gameResolutionX / 50.0f), st.getY());
         btms.setSize(buttonwidth, buttonheight);
-        // ======================================ADD=LISTENERS=TO=BUTTONS================================================
+        // Add Listeners to Buttons
         mn.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 state1 = STATE.Pause;
@@ -459,7 +459,7 @@ public class GameScreen implements Screen {
                 super.touchUp(event, x, y, pointer, button);
             }
         });
-        // ======================================ADD=BUTTONS=TO=STAGES===================================================
+        // Add Buttons to Stages
         stage.addActor(lowRep);
         stage.addActor(medRep);
         stage.addActor(maxRep);
@@ -480,7 +480,7 @@ public class GameScreen implements Screen {
         stage2.addActor(btms);
         stage2.addActor(ad);
         stage2.addActor(ts);
-        //Handles the spawning of customers at semi-regular intervals
+        // Handles the spawning of customers at semi-regular intervals
         Timer.schedule(new Timer.Task() {
             public void run() {
                 if (!timerRunning) {
@@ -510,67 +510,67 @@ public class GameScreen implements Screen {
      */
 
     public void render(float delta) {
-        // =====================================CLEAR=SCREEN=============================================================
+        // Clear Screen
         ScreenUtils.clear(0, 0, 0, 0);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        // =====================================SET=INPUT=PROCESSOR======================================================
+        // Set Input Processor
         Gdx.input.setInputProcessor(multi);
-        // =====================================SET=PROJECTION=MATRICES=FOR=GAME=RENDERING===============================
+        // Set Projection Matrices for Game Rendering
         game.shapeRenderer.setProjectionMatrix(worldCamera.combined);
         game.batch.setProjectionMatrix(worldCamera.combined);
-        // =====================================RENDER=BOTTOM=MAP=LAYER==================================================
+        // Render Bottom Map Layer
         tiledMapRenderer.setView(worldCamera);
         tiledMapRenderer.render(new int[]{0});
-        // =====================================DRAW=COOK=LEGS===========================================================
+        // Draw Cook Legs
         game.batch.begin();
         for (Cook curCook : cooks)
             curCook.draw_bot(game.batch);
         game.batch.end();
-        // =====================================RENDER=TOP=MAP=LAYER=====================================================
+        // Render Top Map Layer
         tiledMapRenderer.render(new int[]{1});
-        // =====================================DRAW=COOK=TOP=HALF=======================================================
+        // Draw Cook Top Hald
         stationManager.handleStations(game.batch);
         drawHeldItems();
         game.batch.begin();
         for (Cook curCook : cooks)
             curCook.draw_top(game.batch);
-        cc.drawCustTop(game.batch); // todo fix customer z ordering
+        cc.drawCustTop(game.batch);
         game.batch.end();
-        // ==================================MOVE=COOK===================================================================
+        // Move Cook
         tempTime = System.currentTimeMillis();
         if (!cook.locked && Tutorial.complete)
             cook.update(control, (tempTime - tempThenTime), CLTiles);
         tempThenTime = tempTime;
         checkInteraction(cook, game.shapeRenderer);
-        // =====================================SET=MATRIX=FOR=UI=ELEMENTS===============================================
+        // Set Matrix for UI Elements
         Matrix4 uiMatrix = worldCamera.combined.cpy();
         uiMatrix.setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.setProjectionMatrix(uiMatrix);
-        // =====================================DRAW=UI=ELEMENTS=========================================================
+        // Draw UI Elements
         drawUI();
         drawPower();
-        // =====================================SET=MATRIX=BACK=TO=GAME=MATRIX===========================================
+        // Set Matrix Back to Game Matrix
 
         setCameraLerp(delta);
 
         game.batch.setProjectionMatrix(worldCamera.combined);
-        // ==================================MOVE=CAMERA=================================================================
+        // Move Camera
 
         worldCamera.update();
         uiCamera.update();
-        // ==================================PLAY=MUSIC==================================================================
+        // Play Music
         game.gameMusic.play();
-        // ==================================DRAW=INTERACTIVE=UI=ELEMENTS================================================
+        // Draw Interactive UI Elements
         stage.act();
         stage.draw();
-        // ==================================JUMP=TO=STATE=SPECIFIC=LOGIC================================================
+        // Jump to State-Specific Logic
         game.batch.setProjectionMatrix(uiMatrix);
         changeScreen(state1);
         game.batch.setProjectionMatrix(worldCamera.combined);
 
         checkCookSwitch();
-        // ====================================CHECK=CUSTOMER=WAIT=TIMES=================================================
+        // Check Customer Wait Times
         for (int i = 0; i < cc.customers.length; i++) {
             if (cc.customers[i] != null && cc.customers[i].locked) {
                 System.out.println("Customer " + cc.customers[i]);
@@ -581,14 +581,12 @@ public class GameScreen implements Screen {
                 }
             }
         }
-        // =========================================CHECK=GAME=OVER======================================================
+        // Check Game Over
         if (orderJustServed) {
             checkGameOver();
             orderJustServed = false;
         }
     }
-
-    //=========CHECK=POWERS=======//
 
     /**
      * Used to draw powers depending on power stack.
