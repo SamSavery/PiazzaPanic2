@@ -196,6 +196,20 @@ public class StationManager {
 				this.unlockStation(pos , "Frying");
 			}
 			break;
+		case "shop":
+			if(GameScreen.cooks.length<3) {
+				batch.begin();
+				(new BitmapFont()).draw(batch, "Hire a new chef! 500 points [e]", pos.x * 64, pos.y * 64);
+				batch.end();
+				if (GameScreen.control.drop) {
+					GameScreen.addnewchef();
+				}
+			else{
+				batch.begin();
+				(new BitmapFont()).draw(batch, "Chef has been hired :)", pos.x * 64, pos.y * 64);
+				batch.end();
+				}
+			}
 		case "locked_pan":
 			batch.begin();
 			(new BitmapFont()).draw(batch, "Unlock station [e]", pos.x * 64, pos.y * 64);
@@ -233,15 +247,17 @@ public class StationManager {
 	 * Implemented by pranshu dhungana, method for changing locked stations to unlocked stations
 	 * @param pos Vector2 type position of locked station
 	 */
-	public void unlockStation(Vector2 pos , String name){
-		TiledMapTileLayer.Cell cell=GameScreen.returnCell(pos);
-		TiledMapTile tile = cell.getTile();
-		TextureRegion newTexture = new TextureRegion(textures.get(name));
-		TiledMapTile newTile = new StaticTiledMapTile(newTexture);
-		newTile.getProperties().put("Station" , name);
-		cell.setTile(newTile);
-	}
+	public void unlockStation(Vector2 pos , String name) {
+		if (GameScreen.score + GameScreen.accumulatedScore >= 10) {
+			GameScreen.subScore(10);
+			TiledMapTileLayer.Cell cell = GameScreen.returnCell(pos);
+			TextureRegion newTexture = new TextureRegion(textures.get(name));
+			TiledMapTile newTile = new StaticTiledMapTile(newTexture);
+			newTile.getProperties().put("Station", name);
+			cell.setTile(newTile);
+		}
 
+	}
 	/**
 	 * Check if the given station exists at the given position.
 	 * 
