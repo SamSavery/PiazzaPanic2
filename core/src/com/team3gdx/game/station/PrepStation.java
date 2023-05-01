@@ -6,120 +6,162 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.food.Ingredient;
-import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.Recipe;
 import com.team3gdx.game.screen.GameScreen;
+import com.team3gdx.game.util.Power;
+
+import java.util.Random;
 
 public class PrepStation extends Station {
 
-	public float progress = 0;
-	public PrepStation(Vector2 pos) {
-		super(pos, 5, false, null, null);
-	}
+    public float progress = 0;
+    SpriteBatch batch;
 
-	/**
-	 * Check if the current ingredients are part of a recipe or an ingredient can be
-	 * formed to another begin progress on creating it.
-	 * 
-	 * @return A boolean representing whether the transformation happens.
-	 */
-	public boolean slotsToRecipe() {
-		for (Recipe recipe : Menu.RECIPES.values()) {
-			if (recipe.matches(slots)) {
-				if (progress == 1) {
-//					progress = 0;
-					slots.clear();
-					slots.add(recipe);
-				}
-				return true;
-			}
+    private final Random rand = new Random();
 
-		}
+    public PrepStation(Vector2 pos) {
+        super(pos, 5, false, null, null);
+    }
 
-		if (ingredientMatch(slots.peek()) != null) {
-			if (progress == 1) {
-//				progress = 0;
-				slots.add(ingredientMatch(slots.pop()));
-			}
+    /**
+     * Check if the current ingredients are part of a recipe or an ingredient can be
+     * formed to another begin progress on creating it.
+     *
+     * @return A boolean representing whether the transformation happens.
+     */
+    public boolean slotsToRecipe() {
+        for (Recipe recipe : Menu.RECIPES.values()) {
+            if (recipe.matches(slots)) {
+                if (progress == 1) {
+                    progress = 0;
+                    slots.clear();
+                    generatePower(150);
+                    slots.add(recipe);
+                }
+                return true;
+            }
 
-			return true;
-		}
+        }
 
-		GameScreen.cook.locked = false;
-		slots.peek().slicing = false;
+        if (ingredientMatch(slots.peek()) != null) {
+            if (progress == 1) {
+                progress = 0;
+                generatePower(300);
+                //	testPower(100,5);
+                slots.add(ingredientMatch(slots.pop()));
+            }
+            return true;
+        }
 
-		return false;
-	}
+        GameScreen.cook.locked = false;
+        slots.peek().slicing = false;
 
-	/**
-	 * Lock currently interacting cook to station.
-	 * 
-	 * @return A boolean indicating if the cook was locked.
-	 */
-	public boolean lockCook() {
-		if (!slots.isEmpty() && slotsToRecipe()) {
-			if (lockedCook == null) {
-				GameScreen.cook.locked = true;
-				lockedCook = GameScreen.cook;
-			} else {
-				lockedCook.locked = true;
-			}
-			return true;
-		}
-		if (lockedCook != null) {
-			lockedCook.locked = false;
-			lockedCook = null;
-			progress = 0;
-		}
+        return false;
+    }
 
-		return false;
-	}
+    /**
+     * generates a power randomly
+     */
+    private void generatePower(int chance) {
+        int randomNumber = rand.nextInt(chance) + 1; // generate a random number between 1-chance and if its below 100 then we use the tasks
+        if (randomNumber <= 10) { //10% chance of clearing order
+            System.out.println("Generated random number " + randomNumber);
+            Power.addPower(3, batch); // add 3 to PowerStack
+        } else if (randomNumber <= 40) { //30% of speed
+            System.out.println("Generated random number " + randomNumber);
+            Power.addPower(2, batch); // add 2 to PowerStack
+        } else if (randomNumber <= 70) { //30% of instant cooking
+            System.out.println("Generated random number " + randomNumber);
+            Power.addPower(1, batch); // add 1 to PowerStack
+        } else if (randomNumber <= 90) { //20% chance of extra points
+            Power.addPower(4, batch);
+        } else if (randomNumber <= 100) { //10% chance of regaining reputation
+            Power.addPower(5, batch);
+        }
+    }
 
-	private static ShapeRenderer shapeRenderer = new ShapeRenderer();
+    /**
+     * testing purposes
+     */
+    private void testPower(int chance, int power) {
+        int randomNumber = rand.nextInt(100) + 1; // generate a random number between 1-chance and if its below 100 then we use the tasks
+        if (randomNumber < 100) {
+            Power.addPower(power, batch);
+        }
+    }
 
-	/**
-	 * Update and display the progress bar.
-	 * 
-	 * @param batch
-	 * @param delta The amount to update the progress bar by.
-	 */
-	public void updateProgress(SpriteBatch batch, float delta) {
-		if (progress < 1)
-			progress += delta;
-		else {
-			progress = 1;
-			slotsToRecipe();
-		}
-		drawStatusBar(batch);
-	}
+    /**
+     * Lock currently interacting cook to station.
+     *
+     * @return A boolean indicating if the cook was locked.
+     */
+    public boolean lockCook() {
+        if (!slots.isEmpty() && slotsToRecipe()) {
+            if (lockedCook == null) {
+                GameScreen.cook.locked = true;
+                lockedCook = GameScreen.cook;
+            } else {
+                lockedCook.locked = true;
+            }
+            return true;
+        }
+        if (lockedCook != null) {
+            lockedCook.locked = false;
+            lockedCook = null;
+            progress = 0;
+        }
 
-	private void drawStatusBar(SpriteBatch batch) {
-		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.WHITE);
-		shapeRenderer.rect(pos.x * 64, pos.y * 64 + 64 + 64 / 10, 64, 64 / 8);
-		shapeRenderer.setColor(Color.GREEN);
-		shapeRenderer.rect(pos.x * 64, pos.y * 64 + 64 + 64 / 10, progress * 64, 64 / 10);
-		shapeRenderer.end();
+        return false;
+    }
 
-	}
+    private static final ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-	/**
-	 * Check whether the ingredient can be formed into another.
-	 * 
-	 * @param toMatch The ingredient to transform.
-	 * @return The ingredient that is formed.
-	 */
-	private Ingredient ingredientMatch(Ingredient toMatch) {
-		for (Ingredient ingredient : Menu.INGREDIENT_PREP.keySet()) {
-			if (ingredient.equals(toMatch)) {
-				Ingredient matchedIngredient = new Ingredient(Menu.INGREDIENT_PREP.get(ingredient));
-				return matchedIngredient;
-			}
-		}
+    /**
+     * Update and display the progress bar.
+     *
+     * @param batch
+     * @param delta The amount to update the progress bar by.
+     */
+    public void updateProgress(SpriteBatch batch, float delta) {
+        if (progress < 1)
+            progress += delta;
+        else {
+            progress = 1;
+            slotsToRecipe();
+        }
+        drawStatusBar(batch);
+    }
 
-		return null;
-	}
+    /**
+     * @param batch The SpriteBatch to draw the progress bar on.
+     */
+    private void drawStatusBar(SpriteBatch batch) {
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.begin(ShapeType.Filled);
+        shapeRenderer.setColor(Color.WHITE);
+        shapeRenderer.rect(pos.x * 64, pos.y * 64 + 64 + 64 / 10, 64, 64 / 8);
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.rect(pos.x * 64, pos.y * 64 + 64 + 64 / 10, progress * 64, 64 / 10);
+        shapeRenderer.end();
+
+    }
+
+    /**
+     * Check whether the ingredient can be formed into another.
+     *
+     * @param toMatch The ingredient to transform.
+     * @return The ingredient that is formed.
+     */
+    private Ingredient ingredientMatch(Ingredient toMatch) {
+        for (Ingredient ingredient : Menu.INGREDIENT_PREP.keySet()) {
+            if (ingredient.equals(toMatch)) {
+                Ingredient matchedIngredient = new Ingredient(Menu.INGREDIENT_PREP.get(ingredient));
+                return matchedIngredient;
+            }
+        }
+
+        return null;
+    }
 
 }
