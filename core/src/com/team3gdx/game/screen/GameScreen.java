@@ -195,10 +195,10 @@ public class GameScreen implements Screen {
 	}
 
 	public static void addnewchef() {
-		if (score + accumulatedScore >= 500) {
+		if (score + accumulatedScore >= 10) {
 			cooks_after = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
 			cooks = cooks_after;
-			subScore(500);
+			subScore(10);
 		}
 	}
 

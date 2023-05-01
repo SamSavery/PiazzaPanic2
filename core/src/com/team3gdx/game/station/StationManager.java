@@ -185,20 +185,24 @@ public class StationManager {
 				this.unlockStation(pos , "Frying");
 			}
 			break;
+
+
 		case "shop":
 			if(GameScreen.cooks.length<3) {
 				batch.begin();
-				(new BitmapFont()).draw(batch, "Hire a new chef! 500 points [e]", pos.x * 64, pos.y * 64);
+				(new BitmapFont()).draw(batch, "Hire chef 500 points [e]", pos.x * 64, pos.y * 64);
 				batch.end();
 				if (GameScreen.control.drop) {
 					GameScreen.addnewchef();
 				}
+			}
+
 			else{
 				batch.begin();
-				(new BitmapFont()).draw(batch, "Chef has been hired :)", pos.x * 64, pos.y * 64);
+				(new BitmapFont()).draw(batch, "Chef already hired", pos.x * 64, pos.y * 64);
 				batch.end();
 				}
-			}
+			break;
 		case "locked_pan":
 			batch.begin();
 			(new BitmapFont()).draw(batch, "Unlock station [e]", pos.x * 64, pos.y * 64);
@@ -214,7 +218,7 @@ public class StationManager {
 			if (GameScreen.control.drop) {
 				this.unlockStation(pos , "Chopping");
 			}
-
+			break;
 		case "Bin":
 			if (!GameScreen.cook.heldItems.empty()) {
 				batch.begin();

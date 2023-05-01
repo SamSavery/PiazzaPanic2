@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.2" name="art_tileset" tilewidth="128" tileheight="64" tilecount="38" columns="0">
+<tileset version="1.9" tiledversion="1.9.2" name="art_tileset" tilewidth="128" tileheight="64" tilecount="39" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <properties>
   <property name="Station" value=""/>
@@ -213,5 +213,11 @@
    <property name="Station" value="locked_pan"/>
   </properties>
   <image width="64" height="64" source="art_images/pan_locked.png"/>
+ </tile>
+ <tile id="45">
+  <properties>
+   <property name="Station" value="shop"/>
+  </properties>
+  <image width="128" height="64" source="art_images/shop.png"/>
  </tile>
 </tileset>
