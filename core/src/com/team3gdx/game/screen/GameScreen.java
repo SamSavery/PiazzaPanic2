@@ -3,6 +3,7 @@ package com.team3gdx.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -158,6 +159,8 @@ public class GameScreen implements Screen {
 	public static CustomerController cc;
 	InputMultiplexer multi;
 	StationManager stationManager;
+	int lateLoadSlot;
+	Preferences slot1, slot2, slot3;
 
 	/**
 	 * Constructor to initialise game screen;
@@ -165,7 +168,7 @@ public class GameScreen implements Screen {
 	 * @param game - Main entry point class
 	 * @param ms   - Title screen class
 	 */
-	public GameScreen(MainGameClass game, MainScreen ms) {
+	public GameScreen(MainGameClass game, MainScreen ms, int lateLoadSlot) {
 		accumulatedScore = 0;
 		gameMode = "";
 		scenarioLimit = 1;
@@ -192,12 +195,20 @@ public class GameScreen implements Screen {
 		currentCookIndex = 0;
 		cook = cooks[currentCookIndex];
 		stationManager = new StationManager();
+		this.lateLoadSlot = lateLoadSlot;
+		slot1 = Gdx.app.getPreferences("slot1");
+		slot2 = Gdx.app.getPreferences("slot2");
+		slot3 = Gdx.app.getPreferences("slot3");
+		Power.resetPower();
 	}
 
 	public static void addnewchef() {
 		if (score + accumulatedScore >= 10) {
-			cooks_after = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
+			cooks_after = new Cook[]{new Cook(new Vector2(cooks[0].getX(), cooks[0].getY()), 1), new Cook(new Vector2(cooks[1].getX(), cooks[1].getY()), 2), new Cook(new Vector2(64 * 5, 64 * 1), 3)};
 			cooks = cooks_after;
+			cook.locked = false;
+			currentCookIndex = 2;
+			cook = cooks[currentCookIndex];
 			subScore(10);
 		}
 	}
@@ -413,31 +424,40 @@ public class GameScreen implements Screen {
 		//Save and Load button handlers
 		ss1.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				saveGame(1);
+				state1 = STATE.Continue;
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
 		ss2.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				saveGame(2);
+				state1 = STATE.Continue;
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
 		ss3.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				saveGame(3);
+				state1 = STATE.Continue;
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
 		ls1.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				loadGame(1);
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
 		ls2.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				loadGame(2);
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
 		ls3.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				loadGame(3);
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
@@ -478,6 +498,9 @@ public class GameScreen implements Screen {
 				}
 			}
 		}, 0, spawnInterval);
+		if (lateLoadSlot >= 1 && lateLoadSlot <= 3) {
+			this.loadGame(lateLoadSlot);
+		}
 	}
 
 	ShapeRenderer selectedPlayerBox = new ShapeRenderer();
@@ -566,7 +589,7 @@ public class GameScreen implements Screen {
 			orderJustServed = false;
 		}
   }
-  
+
 		//=========CHECK=POWERS=======//
 	/**
 	 * Used to draw powers depending on power stack.
@@ -1028,5 +1051,68 @@ public void updateRep(){
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
+	}
+
+	public void saveGame(int slotNo){
+		Preferences slot = Gdx.app.getPreferences("slot"+slotNo);
+		slot.putLong("score", score);
+		slot.putLong("accumulatedScore", accumulatedScore);
+		slot.putInteger("reputation", reputation);
+		slot.putInteger("customersServed", customersServed);
+		slot.putFloat("spawnInterval", spawnInterval);
+		slot.putFloat("upperSpawnInterval", upperSpawnInterval);
+		slot.putFloat("lowerSpawnInterval", lowerSpawnInterval);
+		slot.putFloat("spawnTime", spawnTime);
+		slot.putFloat("targetTime", targetTime);
+		slot.putBoolean("timerRunning", timerRunning);
+		slot.putFloat("timeOnStartup", timeOnStartup);
+		slot.putFloat("startTime", startTime);
+		slot.putString("gameMode", gameMode);
+		slot.putInteger("scenarioLimit", scenarioLimit);
+		slot.putInteger("CUSTOMER_SPAWNCAP", CUSTOMER_SPAWNCAP);
+		slot.putFloat("cook0x", (int)cooks[0].getX());
+		slot.putFloat("cook0y", (int)cooks[0].getY());
+		slot.putFloat("cook1x", (int)cooks[1].getX());
+		slot.putFloat("cook1y", (int)cooks[1].getY());
+		if (cooks.length > 2) {
+			slot.putFloat("cook2x", (int) cooks[2].getX());
+			slot.putFloat("cook2y", (int) cooks[2].getY());
+		} else {
+			slot.putFloat("cook2x", -1);
+			slot.putFloat("cook2y", -1);
+		}
+		slot.flush();
+		cc.saveCC(slotNo);
+		Power.savePower(slotNo);
+	}
+
+	public void loadGame(int slotNo){
+		// load back all preferences saved in saveGame
+		Preferences slot = Gdx.app.getPreferences("slot"+slotNo);
+		score = slot.getLong("score");
+		accumulatedScore = slot.getLong("accumulatedScore");
+		reputation = slot.getInteger("reputation");
+		customersServed = slot.getInteger("customersServed");
+		spawnInterval = slot.getFloat("spawnInterval");
+		upperSpawnInterval = slot.getFloat("upperSpawnInterval");
+		lowerSpawnInterval = slot.getFloat("lowerSpawnInterval");
+		spawnTime = slot.getFloat("spawnTime");
+		targetTime = slot.getFloat("targetTime");
+		timerRunning = slot.getBoolean("timerRunning");
+		timeOnStartup = (long)slot.getFloat("timeOnStartup");
+		startTime = (long)slot.getFloat("startTime");
+		gameMode = slot.getString("gameMode");
+		scenarioLimit = slot.getInteger("scenarioLimit");
+		CUSTOMER_SPAWNCAP = slot.getInteger("CUSTOMER_SPAWNCAP");
+		cooks[0].setX(slot.getFloat("cook0x"));
+		cooks[0].setY(slot.getFloat("cook0y"));
+		cooks[1].setX(slot.getFloat("cook1x"));
+		cooks[1].setY(slot.getFloat("cook1y"));
+		if (cooks.length > 2) {
+			cooks[2].setX(slot.getFloat("cook2x"));
+			cooks[2].setY(slot.getFloat("cook2y"));
+		}
+		cc.loadCC(slotNo);
+		Power.loadPower(slotNo);
 	}
 }

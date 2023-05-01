@@ -23,7 +23,7 @@ public class Customer {
 	public boolean locked;
 	public boolean readyfordeletion;
 
-	private long arrivalTime;
+	public long arrivalTime;
 	public static long maxWaitTime;
 	/**
 	 * Constructor for customer class

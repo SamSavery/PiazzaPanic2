@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -208,5 +210,72 @@ public class CustomerController {
 	public void reInitCustArr(){
 		customers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
 		leavingcustomers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
+	}
+
+	public void saveCC(int slotNo) {
+		Preferences slot = Gdx.app.getPreferences("cc"+slotNo);
+		slot.putInteger("top", top);
+		slot.putInteger("bottom", bottom);
+		slot.putInteger("xCoordinate", xCoordinate);
+		slot.putInteger("customerCount", (int)Arrays.stream(customers).filter(e -> e != null).count());
+		slot.putInteger("leavingcustomerCount", (int)Arrays.stream(leavingcustomers).filter(e -> e != null).count());
+		for (int i = 0; i < (int)Arrays.stream(customers).filter(e -> e != null).count(); i++){
+			slot.putInteger("customers"+i, customers[i].targetsquare);
+			slot.putInteger("posx"+i, customers[i].posx);
+			slot.putInteger("posy"+i, customers[i].posy);
+			slot.putInteger("startposx"+i, customers[i].startposx);
+			slot.putInteger("targetpixel"+i, customers[i].targetpixel);
+			slot.putBoolean("locked"+i, customers[i].locked);
+			slot.putBoolean("readyfordeletion"+i, customers[i].readyfordeletion);
+			slot.putLong("arrivalTime"+i, customers[i].arrivalTime);
+			slot.putLong("maxWaitTime"+i, customers[i].maxWaitTime);
+		}
+		for (int i = 0; i < (int)Arrays.stream(leavingcustomers).filter(e -> e != null).count(); i++){
+			slot.putInteger("leavingcustomers"+i, leavingcustomers[i].targetsquare);
+			slot.putInteger("leavingposx"+i, leavingcustomers[i].posx);
+			slot.putInteger("leavingposy"+i, leavingcustomers[i].posy);
+			slot.putInteger("leavingstartposx"+i, leavingcustomers[i].startposx);
+			slot.putInteger("leavingtargetpixel"+i, leavingcustomers[i].targetpixel);
+			slot.putBoolean("leavinglocked"+i, leavingcustomers[i].locked);
+			slot.putBoolean("leavingreadyfordeletion"+i, leavingcustomers[i].readyfordeletion);
+			slot.putLong("leavingarrivalTime"+i, leavingcustomers[i].arrivalTime);
+			slot.putLong("leavingmaxWaitTime"+i, leavingcustomers[i].maxWaitTime);
+		}
+		slot.flush();
+	}
+
+	public void loadCC(int slotNo){
+		Preferences slot = Gdx.app.getPreferences("cc"+slotNo);
+		customers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
+		leavingcustomers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
+		top = slot.getInteger("top");
+		bottom = slot.getInteger("bottom");
+		xCoordinate = slot.getInteger("xCoordinate");
+		int customerCount = slot.getInteger("customerCount");
+		int leavingcustomerCount = slot.getInteger("leavingcustomerCount");
+		for (int i = 0; i < customerCount; i++){
+			customers[i] = new Customer(this.xCoordinate, this.bottom, this.top - i, ThreadLocalRandom.current().nextInt(1, 5 + 1));
+			customers[i].targetsquare = slot.getInteger("customers"+i);
+			customers[i].posx = slot.getInteger("posx"+i);
+			customers[i].posy = slot.getInteger("posy"+i);
+			customers[i].startposx = slot.getInteger("startposx"+i);
+			customers[i].targetpixel = slot.getInteger("targetpixel"+i);
+			customers[i].locked = slot.getBoolean("locked"+i);
+			customers[i].readyfordeletion = slot.getBoolean("readyfordeletion"+i);
+			customers[i].arrivalTime = slot.getLong("arrivalTime"+i);
+			customers[i].maxWaitTime = slot.getLong("maxWaitTime"+i);
+		}
+		for (int i = 0; i < leavingcustomerCount; i++){
+			leavingcustomers[i] = new Customer(this.xCoordinate, this.bottom, this.top - i, ThreadLocalRandom.current().nextInt(1, 5 + 1));
+			leavingcustomers[i].targetsquare = slot.getInteger("leavingcustomers"+i);
+			leavingcustomers[i].posx = slot.getInteger("leavingposx"+i);
+			leavingcustomers[i].posy = slot.getInteger("leavingposy"+i);
+			leavingcustomers[i].startposx = slot.getInteger("leavingstartposx"+i);
+			leavingcustomers[i].targetpixel = slot.getInteger("leavingtargetpixel"+i);
+			leavingcustomers[i].locked = slot.getBoolean("leavinglocked"+i);
+			leavingcustomers[i].readyfordeletion = slot.getBoolean("leavingreadyfordeletion"+i);
+			leavingcustomers[i].arrivalTime = slot.getLong("leavingarrivalTime"+i);
+			leavingcustomers[i].maxWaitTime = slot.getLong("leavingmaxWaitTime"+i);
+		}
 	}
 }
