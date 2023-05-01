@@ -2,6 +2,7 @@ package com.team3gdx.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -72,6 +73,7 @@ public class MainScreen implements Screen {
     Texture tutorialScreen;
     Texture loadData;
     Stage stage;
+    Preferences slot1, slot2, slot3;
 
     /**
      * Enum for the different states of the menu
@@ -113,6 +115,10 @@ public class MainScreen implements Screen {
         this.xSliderMin = gameResolutionX / 2.0f + buttonwidth / 12;
         this.xSliderMax = xSliderMin + volSlideBackgr.width;
         this.sliderWidth = volSlideBackgr.width;
+
+        slot1 = Gdx.app.getPreferences("slot1");
+        slot2 = Gdx.app.getPreferences("slot2");
+        slot3 = Gdx.app.getPreferences("slot3");
     }
 
     /**
@@ -165,9 +171,9 @@ public class MainScreen implements Screen {
         TextButton.TextButtonStyle tbStyle = new TextButton.TextButtonStyle();
         tbStyle.font = game.font;
         tbStyle.up = new TextureRegionDrawable(loadData);
-        ls1 = new TextButton("Load Slot 1", tbStyle);
-        ls2 = new TextButton("Load Slot 2", tbStyle);
-        ls3 = new TextButton("Load Slot 3", tbStyle);
+        ls1 = new TextButton("Load Slot 1\n" + ((int) slot1.getLong("score")) + " Score / " + slot1.getInteger("reputation") + " Rep", tbStyle);
+        ls2 = new TextButton("Load Slot 2\n" + ((int) slot2.getLong("score")) + " Score / " + slot2.getInteger("reputation") + " Rep", tbStyle);
+        ls3 = new TextButton("Load Slot 3\n" + ((int) slot3.getLong("score")) + " Score / " + slot3.getInteger("reputation") + " Rep", tbStyle);
 
         sb.setPosition(gameResolutionX / 10.0f, 6 * gameResolutionY / 7.0f - buttonheight / 2);
         eb.setPosition(gameResolutionX / 10.0f, 5 * gameResolutionY / 7.0f - buttonheight / 2);
