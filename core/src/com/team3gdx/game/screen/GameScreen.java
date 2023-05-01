@@ -99,8 +99,8 @@ public class GameScreen implements Screen {
 	Texture FULLSCREEN;
 	Texture SAVEDATA;
 	Image lowRep;
-	Image medRep;
-	Image maxRep;
+	static Image medRep;
+	static Image maxRep;
 	Image  mb;
 	Button mn;
 	Button lm;
@@ -974,6 +974,16 @@ public void updateRep(){
 			go.setVisible(true);
 	}
 }
+	public static void addRep(){
+		switch (reputation) {
+			case 2:
+				reputation += 1;
+				maxRep.setVisible(true);
+			case 1:
+				reputation +=1;
+				medRep.setVisible(true);
+		}
+	}
 	public void resetStatic() {
 		customersServed = 0;
 		reputation = 3;
@@ -981,6 +991,7 @@ public void updateRep(){
 		spawnInterval = 5.0f;
 		upperSpawnInterval = 30000;
 		lowerSpawnInterval = 1000;
+		Power.getPowerStack().clear();
 		this.spawnTime = 0.0f;
 		this.targetTime = 0.0f;
 		this.timerRunning = false;
