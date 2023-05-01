@@ -12,7 +12,6 @@ import java.util.Stack;
 
 import static com.team3gdx.game.screen.GameScreen.orderCards;
 
-//this whole class done by pranshu dhungana
 public class Power {
     public static int use;
     //in charge of handling different states of power ups

@@ -121,8 +121,7 @@ public class Ingredient extends Entity {
      */
     public boolean slice(SpriteBatch batch, float dT) {
         /**
-         * added by pranshu,
-         * instantly generates the chopped ingredient, skipping the cutting process.
+         * Instantly generates the chopped ingredient, skipping the cutting process.
          */
         if (this.use) {
             slices++;
@@ -148,7 +147,7 @@ public class Ingredient extends Entity {
     BitmapFont flipText = new BitmapFont();
 
     /**
-     * implemented by pranshu dhungana. Method is used by station manager to check if power is activated.
+     * Method is used by station manager to check if power is activated.
      * sets use flag to true if there is Instant power activated.
      *
      * @return boolean True if power is activated the use flag is set to true. False otherwie
@@ -177,8 +176,7 @@ public class Ingredient extends Entity {
      */
     public double cook(float dT, SpriteBatch batch) {
         /**
-         * added by pranshu,
-         * instantly generates the cooked ingredient, skipping the cooking process.
+         * Instantly generates the cooked ingredient, skipping the cooking process.
          */
         if (this.use) {
             texture = new Texture("items/" + name + "_cooked.png");
