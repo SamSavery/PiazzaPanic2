@@ -99,8 +99,8 @@ public class GameScreen implements Screen {
 	Texture FULLSCREEN;
 	Texture SAVEDATA;
 	Image lowRep;
-	Image medRep;
-	Image maxRep;
+	static Image medRep;
+	static Image maxRep;
 	Image  mb;
 	Button mn;
 	Button lm;
@@ -152,6 +152,7 @@ public class GameScreen implements Screen {
 	TiledMapRenderer tiledMapRenderer;
 	public static TiledMap map1;
 	public static Cook[] cooks;
+	public static Cook[] cooks_after;
 	public static int currentCookIndex;
 	public static Cook cook;
 	public static CustomerController cc;
@@ -187,11 +188,20 @@ public class GameScreen implements Screen {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(map1);
 		constructCollisionData(map1);
 		cc = new CustomerController(map1);
-		cooks = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
+		cooks = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2)};
 		currentCookIndex = 0;
 		cook = cooks[currentCookIndex];
 		stationManager = new StationManager();
 	}
+
+	public static void addnewchef() {
+		if (score + accumulatedScore >= 10) {
+			cooks_after = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
+			cooks = cooks_after;
+			subScore(10);
+		}
+	}
+
 
 	/**
 	 * Things that should be done while the game screen is shown
@@ -943,7 +953,9 @@ public class GameScreen implements Screen {
 public static void addScore(long points){
 		accumulatedScore += points;
 }
-
+public static void subScore(long points){
+		accumulatedScore -= points;
+	}
 public void updateRep(){
 	switch (reputation) {
 		case 3:
@@ -962,6 +974,16 @@ public void updateRep(){
 			go.setVisible(true);
 	}
 }
+	public static void addRep(){
+		switch (reputation) {
+			case 2:
+				reputation += 1;
+				maxRep.setVisible(true);
+			case 1:
+				reputation +=1;
+				medRep.setVisible(true);
+		}
+	}
 	public void resetStatic() {
 		customersServed = 0;
 		reputation = 3;
@@ -969,6 +991,7 @@ public void updateRep(){
 		spawnInterval = 5.0f;
 		upperSpawnInterval = 30000;
 		lowerSpawnInterval = 1000;
+		Power.getPowerStack().clear();
 		this.spawnTime = 0.0f;
 		this.targetTime = 0.0f;
 		this.timerRunning = false;

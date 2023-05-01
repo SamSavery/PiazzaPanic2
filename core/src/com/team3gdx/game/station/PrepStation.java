@@ -27,7 +27,7 @@ public class PrepStation extends Station {
 	/**
 	 * Check if the current ingredients are part of a recipe or an ingredient can be
 	 * formed to another begin progress on creating it.
-	 * Implemented by pranshu dhungana
+	 *
 	 * @return A boolean representing whether the transformation happens.
 	 */
 	public boolean slotsToRecipe() {
@@ -48,7 +48,7 @@ public class PrepStation extends Station {
 			if (progress == 1) {
 				progress = 0;
 				generatePower(300);
-
+			//	testPower(100,5);
 				slots.add(ingredientMatch(slots.pop()));
 			}
 			return true;
@@ -65,15 +65,28 @@ public class PrepStation extends Station {
 	 */
 	private void generatePower(int chance) {
 		int randomNumber = rand.nextInt(chance) + 1; // generate a random number between 1-chance and if its below 100 then we use the tasks
-		if (randomNumber <= 20) {
+		if (randomNumber <= 10) { //10% chance of clearing order
 			System.out.println("Generated random number "+ randomNumber);
 			Power.addPower(3, batch); // add 3 to PowerStack
-		} else if (randomNumber <= 60) {
+		} else if (randomNumber <= 40) { //30% of speed
 			System.out.println("Generated random number "+ randomNumber);
 			Power.addPower(2, batch); // add 2 to PowerStack
-		} else if (randomNumber<=100){
+		} else if (randomNumber<=70){ //30% of instant cooking
 			System.out.println("Generated random number "+ randomNumber);
 			Power.addPower(1, batch); // add 1 to PowerStack
+		} else if(randomNumber<=90){ //20% chance of extra points
+			Power.addPower(4, batch);
+		} else if(randomNumber<=100){ //10% chance of regaining reputation
+			Power.addPower(5,batch);
+		}
+	}
+	/**
+	 * testing purposes
+	 */
+	private void testPower(int chance , int power) {
+		int randomNumber = rand.nextInt(100) + 1; // generate a random number between 1-chance and if its below 100 then we use the tasks
+		if(randomNumber<100){
+			Power.addPower(power , batch);
 		}
 	}
 
