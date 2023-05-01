@@ -24,6 +24,7 @@ public class MainGameClass extends Game {
 	private LeaderBoard leaderBoardScreen1;
 	public AudioController sounds;
 	public ShapeRenderer shapeRenderer;
+	public static int lateLoadSlot = -1;
 
 	@Override
 	public void create() {
@@ -45,7 +46,7 @@ public class MainGameClass extends Game {
 		font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		// ====================================GAME=SCREEN=INITIALISATION================================================
 		mainScreen1 = new MainScreen(this);
-		gameScreen1 = new GameScreen(this, mainScreen1);
+		gameScreen1 = new GameScreen(this, mainScreen1, lateLoadSlot);
 		leaderBoardScreen1 = new LeaderBoard(this, mainScreen1);
 		this.setScreen(mainScreen1);
 		// ==============================================================================================================
@@ -64,7 +65,7 @@ public class MainGameClass extends Game {
 	}
 
 	public void resetGameScreen() {
-		this.gameScreen1 = new GameScreen(this, mainScreen1);
+		this.gameScreen1 = new GameScreen(this, mainScreen1, lateLoadSlot);
 	}
 
 	@Override

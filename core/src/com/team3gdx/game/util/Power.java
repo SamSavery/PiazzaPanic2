@@ -1,6 +1,7 @@
 package com.team3gdx.game.util;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
@@ -217,5 +218,38 @@ public class Power {
      */
 
     public static boolean isPowerFull(){return powerStack.size()==max;}
+
+    public static void resetPower(){
+        powerStack.clear();
+        currentPower="None";
+        use=0;
+    }
+
+    public static void savePower(int slotNo) {
+        Preferences slot = Gdx.app.getPreferences("power"+slotNo);
+        slot.putInteger("use", use);
+        slot.putString("currentPower", currentPower);
+        slot.putInteger("powerStackSize", powerStack.size());
+        int i = 0;
+        for (PowerUnit powerUnit : powerStack) {
+            slot.putInteger("powerStack" + i, powerUnit.getPower());
+            i++;
+        }
+        slot.putInteger("max", max);
+        slot.putInteger("speedmultiplier", speedmultiplier);
+    }
+
+    public static void loadPower(int slotNo){
+        Preferences slot = Gdx.app.getPreferences("power"+slotNo);
+        use = slot.getInteger("use");
+        currentPower = slot.getString("currentPower");
+        int powerStackSize = slot.getInteger("powerStackSize");
+        for (int i = 0; i < powerStackSize; i++) {
+            int power = slot.getInteger("powerStack" + i);
+            addPower(power, null);
+        }
+        max = slot.getInteger("max");
+        speedmultiplier = slot.getInteger("speedmultiplier");
+    }
 }
 

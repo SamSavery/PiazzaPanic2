@@ -255,6 +255,22 @@ public class Cook extends Entity {
 	}
 
 	/**
+	 * Set cook x pixel coordinate
+	 * @param x - cook x pixel coordinate
+	 */
+	public void setX(float x) {
+		pos.x = x;
+	}
+
+	/**
+	 * Set cook y pixel coordinate
+	 * @param y - cook y pixel coordinate
+	 */
+	public void setY(float y) {
+		pos.y = y;
+	}
+
+	/**
 	 * Return cook width
 	 * @return cook width
 	 */

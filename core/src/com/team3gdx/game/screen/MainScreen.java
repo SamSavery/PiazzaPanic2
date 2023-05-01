@@ -307,16 +307,25 @@ public class MainScreen implements Screen {
 		//Load button handlers
 		ls1.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				MainGameClass.lateLoadSlot = 1;
+				game.resetGameScreen();
+				state = STATE.new_game;
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
 		ls2.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				MainGameClass.lateLoadSlot = 2;
+				game.resetGameScreen();
+				state = STATE.new_game;
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
 		ls3.addListener(new ClickListener() {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				MainGameClass.lateLoadSlot = 3;
+				game.resetGameScreen();
+				state = STATE.new_game;
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
