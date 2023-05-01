@@ -8,7 +8,7 @@ public class Control extends InputAdapter implements InputProcessor {
 
     public boolean up, down, left, right;
     public boolean del;
-    private long lastZKeyPressTime = 0; // added this by pranshu dhungana to handle delay between using powers.
+    private long lastZKeyPressTime = 0; // Handles delay between using powers.
     public boolean interact, drop, flip;
     public boolean tab, shift;
     public boolean power;
@@ -46,7 +46,7 @@ public class Control extends InputAdapter implements InputProcessor {
             case Keys.DEL:
                 del = true;
                 break;
-            case Keys.Z: // set up by pranshu dhungana
+            case Keys.Z:
                 if (System.currentTimeMillis() - lastZKeyPressTime > 500) { //if its been 0.5 seconds then can press z
                     power = true;
                     lastZKeyPressTime = System.currentTimeMillis();
@@ -105,7 +105,7 @@ public class Control extends InputAdapter implements InputProcessor {
 //			break;
             case Keys.ESCAPE:
                 break;
-            case Keys.Z: // added by pranshu dhungana
+            case Keys.Z:
                 power = false;
                 break;
         }

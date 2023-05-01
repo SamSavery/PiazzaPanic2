@@ -53,7 +53,7 @@ public class Cook extends Entity {
     }
 
     /**
-     * method for setting cook speed, by pranshu dhungana
+     * Sets cooking speed
      *
      * @param multiplier
      */

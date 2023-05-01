@@ -235,7 +235,7 @@ public class StationManager {
     }
 
     /**
-     * Implemented by pranshu dhungana, method for changing locked stations to unlocked stations
+     * Method for changing locked stations to unlocked stations
      *
      * @param pos Vector2 type position of locked station
      */

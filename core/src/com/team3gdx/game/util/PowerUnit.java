@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
- * implemented by pranshu dhungana
- * used to store powers and the relevant texture, their positions, used by game screen to render power link
+ * Stores powers and relevant textures, positions, and used by GameScreen to render power ups.
  */
 public class PowerUnit {
     private final Texture texture;

@@ -28,7 +28,7 @@ public class CuttingStation extends Station {
     public boolean interact(SpriteBatch batch, float dT) {
         currentCutTime += dT;
         /**
-         * implemented by pranshu dhungana,so instantly adds cooked ingredient to held items.
+         * Instantly adds cooked ingredient to held items.
          */
         if (slots.peek().slice(batch, currentCutTime) && Power.getCurrentPower() == "Instant") {
             lockedCook.heldItems.add(slots.pop());
