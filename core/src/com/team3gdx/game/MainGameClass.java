@@ -64,6 +64,7 @@ public class MainGameClass extends Game {
     }
 
     public void resetGameScreen() {
+        this.gameScreen1.dispose();
         this.gameScreen1 = new GameScreen(this, mainScreen1, lateLoadSlot);
     }
 

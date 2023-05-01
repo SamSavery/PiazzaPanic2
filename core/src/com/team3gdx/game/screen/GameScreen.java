@@ -375,10 +375,12 @@ public class GameScreen implements Screen {
                 game.gameMusic.dispose();
                 game.resetGameScreen();
                 if (gameMode == "scenario") {
+                    game.resetGameScreen();
                     game.setScreen(game.getMainScreen());
                 } else {
                     game.getLeaderBoardScreen().addLeaderBoardData("PLAYER1",
                             (int) Math.floor((startTime - timeOnStartup) / 1000f));
+                    game.resetGameScreen();
                     game.setScreen(game.getLeaderBoardScreen());
                 }
             }
