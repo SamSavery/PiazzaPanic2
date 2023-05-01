@@ -64,5 +64,6 @@ public class Menu {
 	static {
 		INGREDIENT_PREP.put(Ingredients.unformedPatty, Ingredients.formedPatty);
 		INGREDIENT_PREP.put(Ingredients.raw_pizza, Ingredients.cooked_pizza);
+		INGREDIENT_PREP.put(Ingredients.flour, Ingredients.dough);
 	}
 }

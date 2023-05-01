@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.2" name="art_tileset" tilewidth="128" tileheight="64" tilecount="32" columns="0">
+<tileset version="1.9" tiledversion="1.9.2" name="art_tileset" tilewidth="128" tileheight="64" tilecount="38" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <properties>
   <property name="Station" value=""/>
@@ -183,5 +183,35 @@
    <property name="Station" value="Potato"/>
   </properties>
   <image width="64" height="64" source="art_images/potatocrate.png"/>
+ </tile>
+ <tile id="39">
+  <properties>
+   <property name="Station" value="locked_frying"/>
+  </properties>
+  <image width="64" height="64" source="art_images/grill_locked.png"/>
+ </tile>
+ <tile id="40">
+  <image width="64" height="64" source="art_images/pln_gray.png"/>
+ </tile>
+ <tile id="41">
+  <properties>
+   <property name="Station" value="locked_chopping"/>
+  </properties>
+  <image width="128" height="64" source="art_images/chopping_locked.png"/>
+ </tile>
+ <tile id="42">
+  <image width="64" height="64" source="art_images/clrn_locked.png"/>
+ </tile>
+ <tile id="43">
+  <properties>
+   <property name="Station" value="locked_oven"/>
+  </properties>
+  <image width="64" height="64" source="art_images/ovenbot_locked.png"/>
+ </tile>
+ <tile id="44">
+  <properties>
+   <property name="Station" value="locked_pan"/>
+  </properties>
+  <image width="64" height="64" source="art_images/pan_locked.png"/>
  </tile>
 </tileset>

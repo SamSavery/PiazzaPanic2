@@ -2,7 +2,6 @@ package com.team3gdx.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -37,16 +36,16 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team3gdx.game.MainGameClass;
 import com.team3gdx.game.entity.Cook;
-import com.team3gdx.game.entity.Customer;
 import com.team3gdx.game.entity.CustomerController;
 import com.team3gdx.game.entity.Entity;
-import com.team3gdx.game.food.Menu;
 import com.team3gdx.game.food.OrderCard;
 import com.team3gdx.game.food.Recipe;
 import com.team3gdx.game.station.ServingStation;
 import com.team3gdx.game.station.StationManager;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
+import com.team3gdx.game.util.Power;
+import com.team3gdx.game.util.PowerUnit;
 
 import java.awt.geom.FlatteningPathIterator;
 import java.util.*;
@@ -92,6 +91,10 @@ public class GameScreen implements Screen {
 	Texture fullRep;
 	Texture RECIPEMENU;
 	Texture RECIPEMENUICON;
+	Texture POWERICON1;
+	Texture POWERICON2;
+	Texture POWERICON3;
+
 	Texture GAMEOVER;
 	Texture FULLSCREEN;
 	Texture SAVEDATA;
@@ -147,7 +150,7 @@ public class GameScreen implements Screen {
 	long tempTime, tempThenTime;
 	public static Control control;
 	TiledMapRenderer tiledMapRenderer;
-	public TiledMap map1;
+	public static TiledMap map1;
 	public static Cook[] cooks;
 	public static int currentCookIndex;
 	public static Cook cook;
@@ -515,6 +518,7 @@ public class GameScreen implements Screen {
 		game.batch.setProjectionMatrix(uiMatrix);
 		// =====================================DRAW=UI=ELEMENTS=========================================================
 		drawUI();
+		drawPower();
 		// =====================================SET=MATRIX=BACK=TO=GAME=MATRIX===========================================
 
 		setCameraLerp(delta);
@@ -551,9 +555,28 @@ public class GameScreen implements Screen {
 			checkGameOver();
 			orderJustServed = false;
 		}
+  }
+  
+		//=========CHECK=POWERS=======//
+	/**
+	 * Used to draw powers depending on power stack.
+	 * @return
+	 */
+	private boolean drawPower() {
+		if (!Power.isPowerEmpty()) {
+			game.batch.begin();
+			for (PowerUnit powerUnit : Power.getPowerStack()) {
+				if (powerUnit.isVisible()) {
+					powerUnit.render(game.batch);
+				}
+			}
+			game.batch.end();
+			return true;
+		}
+		return false;
 	}
 
-    /**
+	/**
      * Change selected cook
      */
 	private void checkCookSwitch() {
@@ -600,6 +623,9 @@ public class GameScreen implements Screen {
 				}
 			}
 			game.batch.end();
+		}
+		if (!Power.isPowerEmpty() && !Power.isPowerFull()){
+
 		}
 		for (int i = 0; i < cooks.length; i++) {
 			if (i == currentCookIndex) {
@@ -860,6 +886,15 @@ public class GameScreen implements Screen {
 			}
 		}
 	}
+	/**
+	 * return viewed tile at vector positions
+	 * @param  pos for positinos
+	 * @return cell object
+	 */
+	public static Cell returnCell(Vector2 pos) {
+		return ((TiledMapTileLayer) map1.getLayers().get(1)).getCell((int) pos.x, (int) pos.y);
+	}
+
 
 	/**
 	 * Check the tile the cook is looking at for interaction

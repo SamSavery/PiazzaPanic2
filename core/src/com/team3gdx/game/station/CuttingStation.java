@@ -5,16 +5,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.food.Ingredient;
 import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.screen.GameScreen;
+import com.team3gdx.game.util.Power;
 
 public class CuttingStation extends Station {
-
+	private Boolean temp=false;
 	private final static Ingredient[] ALLOWED_INGREDIENTS = { Ingredients.lettuce, Ingredients.tomato,
 			Ingredients.onion };
 
 	public float currentCutTime;
 
 	public CuttingStation(Vector2 pos) {
-		super(pos, 1, false, ALLOWED_INGREDIENTS, "audio/soundFX/chopping.mp3");
+		super(pos, 1, false, ALLOWED_INGREDIENTS, "audio/soundFX/chopping.mp3" );
+
 	}
 
 	/**
@@ -23,12 +25,23 @@ public class CuttingStation extends Station {
 	 * @param batch
 	 * @param dT
 	 */
-	public void interact(SpriteBatch batch, float dT) {
+	public boolean interact(SpriteBatch batch, float dT) {
 		currentCutTime += dT;
-		if (slots.peek().slice(batch, currentCutTime)) {
+		/**
+		 * implemented by pranshu dhungana,so instantly adds cooked ingredient to held items.
+		 */
+		if (slots.peek().slice(batch, currentCutTime) && Power.getCurrentPower()=="Instant") {
+			lockedCook.heldItems.add(slots.pop());
 			currentCutTime = 0;
+			return true;
 		}
+		else if(slots.peek().slice(batch, currentCutTime) ){
+			currentCutTime = 0;
+			return true;
+		}
+		return false;
 	}
+
 
 	/**
 	 * Lock interacting cook at station.

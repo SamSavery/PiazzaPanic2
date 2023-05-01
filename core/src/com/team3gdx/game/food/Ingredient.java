@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.entity.Entity;
 import com.team3gdx.game.screen.GameScreen;
 import com.team3gdx.game.screen.GameScreen.STATE;
+import com.team3gdx.game.util.Power;
 
 /**
  * Represents an ingredient.
@@ -28,6 +29,8 @@ public class Ingredient extends Entity {
 	private BitmapFont font;
 	public Status status;
 
+	private float cutime=width;
+
 	/**
 	 * Represents ongoing states of the ingredient.
 	 */
@@ -35,13 +38,17 @@ public class Ingredient extends Entity {
 	public boolean slicing;
 	public boolean flipped;
 	public boolean mixing;
-
+	private boolean burn = true; // determines if cooking items can be burnt, can be changed in the future when implementing easy modes
 	/**
 	 * Name of ingredient to get texture.
 	 */
 	public String name;
 
 	private static ShapeRenderer shapeRenderer;
+	/**
+	 * flag used to determine if Instant power is in use.
+	 */
+	private boolean use;
 
 	/**
 	 * Sets the appropriate properties.
@@ -72,6 +79,7 @@ public class Ingredient extends Entity {
 		this.flipped = false;
 		this.mixing = false;
 		this.shapeRenderer = new ShapeRenderer();
+		this.use=false;
 	}
 
 	/**
@@ -113,7 +121,15 @@ public class Ingredient extends Entity {
 	 * @return A boolean representing if current slicing action is complete.
 	 */
 	public boolean slice(SpriteBatch batch, float dT) {
-
+		/**
+		 * added by pranshu,
+		 * instantly generates the chopped ingredient, skipping the cutting process.
+		 */
+		if(this.use){
+			slices++;
+			texture = new Texture("items/" + name + "_chopped.png"); // changes texture when slicing action is complete
+			return true;
+		}
 		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 
 		if (dT / width * width <= width) {
@@ -133,13 +149,46 @@ public class Ingredient extends Entity {
 	BitmapFont flipText = new BitmapFont();
 
 	/**
+	 * implemented by pranshu dhungana. Method is used by station manager to check if power is activated.
+	 * sets use flag to true if there is Instant power activated.
+	 * @return boolean True if power is activated the use flag is set to true. False otherwie
+	 */
+
+	public Boolean PowerChecker(){
+		//if there is a power then cooking ingredients are instantly cooked;
+
+		if(Power.getCurrentPower()=="Instant" && idealCookedTime>0 && this.use==false) { // will only be used once since afterwards its going to be empty
+			this.use=true;
+			return true;
+		}
+		else if(Power.getCurrentPower()=="Instant" && idealSlices==1 && this.use==false){
+			this.use=true;
+			return true;
+		}
+		this.use=false;
+		return false;
+	}
+	/**
 	 * Begin process of cooking ingredient and show status.
-	 * 
+	 *
 	 * @param dT    The amount of time to increment {@link this#cookedTime} by.
 	 * @param batch {@link SpriteBatch} to render texture and status.
-	 * @return A double representing the current {@link this#cookedTime}.
+	 * @return A double representing the current {@link this#cookedTime} and 1 if succesfully cooked
 	 */
 	public double cook(float dT, SpriteBatch batch) {
+		/**
+		 * added by pranshu,
+		 * instantly generates the cooked ingredient, skipping the cooking process.
+		 */
+		if (this.use) {
+			texture = new Texture("items/" + name + "_cooked.png");
+			status = Status.COOKED;
+			this.use = false;
+			this.flipped=true;
+			return 1;
+		}
+
+
 		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 		if (!flipped && cookedTime / idealCookedTime * width > idealCookedTime * width * .65f) {
 			batch.begin();
@@ -153,36 +202,21 @@ public class Ingredient extends Entity {
 			if (cookedTime / idealCookedTime * width > idealCookedTime * width * .65f) {
 				texture = new Texture("items/" + name + "_cooked.png");
 				status = Status.COOKED;
+				this.use=false;
+				return 1;
 			}
-		} else {
-//			status = Status.BURNED;
-//			texture = new Texture("items/" + name + "_burned.png");
+		}
+		else {
+			if(this.burn) {
+			status = Status.BURNED;
+			texture = new Texture("items/" + name + "_burned.png");
+			}
 		}
 
 		draw(batch);
 		return cookedTime;
 	}
 
-	/**
-	 * Begin process of slicing ingredient and show status.
-	 *
-	 * @param batch {@link SpriteBatch} to render texture and status.
-	 * @param dT    The amount of time to increment by when slicing.
-	 * @return A boolean representing if current mixing action is complete
-	 */
-	public boolean mix(SpriteBatch batch, float dT) {
-		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-
-		if (dT / width * width <= width) {
-			drawStatusBar(dT / width, 0, 1);
-		} else {
-			status = Status.MIXED;
-			texture = new Texture("items/dough.png"); // changes texture when status is full
-			return true;
-		}
-		draw(batch);
-		return false;
-	}
 
 	/**
 	 * Draw a status bar.

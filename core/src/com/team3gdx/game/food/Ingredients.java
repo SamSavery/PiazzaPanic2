@@ -62,7 +62,7 @@ public class Ingredients {
 		cooked_pizza.status = Status.BURNED;
 	}
 	public static Ingredient flour = new Ingredient(null, 32, 32, "flour", 0, 0);
-	public static Ingredient dough = new Ingredient(null, 32, 32, "flour", 0, 0);
+	public static Ingredient dough = new Ingredient(null, 32, 32, "dough", 0, 0);
 	static {
 		dough.status = Status.MIXED;
 	}

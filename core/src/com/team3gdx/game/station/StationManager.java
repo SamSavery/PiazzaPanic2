@@ -3,12 +3,19 @@ package com.team3gdx.game.station;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.food.Ingredient;
 import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.screen.GameScreen;
+import com.team3gdx.game.util.Power;
 
 /**
  * 
@@ -19,13 +26,22 @@ import com.team3gdx.game.screen.GameScreen;
  *
  */
 public class StationManager {
+	private static Map<String, Texture>  textures = new HashMap<>();
+	static{
+		textures.put("Baking", new Texture(Gdx.files.internal("map/art_map/art_images/emptygrill.png")));
+		textures.put("Oven", new Texture(Gdx.files.internal("map/art_map/art_images/ovenbotcln.png")));
+		textures.put("Frying", new Texture(Gdx.files.internal("map/art_map/art_images/ovtopcln.png")));
+		textures.put("Chopping", new Texture(Gdx.files.internal("map/art_map/art_images/chopping.png")));
+	}
 
 	/**
 	 * A Map representing every station and its (x, y) coordinates.
 	 */
 	public static Map<Vector2, Station> stations;
-
+	public Power power;
 	SpriteBatch batch;
+
+	private Boolean temp= false;
 
 	public StationManager() {
 		stations = new HashMap<Vector2, Station>();
@@ -54,17 +70,31 @@ public class StationManager {
 
 					if (station instanceof CuttingStation && currentIngredient.slicing) {
 						((CuttingStation) station).interact(batch, .1f);
+						currentIngredient.PowerChecker();
 						station.interactSound();
 					}
 
 					if (station instanceof MixingStation && currentIngredient.mixing){
+						currentIngredient.PowerChecker();
 						((MixingStation) station).interact(batch, .1f);
 					}
 
 					if (currentIngredient.cooking && station instanceof CookingStation) {
 						((CookingStation) station).drawParticles(batch, i);
-						currentIngredient.cook(.0005f, batch);
+						currentIngredient.PowerChecker();
+
+						double temp = currentIngredient.cook(.0005f, batch);
 						station.interactSound();
+						/**
+						 * instantly generates ingredient and adds it to held items stack.
+						 */
+						if(temp==1 && Power.getCurrentPower()=="Instant"){
+							if (!station.slots.empty() && !GameScreen.cook.full()) {
+								if (station.slots.peek().flipped) {
+									GameScreen.cook.pickUpItem(station.take());
+								}
+							}
+						}
 					} else {
 						currentIngredient.draw(batch);
 					}
@@ -122,7 +152,7 @@ public class StationManager {
 			break;
 		case "Chopping":
 			if (!stations.containsKey(pos)) {
-				stations.put(pos, new CuttingStation(pos));
+				stations.put(pos, new CuttingStation(pos ));
 			}
 			placeIngredientStation(pos);
 			CuttingStation cutStation = ((CuttingStation) stations.get(pos));
@@ -149,6 +179,39 @@ public class StationManager {
 			checkStationExists(pos, new OvenStation(pos));
 			((CookingStation) stations.get(pos)).checkCookingStation(batch);
 			break;
+		case "locked_oven":
+
+			batch.begin();
+			(new BitmapFont()).draw(batch, "Unlock station [e]", pos.x * 64, pos.y * 64);
+			batch.end();
+			if (GameScreen.control.drop) {
+				this.unlockStation(pos , "Oven");
+			}
+			break;
+		case "locked_frying":
+			batch.begin();
+			(new BitmapFont()).draw(batch, "Unlock station [e]", pos.x * 64, pos.y * 64);
+			batch.end();
+			if (GameScreen.control.drop) {
+				this.unlockStation(pos , "Frying");
+			}
+			break;
+		case "locked_pan":
+			batch.begin();
+			(new BitmapFont()).draw(batch, "Unlock station [e]", pos.x * 64, pos.y * 64);
+			batch.end();
+			if (GameScreen.control.drop) {
+				this.unlockStation(pos , "Baking");
+			}
+			break;
+		case "locked_chopping":
+			batch.begin();
+			(new BitmapFont()).draw(batch, "Unlock station [e]", pos.x * 64, pos.y * 64);
+			batch.end();
+			if (GameScreen.control.drop) {
+				this.unlockStation(pos , "Chopping");
+			}
+
 		case "Bin":
 			if (!GameScreen.cook.heldItems.empty()) {
 				batch.begin();
@@ -162,8 +225,21 @@ public class StationManager {
 		case "Table_Surface":
 			placeIngredientStation(pos);
 			break;
+
 		}
 
+	}
+	/**
+	 * Implemented by pranshu dhungana, method for changing locked stations to unlocked stations
+	 * @param pos Vector2 type position of locked station
+	 */
+	public void unlockStation(Vector2 pos , String name){
+		TiledMapTileLayer.Cell cell=GameScreen.returnCell(pos);
+		TiledMapTile tile = cell.getTile();
+		TextureRegion newTexture = new TextureRegion(textures.get(name));
+		TiledMapTile newTile = new StaticTiledMapTile(newTexture);
+		newTile.getProperties().put("Station" , name);
+		cell.setTile(newTile);
 	}
 
 	/**
