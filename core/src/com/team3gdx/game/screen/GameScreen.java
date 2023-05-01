@@ -12,12 +12,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
@@ -40,16 +36,16 @@ import com.team3gdx.game.entity.Cook;
 import com.team3gdx.game.entity.CustomerController;
 import com.team3gdx.game.entity.Entity;
 import com.team3gdx.game.food.OrderCard;
-import com.team3gdx.game.food.Recipe;
-import com.team3gdx.game.station.ServingStation;
 import com.team3gdx.game.station.StationManager;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
 import com.team3gdx.game.util.Power;
 import com.team3gdx.game.util.PowerUnit;
 
-import java.awt.geom.FlatteningPathIterator;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Queue;
 
 public class GameScreen implements Screen {
 

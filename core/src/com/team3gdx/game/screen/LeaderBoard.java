@@ -1,9 +1,5 @@
 package com.team3gdx.game.screen;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.TextInputListener;
@@ -15,6 +11,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.team3gdx.game.MainGameClass;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 //INCORRECT FILE FORMATTING WILL CRASH GAME
 //MAKE SURE ALL LINES IN LEADERBOARD FILE ARE x;y OR JUST s

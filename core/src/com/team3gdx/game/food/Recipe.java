@@ -1,13 +1,11 @@
 package com.team3gdx.game.food;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
-
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.team3gdx.game.screen.GameScreen;
 
 /**
  * Represents a recipe (combination of ingredients and states).

@@ -1,7 +1,5 @@
 package com.team3gdx.game.station;
 
-import java.util.Stack;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,6 +9,8 @@ import com.team3gdx.game.MainGameClass;
 import com.team3gdx.game.entity.Cook;
 import com.team3gdx.game.food.Ingredient;
 import com.team3gdx.game.screen.GameScreen;
+
+import java.util.Stack;
 
 /**
  * Represents a station.

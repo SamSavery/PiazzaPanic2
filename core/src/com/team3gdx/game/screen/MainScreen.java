@@ -1,6 +1,5 @@
 package com.team3gdx.game.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -18,7 +17,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team3gdx.game.MainGameClass;
 import com.team3gdx.game.entity.Customer;
-import com.team3gdx.game.entity.CustomerController;
 
 public class MainScreen implements Screen {
     final MainGameClass game;

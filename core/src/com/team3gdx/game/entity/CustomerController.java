@@ -1,13 +1,5 @@
 package com.team3gdx.game.entity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -18,6 +10,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.screen.GameScreen;
+
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CustomerController {
     int lockout;

@@ -1,7 +1,5 @@
 package com.team3gdx.game.entity;
 
-import java.util.Stack;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -14,6 +12,8 @@ import com.team3gdx.game.food.Ingredient;
 import com.team3gdx.game.util.CollisionTile;
 import com.team3gdx.game.util.Control;
 import com.team3gdx.game.util.Power;
+
+import java.util.Stack;
 
 public class Cook extends Entity {
 

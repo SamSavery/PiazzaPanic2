@@ -1,13 +1,12 @@
 package com.team3gdx.game.station;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-
 import com.badlogic.gdx.math.Vector2;
 import com.team3gdx.game.entity.Customer;
 import com.team3gdx.game.food.*;
 import com.team3gdx.game.screen.GameScreen;
+
+import java.util.Iterator;
+import java.util.Random;
 
 public class ServingStation extends Station {
     public String name = "ServingStation";

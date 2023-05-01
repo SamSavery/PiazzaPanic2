@@ -1,11 +1,11 @@
 package com.team3gdx.game.util;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
+
+import java.util.HashMap;
 
 public class AudioController {
     private final HashMap<String, Music> musics = new HashMap<String, Music>();

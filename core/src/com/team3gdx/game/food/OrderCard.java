@@ -1,9 +1,9 @@
 package com.team3gdx.game.food;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+
+import java.util.HashMap;
 
 public class OrderCard {
 

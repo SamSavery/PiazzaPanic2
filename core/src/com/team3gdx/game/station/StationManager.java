@@ -1,8 +1,5 @@
 package com.team3gdx.game.station;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,6 +13,9 @@ import com.team3gdx.game.food.Ingredient;
 import com.team3gdx.game.food.Ingredients;
 import com.team3gdx.game.screen.GameScreen;
 import com.team3gdx.game.util.Power;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Deals with all the stations and cook interactions. To create a new station,
