@@ -1,30 +1,35 @@
 package com.team3gdx.game.food;
-import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
+import java.util.HashMap;
+
 public class OrderCard {
 
     public String name;
-    private String textureFilePath;
-    private Texture texture;
-    private long creationTime;
-    private float maxWaitTime;
-    private HashMap<String, Integer> dishWaitTimes = new HashMap<>(){{
+    private final String textureFilePath;
+    private final Texture texture;
+    private final long creationTime;
+    private final float maxWaitTime;
+    private final HashMap<String, Integer> dishWaitTimes = new HashMap<>() {{
         put("salad", 50000);
         put("burger", 75000);
         put("pizza", 100000);
         put("jacket_potato", 40000);
     }};
-    private float orderCardWidth;
-    private float orderCardHeight;
-    private float orderCardPosX;
-    private float orderCardPosY;
+    private final float orderCardWidth;
+    private final float orderCardHeight;
+    private final float orderCardPosX;
+    private final float orderCardPosY;
 
-    public OrderCard(String name){
+    /**
+     * OrderCard constructor
+     * @param name - name of the dish represented in the order card
+     */
+    public OrderCard(String name) {
         this.name = name;
-        this.textureFilePath = "uielements/queued" + name.substring(0,1).toUpperCase() + name.substring(1) + ".png";
+        this.textureFilePath = "uielements/queued" + name.substring(0, 1).toUpperCase() + name.substring(1) + ".png";
         this.texture = new Texture(Gdx.files.internal(textureFilePath));
         this.creationTime = System.currentTimeMillis();
         this.maxWaitTime = dishWaitTimes.get(name);
@@ -34,29 +39,52 @@ public class OrderCard {
         this.orderCardPosY = 50;
     }
 
-    public String getName(){
+    /**
+     * @return name of the order card
+     */
+    public String getName() {
         return this.name;
     }
-    public Texture getTexture(){
+
+    /**
+     * @return texture for the order card
+     */
+    public Texture getTexture() {
         return this.texture;
     }
-    public float getX(){
+
+    /**
+     * @return x position of the order card
+     */
+    public float getX() {
         return this.orderCardPosX;
     }
-    public float getY(){
+
+    /**
+     * @return y position of the order card
+     */
+    public float getY() {
         return this.orderCardPosY;
     }
-    public float getHeight(){
+
+    /**
+     * @return height of the order card
+     */
+    public float getHeight() {
         return this.orderCardHeight;
     }
-    public float getWidth(){
+
+    /**
+     * @return width of the order card
+     */
+    public float getWidth() {
         return this.orderCardWidth;
     }
 
-    public Boolean hasExpired(){
-        if (System.currentTimeMillis()- creationTime >= maxWaitTime){
-            return true;
-        }
-        return false;
+    /**
+     * @return true if the order card has expired, false otherwise
+     */
+    public Boolean hasExpired() {
+        return System.currentTimeMillis() - creationTime >= maxWaitTime;
     }
 }
