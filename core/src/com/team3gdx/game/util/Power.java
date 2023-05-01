@@ -28,10 +28,9 @@ public class Power {
     }
 
     /**
-     * pranshu dhungana
-     * changes the speed of the cooks
+     * Changes the speed of the cooks
      *
-     * @return
+     * @return boolean
      */
 
     public static boolean Speed() {
@@ -56,13 +55,13 @@ public class Power {
         }, 15);
         return true;
 
-    } //improves w
+    }
 
     /**
-     * method to change speed depending on multiplier supplied
+     * Method to change speed depending on multiplier supplied
      *
      * @param Multiplier
-     * @return
+     * @return boolean
      */
     private static boolean cookspeed(Float Multiplier) {
         for (Cook cook : GameScreen.cooks) {
@@ -163,6 +162,9 @@ public class Power {
         return false;
     }
 
+    /**
+     * Adds points to the score
+     */
     private static void addPoints() {
         PowerUnit temp = powerStack.peek();
         GameScreen.addScore(250);
@@ -171,6 +173,9 @@ public class Power {
         temp.dispose();
     }
 
+    /**
+     * Adds a reputation point
+     */
     private static void addRep() {
         PowerUnit temp = powerStack.peek();
         GameScreen.addRep();

@@ -118,7 +118,7 @@ public class Station {
     /**
      * Display text indicating to take the ingredient.
      *
-     * @param pos The position to draw at.
+     * @param batch The SpriteBatch to draw the text on.
      */
     public void drawTakeText(SpriteBatch batch) {
         if (!slots.empty() && !GameScreen.cook.full()) {
@@ -130,7 +130,7 @@ public class Station {
     /**
      * Display text indicating to drop an item in the station's slot.
      *
-     * @param pos The position of the station.
+     * @param batch The SpriteBatch to draw the text on.
      */
     public void drawDropText(SpriteBatch batch) {
         if (GameScreen.cook.heldItems.size() > 0 && isAllowed(GameScreen.cook.heldItems.peek())) {
@@ -148,6 +148,9 @@ public class Station {
         batch.end();
     }
 
+    /**
+     * Play the station's sound.
+     */
     public void interactSound() {
         interactSound.setVolume(MainGameClass.gameVolumeScale);
         interactSound.play();

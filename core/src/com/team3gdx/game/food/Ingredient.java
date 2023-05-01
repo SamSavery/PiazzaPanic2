@@ -246,6 +246,10 @@ public class Ingredient extends Entity {
         shapeRenderer.end();
     }
 
+    /**
+     * @param o {@link Object} to compare to.
+     * @return A boolean representing if the two objects are equal.
+     */
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Ingredient))
@@ -258,6 +262,9 @@ public class Ingredient extends Entity {
 
 }
 
+/**
+ * Enum representing the status of an ingredient.
+ */
 enum Status {
     RAW, COOKED, BURNED, MIXED
 }

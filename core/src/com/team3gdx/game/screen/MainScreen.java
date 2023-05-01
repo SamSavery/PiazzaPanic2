@@ -73,6 +73,9 @@ public class MainScreen implements Screen {
     Texture loadData;
     Stage stage;
 
+    /**
+     * Enum for the different states of the menu
+     */
     enum STATE {
         main, audio, leaderboard, new_game
     }

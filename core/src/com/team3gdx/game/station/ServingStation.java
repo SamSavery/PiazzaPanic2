@@ -42,6 +42,9 @@ public class ServingStation extends Station {
         }
     }
 
+    /**
+     * Check if the station has an order that matches the current order card and serve it.
+     */
     public void serveOrder() {
         if (!slots.empty()) {
             //Stupid more verbose for-loop to prevent concurrentModification errors.

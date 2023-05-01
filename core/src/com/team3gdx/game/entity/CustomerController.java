@@ -111,6 +111,9 @@ public class CustomerController {
         this.xCoordinate = xvalues[0]; // We can do this because the search scans left to right, 0th value will be left
     }
 
+    /**
+     * Update the customer controller
+     */
     public void spawnCustomer() {
         for (int i = 0; i < this.customers.length; i++) {
             if (customers[i] == null) {
@@ -121,6 +124,10 @@ public class CustomerController {
         }
     }
 
+    /**
+     * Deletes a customer from the customer list
+     * @param num - index of customer to delete
+     */
     public void delCustomer(int num) {
         if (this.customers[num].locked) {
             this.leavingcustomers[num] = this.customers[num];
@@ -129,6 +136,10 @@ public class CustomerController {
         }
     }
 
+    /**
+     * Deletes a customer from the customer list
+     * @param customer - customer to delete
+     */
     public void delCustomer(Customer customer) {
         for (int i = 0; i < this.customers.length; i++) {
             if (customers[i] == customer) {
@@ -203,6 +214,9 @@ public class CustomerController {
         return null;
     }
 
+    /**
+     * Reinitialise the customer array
+     */
     public void reInitCustArr() {
         customers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];
         leavingcustomers = new Customer[GameScreen.CUSTOMER_SPAWNCAP];

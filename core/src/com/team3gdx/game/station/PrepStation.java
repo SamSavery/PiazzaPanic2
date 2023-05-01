@@ -133,6 +133,9 @@ public class PrepStation extends Station {
         drawStatusBar(batch);
     }
 
+    /**
+     * @param batch The SpriteBatch to draw the progress bar on.
+     */
     private void drawStatusBar(SpriteBatch batch) {
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         shapeRenderer.begin(ShapeType.Filled);

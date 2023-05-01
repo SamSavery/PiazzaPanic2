@@ -15,6 +15,9 @@ public class CollisionTile {
         tilewidth = wid;
     }
 
+    /**
+     * @return Rectangle covering the tile
+     */
     public Rectangle returnRect() {
         return new Rectangle(tilex, tiley, tilewidth, tileheight);
     }

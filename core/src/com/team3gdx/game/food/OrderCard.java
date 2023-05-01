@@ -23,6 +23,10 @@ public class OrderCard {
     private final float orderCardPosX;
     private final float orderCardPosY;
 
+    /**
+     * OrderCard constructor
+     * @param name - name of the dish represented in the order card
+     */
     public OrderCard(String name) {
         this.name = name;
         this.textureFilePath = "uielements/queued" + name.substring(0, 1).toUpperCase() + name.substring(1) + ".png";
@@ -35,30 +39,51 @@ public class OrderCard {
         this.orderCardPosY = 50;
     }
 
+    /**
+     * @return name of the order card
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @return texture for the order card
+     */
     public Texture getTexture() {
         return this.texture;
     }
 
+    /**
+     * @return x position of the order card
+     */
     public float getX() {
         return this.orderCardPosX;
     }
 
+    /**
+     * @return y position of the order card
+     */
     public float getY() {
         return this.orderCardPosY;
     }
 
+    /**
+     * @return height of the order card
+     */
     public float getHeight() {
         return this.orderCardHeight;
     }
 
+    /**
+     * @return width of the order card
+     */
     public float getWidth() {
         return this.orderCardWidth;
     }
 
+    /**
+     * @return true if the order card has expired, false otherwise
+     */
     public Boolean hasExpired() {
         return System.currentTimeMillis() - creationTime >= maxWaitTime;
     }

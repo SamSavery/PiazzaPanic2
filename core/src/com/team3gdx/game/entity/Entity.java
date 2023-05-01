@@ -18,6 +18,9 @@ public class Entity {
     float dirX = 0;
     float dirY = 0;
 
+    /**
+     * @param batch SpriteBatch on which to draw the entity
+     */
     public void draw(SpriteBatch batch) {
         batch.begin();
         batch.draw(texture, pos.x, pos.y, width, height);

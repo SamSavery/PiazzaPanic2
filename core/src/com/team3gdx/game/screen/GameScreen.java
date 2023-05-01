@@ -198,6 +198,9 @@ public class GameScreen implements Screen {
         Power.resetPower();
     }
 
+    /**
+     * Add a new chef to the game
+     */
     public static void addnewchef() {
         if (score + accumulatedScore >= 10) {
             cooks_after = new Cook[]{new Cook(new Vector2(cooks[0].getX(), cooks[0].getY()), 1), new Cook(new Vector2(cooks[1].getX(), cooks[1].getY()), 2), new Cook(new Vector2(64 * 5, 64), 3)};
@@ -962,6 +965,9 @@ public class GameScreen implements Screen {
         sr.end();
     }
 
+    /**
+     * Check if the game is over
+     */
     public void checkGameOver() {
         if (Objects.equals(gameMode, "Scenario")) {
             if (customersServed >= scenarioLimit) {
@@ -974,14 +980,23 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * @param points - points to add to the score
+     */
     public static void addScore(long points) {
         accumulatedScore += points;
     }
 
+    /**
+     * @param points - points to subtract from the score
+     */
     public static void subScore(long points) {
         accumulatedScore -= points;
     }
 
+    /**
+     * Updates the reputation point visibility
+     */
     public void updateRep() {
         switch (reputation) {
             case 3:
@@ -1001,6 +1016,9 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Adds a reputation point
+     */
     public static void addRep() {
         switch (reputation) {
             case 2:
@@ -1012,6 +1030,9 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Resets game parameters
+     */
     public void resetStatic() {
         customersServed = 0;
         reputation = 3;
