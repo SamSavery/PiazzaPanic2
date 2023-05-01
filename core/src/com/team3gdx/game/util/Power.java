@@ -16,7 +16,7 @@ public class Power {
     private static String currentPower="None";
     private static Integer speedmultiplier = 2;
     private static Stack<PowerUnit> powerStack = new Stack<>();
-    private static int max=3;
+    private static int max=5;
     private Power() {}
 
     private static void init(){}
@@ -137,9 +137,33 @@ public class Power {
                 Power.wipe();
                 use=0;
                 return true;
+            } else if(powerStack.peek().getPower()==4){
+                currentPower= "Points";
+                Power.addPoints();
+                use=0;
+            } else if(powerStack.peek().getPower()==5){
+                currentPower="Reputation";
+                Power.addRep();
+                use=0;
             }
         }
         return false;
+    }
+
+    private static void addPoints() {
+        PowerUnit temp= powerStack.peek();
+        GameScreen.addScore(250);
+        powerStack.pop();
+        temp.setVisible(false);
+        temp.dispose();
+    }
+
+    private static void addRep(){
+        PowerUnit temp= powerStack.peek();
+        GameScreen.addRep();
+        powerStack.pop();
+        temp.setVisible(false);
+        temp.dispose();
     }
 
     /**
@@ -186,13 +210,6 @@ public class Power {
         return powerStack.isEmpty();
     }
 
-    /**
-     * returns power stack size
-     * @return powerstack size
-     */
-    public static Integer powerSize(){
-        return powerStack.size();
-    }
 
     /**
      * used to check if maximum amount of power is used
