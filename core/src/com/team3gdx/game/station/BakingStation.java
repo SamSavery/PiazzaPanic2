@@ -6,20 +6,20 @@ import com.team3gdx.game.food.Ingredients;
 
 public class BakingStation extends CookingStation {
 
-	private final static Ingredient[] ALLOWED_INGREDIENTS = { Ingredients.bun, Ingredients.cooked_bun};
+    private final static Ingredient[] ALLOWED_INGREDIENTS = {Ingredients.bun, Ingredients.cooked_bun};
 
-	public BakingStation(Vector2 pos) {
-		super(pos, 4, ALLOWED_INGREDIENTS, "particles/smokes.party", "audio/soundFX/frying.mp3");
-	}
+    public BakingStation(Vector2 pos) {
+        super(pos, 4, ALLOWED_INGREDIENTS, "particles/smokes.party", "audio/soundFX/frying.mp3");
+    }
 
-	@Override
-	public boolean place(Ingredient ingredient) {
-		if (super.place(ingredient)) {
-			ingredient.flipped = true;
-			return true;
-		}
+    @Override
+    public boolean place(Ingredient ingredient) {
+        if (super.place(ingredient)) {
+            ingredient.flipped = true;
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
 }

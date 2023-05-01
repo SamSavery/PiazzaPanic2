@@ -17,281 +17,299 @@ import com.team3gdx.game.util.Power;
 
 public class Cook extends Entity {
 
-	private static final int MAX_STACK_SIZE = 5;
-	private static final int FRAME_COLS = 5, FRAME_ROWS = 4;
+    private static final int MAX_STACK_SIZE = 5;
+    private static final int FRAME_COLS = 5, FRAME_ROWS = 4;
 
-	private Vector2 direction;
-	private int cookno;
+    private Vector2 direction;
+    private final int cookno;
 
-	private Texture walkSheet;
-	private Animation<TextureRegion> walkAnimation;
-	private TextureRegion[][] spriteSheet;
-	private TextureRegion[][] currentFrame;
-	private TextureRegion[] walkFrames;
-	private float stateTime = 0;
+    private Texture walkSheet;
+    private Animation<TextureRegion> walkAnimation;
+    private TextureRegion[][] spriteSheet;
+    private TextureRegion[][] currentFrame;
+    private TextureRegion[] walkFrames;
+    private float stateTime = 0;
 
-	public boolean locked = false;
-	public boolean holding = false;
-	public Stack<Ingredient> heldItems = new Stack<Ingredient>();
+    public boolean locked = false;
+    public boolean holding = false;
+    public Stack<Ingredient> heldItems = new Stack<Ingredient>();
 
-	/**
-	 * Cook entity constructor
-	 * @param pos - x y position vector in pixels
-	 * @param cooknum - cook number, changes texture
-	 */
-	public Cook(Vector2 pos, int cooknum) {
-		this.pos = pos;
-		this.cookno = cooknum;
+    /**
+     * Cook entity constructor
+     *
+     * @param pos     - x y position vector in pixels
+     * @param cooknum - cook number, changes texture
+     */
+    public Cook(Vector2 pos, int cooknum) {
+        this.pos = pos;
+        this.cookno = cooknum;
 
-		width = 64;
-		height = 128;
-		speed = 0.25f;
-		direction = new Vector2(0, -1);
+        width = 64;
+        height = 128;
+        speed = 0.25f;
+        direction = new Vector2(0, -1);
 
-		setWalkTexture("entities/cook_walk_" + String.valueOf(cookno) + ".png");
-	}
+        setWalkTexture("entities/cook_walk_" + cookno + ".png");
+    }
 
-	/**
-	 * method for setting cook speed, by pranshu dhungana
-	 * @param multiplier
-	 */
-	public void setSpeed(Float multiplier){
-		this.speed=speed*multiplier;
-	}
-	/**
-	 * Update cook using user input
-	 * @param control - Control input handling object
-	 * @param dt - some change in time
-	 * @param cl - 2d array of collision tiles for collision detection
-	 */
-	public void update(Control control, float dt, CollisionTile[][] cl) {
-		currentFrame = walkAnimation.getKeyFrame(stateTime, true).split(32, 32);
+    /**
+     * method for setting cook speed, by pranshu dhungana
+     *
+     * @param multiplier
+     */
+    public void setSpeed(Float multiplier) {
+        this.speed = speed * multiplier;
+    }
 
-		dirX = 0;
-		dirY = 0;
-		if (control.up && !control.down) {
-			if (this.checkCollision(pos.x, pos.y + (speed * dt), cl)) {
-				dirY = 1;
-			}
-			setWalkFrames(2);
-			direction = new Vector2(0, 1);
-		} else if (control.down && !control.up) {
-			if (this.checkCollision(pos.x, pos.y - (speed * dt), cl)) {
-				dirY = -1;
-			}
-			setWalkFrames(0);
-			direction = new Vector2(0, -1);
-		}
-		if (control.left && !control.right) {
-			if (this.checkCollision(pos.x - (speed * dt), pos.y, cl)) {
-				dirX = -1;
-			}
-			setWalkFrames(1);
-			direction = new Vector2(-1, 0);
-		} else if (control.right && !control.left) {
-			if (this.checkCollision(pos.x + (speed * dt), pos.y, cl)) {
-				dirX = +1;
-			}
-			setWalkFrames(3);
-			direction.x = 1;
-			direction.y = 1;
-			direction = new Vector2(1, 0);
-		}
-		if(control.power){
-			//GameScreen.power then set gamescreen power
-			Power.usePower();
-			control.power=false;
+    /**
+     * Update cook using user input
+     *
+     * @param control - Control input handling object
+     * @param dt      - some change in time
+     * @param cl      - 2d array of collision tiles for collision detection
+     */
+    public void update(Control control, float dt, CollisionTile[][] cl) {
+        currentFrame = walkAnimation.getKeyFrame(stateTime, true).split(32, 32);
 
-		}
-		if (dirX != 0 || dirY != 0) {
-			stateTime += Gdx.graphics.getDeltaTime() / 8;
-		} else {
-			stateTime = 0;
-		}
-		pos.x += dirX * speed * dt;
-		pos.y += dirY * speed * dt;
+        dirX = 0;
+        dirY = 0;
+        if (control.up && !control.down) {
+            if (this.checkCollision(pos.x, pos.y + (speed * dt), cl)) {
+                dirY = 1;
+            }
+            setWalkFrames(2);
+            direction = new Vector2(0, 1);
+        } else if (control.down && !control.up) {
+            if (this.checkCollision(pos.x, pos.y - (speed * dt), cl)) {
+                dirY = -1;
+            }
+            setWalkFrames(0);
+            direction = new Vector2(0, -1);
+        }
+        if (control.left && !control.right) {
+            if (this.checkCollision(pos.x - (speed * dt), pos.y, cl)) {
+                dirX = -1;
+            }
+            setWalkFrames(1);
+            direction = new Vector2(-1, 0);
+        } else if (control.right && !control.left) {
+            if (this.checkCollision(pos.x + (speed * dt), pos.y, cl)) {
+                dirX = +1;
+            }
+            setWalkFrames(3);
+            direction.x = 1;
+            direction.y = 1;
+            direction = new Vector2(1, 0);
+        }
+        if (control.power) {
+            //GameScreen.power then set gamescreen power
+            Power.usePower();
+            control.power = false;
 
-	}
+        }
+        if (dirX != 0 || dirY != 0) {
+            stateTime += Gdx.graphics.getDeltaTime() / 8;
+        } else {
+            stateTime = 0;
+        }
+        pos.x += dirX * speed * dt;
+        pos.y += dirY * speed * dt;
 
-	/**
-	 * Pick up an item
-	 * @param item - item to pick up
-	 */
-	public void pickUpItem(Ingredient item) {
-		item.cooking = false;
-		item.slicing = false;
-		if (!holding) {
-			holding = true;
-			setWalkTexture("entities/cook_walk_hands_" + cookno + ".png");
-		}
+    }
 
-		if (!full())
-			heldItems.push(item);
-	}
+    /**
+     * Pick up an item
+     *
+     * @param item - item to pick up
+     */
+    public void pickUpItem(Ingredient item) {
+        item.cooking = false;
+        item.slicing = false;
+        if (!holding) {
+            holding = true;
+            setWalkTexture("entities/cook_walk_hands_" + cookno + ".png");
+        }
 
-	/**
-	 * Put down the item on the top of the stack
-	 */
-	public void dropItem() {
-		if (heldItems.size() == 1) {
-			holding = false;
-			setWalkTexture("entities/cook_walk_" + cookno + ".png");
-		}
-		if (heldItems.size() > 0) {
-			heldItems.pop();
-		}
-		if (heldItems.size() == 0) {
-			holding = false;
-			setWalkTexture("entities/cook_walk_" + cookno + ".png");
-		}
-	}
+        if (!full())
+            heldItems.push(item);
+    }
 
-	/**
-	 * Checks if cook's inventory is true.
-	 * @return boolean : whether inventory is full.
-	 */
-	public boolean full() {
-		return heldItems.size() >= MAX_STACK_SIZE;
-	}
+    /**
+     * Put down the item on the top of the stack
+     */
+    public void dropItem() {
+        if (heldItems.size() == 1) {
+            holding = false;
+            setWalkTexture("entities/cook_walk_" + cookno + ".png");
+        }
+        if (heldItems.size() > 0) {
+            heldItems.pop();
+        }
+        if (heldItems.size() == 0) {
+            holding = false;
+            setWalkTexture("entities/cook_walk_" + cookno + ".png");
+        }
+    }
 
-	/**
-	 * Draw bottom of cook
-	 * @param batch - spritebatch to draw with
-	 */
-	public void draw_bot(SpriteBatch batch) {
-		batch.draw(currentFrame[1][0], pos.x, pos.y, 64, 64);
-	}
+    /**
+     * Checks if cook's inventory is true.
+     *
+     * @return boolean : whether inventory is full.
+     */
+    public boolean full() {
+        return heldItems.size() >= MAX_STACK_SIZE;
+    }
 
-	/**
-	 * Draw top of cook
-	 * @param batch - spritebatch to draw with
-	 */
-	public void draw_top(SpriteBatch batch) {
-		batch.draw(currentFrame[0][0], pos.x, pos.y + 64, 64, 64);
-	}
+    /**
+     * Draw bottom of cook
+     *
+     * @param batch - spritebatch to draw with
+     */
+    public void draw_bot(SpriteBatch batch) {
+        batch.draw(currentFrame[1][0], pos.x, pos.y, 64, 64);
+    }
 
-	/**
-	 * Draw top of cook at a certain position - used for the display in the top right
-	 * @param batch - spritebatch to draw with
-	 * @param position - position in pixels to draw at
-	 */
-	public void draw_top(SpriteBatch batch, Vector2 position) {
-		batch.draw(currentFrame[0][0], position.x, position.y + 128, 128, 128);
-	}
+    /**
+     * Draw top of cook
+     *
+     * @param batch - spritebatch to draw with
+     */
+    public void draw_top(SpriteBatch batch) {
+        batch.draw(currentFrame[0][0], pos.x, pos.y + 64, 64, 64);
+    }
 
-	/**
-	 * Set the texture to draw with
-	 * @param path - Filepath to texture
-	 */
-	private void setWalkTexture(String path) {
-		walkSheet = new Texture(path);
-		spriteSheet = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS,
-				walkSheet.getHeight() / FRAME_ROWS);
-		walkFrames = new TextureRegion[FRAME_ROWS];
-		setWalkFrames(0);
-	}
+    /**
+     * Draw top of cook at a certain position - used for the display in the top right
+     *
+     * @param batch    - spritebatch to draw with
+     * @param position - position in pixels to draw at
+     */
+    public void draw_top(SpriteBatch batch, Vector2 position) {
+        batch.draw(currentFrame[0][0], position.x, position.y + 128, 128, 128);
+    }
 
-	/**
-	 * Set specific walk frames
-	 * @param row - row on the sprite sheet to draw
-	 */
-	private void setWalkFrames(int row) {
-		for (int i = 0; i < FRAME_ROWS; i++) {
-			walkFrames[i] = spriteSheet[row][i];
-		}
-		walkAnimation = new Animation<TextureRegion>(0.025f, walkFrames);
-		currentFrame = walkAnimation.getKeyFrame(stateTime, true).split(32, 32);
-	}
+    /**
+     * Set the texture to draw with
+     *
+     * @param path - Filepath to texture
+     */
+    private void setWalkTexture(String path) {
+        walkSheet = new Texture(path);
+        spriteSheet = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS,
+                walkSheet.getHeight() / FRAME_ROWS);
+        walkFrames = new TextureRegion[FRAME_ROWS];
+        setWalkFrames(0);
+    }
 
-	/**
-	 * Check collision with collide tiles at a certain coordinate
-	 * @param cookx - cook x pixel coordinate
-	 * @param cooky - cook y pixel coordinate
-	 * @param cltiles - 2d Collision tiles array
-	 * @return True if the cook can move, false if they cant
-	 */
-	public Boolean checkCollision(float cookx, float cooky, CollisionTile[][] cltiles) {
-		if (cooky - 10 < 0) {
-			return false;
-		}
-		int wid = cltiles.length;
-		int hi = cltiles[0].length;
-		for (int x = 0; x < wid; x++) {
-			for (int y = 0; y < hi; y++) {
-				if (cltiles[x][y] != null) {
-					if (Intersector.overlaps(cltiles[x][y].returnRect(), this.getCollideBoxAtPosition(cookx, cooky))) {
-						return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
+    /**
+     * Set specific walk frames
+     *
+     * @param row - row on the sprite sheet to draw
+     */
+    private void setWalkFrames(int row) {
+        System.arraycopy(spriteSheet[row], 0, walkFrames, 0, FRAME_ROWS);
+        walkAnimation = new Animation<TextureRegion>(0.025f, walkFrames);
+        currentFrame = walkAnimation.getKeyFrame(stateTime, true).split(32, 32);
+    }
 
-	/**
-	 * Return a rectangle which is the hitbox of the cook at a certain coordinate
-	 * @param x - x pixel coordinate
-	 * @param y - y pixel coordinate
-	 * @return Rectangle object of the cook hitbox
-	 */
-	Rectangle getCollideBoxAtPosition(float x, float y) {
-		return new Rectangle(x + 12, y - 10, 40, 25);
-	}
+    /**
+     * Check collision with collide tiles at a certain coordinate
+     *
+     * @param cookx   - cook x pixel coordinate
+     * @param cooky   - cook y pixel coordinate
+     * @param cltiles - 2d Collision tiles array
+     * @return True if the cook can move, false if they cant
+     */
+    public Boolean checkCollision(float cookx, float cooky, CollisionTile[][] cltiles) {
+        if (cooky - 10 < 0) {
+            return false;
+        }
+        int wid = cltiles.length;
+        int hi = cltiles[0].length;
+        for (int x = 0; x < wid; x++) {
+            for (int y = 0; y < hi; y++) {
+                if (cltiles[x][y] != null) {
+                    if (Intersector.overlaps(cltiles[x][y].returnRect(), this.getCollideBoxAtPosition(cookx, cooky))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
-	/**
-	 * Return cook x pixel coordinate
-	 * @return cook x pixel coordinate
-	 */
-	public float getX() {
-		return pos.x;
-	}
+    /**
+     * Return a rectangle which is the hitbox of the cook at a certain coordinate
+     *
+     * @param x - x pixel coordinate
+     * @param y - y pixel coordinate
+     * @return Rectangle object of the cook hitbox
+     */
+    Rectangle getCollideBoxAtPosition(float x, float y) {
+        return new Rectangle(x + 12, y - 10, 40, 25);
+    }
 
-	/**
-	 * Return cook y pixel coordinate
-	 * @return cook y pixel coordinate
-	 */
-	public float getY() {
-		return pos.y;
-	}
+    /**
+     * Return cook x pixel coordinate
+     *
+     * @return cook x pixel coordinate
+     */
+    public float getX() {
+        return pos.x;
+    }
 
-	/**
-	 * Set cook x pixel coordinate
-	 * @param x - cook x pixel coordinate
-	 */
-	public void setX(float x) {
-		pos.x = x;
-	}
+    /**
+     * Return cook y pixel coordinate
+     *
+     * @return cook y pixel coordinate
+     */
+    public float getY() {
+        return pos.y;
+    }
 
-	/**
-	 * Set cook y pixel coordinate
-	 * @param y - cook y pixel coordinate
-	 */
-	public void setY(float y) {
-		pos.y = y;
-	}
+    /**
+     * Set cook x pixel coordinate
+     *
+     * @param x - cook x pixel coordinate
+     */
+    public void setX(float x) {
+        pos.x = x;
+    }
 
-	/**
-	 * Return cook width
-	 * @return cook width
-	 */
-	public float getWidth() {
-		return width;
-	}
+    /**
+     * Set cook y pixel coordinate
+     *
+     * @param y - cook y pixel coordinate
+     */
+    public void setY(float y) {
+        pos.y = y;
+    }
 
-	/**
-	 * return cook height
-	 * @return cook height
-	 */
-	public float getHeight() {
-		return height;
-	}
+    /**
+     * Return cook width
+     *
+     * @return cook width
+     */
+    public float getWidth() {
+        return width;
+    }
 
-	/**
-	 * Return cook direction vector
-	 * @return cook direction vector
-	 */
-	public Vector2 getDirection() {
-		return direction;
-	}
+    /**
+     * return cook height
+     *
+     * @return cook height
+     */
+    public float getHeight() {
+        return height;
+    }
+
+    /**
+     * Return cook direction vector
+     *
+     * @return cook direction vector
+     */
+    public Vector2 getDirection() {
+        return direction;
+    }
 
 }

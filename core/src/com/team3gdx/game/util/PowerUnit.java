@@ -10,31 +10,33 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class PowerUnit {
     private final Texture texture;
     //stores texture for each power and store texture position.
-    private Integer power;
-    private Float x;
-    private Float y;
+    private final Integer power;
+    private final Float x;
+    private final Float y;
 
-    private Float width=100F;
-    private Float height= 80F;
+    private final Float width = 100F;
+    private final Float height = 80F;
     private boolean visible = true;
 
     /**
      * constructur for power unit
+     *
      * @param power
      * @param texture
      * @param x
      * @param y
      */
-    public PowerUnit(Integer power , Texture texture , Float x,Float y){
-        this.power=power;
-        this.texture=texture;
-        this.x=x;
-        this.y=y;
-        this.visible= true;
+    public PowerUnit(Integer power, Texture texture, Float x, Float y) {
+        this.power = power;
+        this.texture = texture;
+        this.x = x;
+        this.y = y;
+        this.visible = true;
     }
 
     /**
      * getter method for returning power
+     *
      * @return
      */
 
@@ -44,6 +46,7 @@ public class PowerUnit {
 
     /**
      * used to render the textures in the right positions
+     *
      * @param batch
      */
     public void render(SpriteBatch batch) {
@@ -52,6 +55,7 @@ public class PowerUnit {
 
     /**
      * used to set visibility of textures, if set to false then gamescreen.powerunit method will stop rendering
+     *
      * @param visible
      */
     public void setVisible(boolean visible) {
@@ -60,6 +64,7 @@ public class PowerUnit {
 
     /**
      * checks for visibility by gamescreen.powerunit
+     *
      * @return
      */
     public boolean isVisible() {
@@ -68,6 +73,7 @@ public class PowerUnit {
 
     /**
      * getter method for returning texture
+     *
      * @return
      */
 
@@ -77,22 +83,23 @@ public class PowerUnit {
 
     /**
      * getter method for returning x position
+     *
      * @return
      */
-    public Float getX(){
+    public Float getX() {
         return x;
     }
 
     /**
      * getter method for returning y positions
+     *
      * @return
      */
-    public Float getY(){
+    public Float getY() {
         return y;
     }
 
     /**
-     *
      * @return boolean if disposed succesfully
      */
     public boolean dispose() {
