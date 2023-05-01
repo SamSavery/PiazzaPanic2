@@ -194,9 +194,12 @@ public class GameScreen implements Screen {
 		stationManager = new StationManager();
 	}
 
-	public static void addnewchef(){
-		cooks_after=new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
-		cooks=cooks_after;
+	public static void addnewchef() {
+		if (score + accumulatedScore >= 500) {
+			cooks_after = new Cook[]{new Cook(new Vector2(64 * 5, 64 * 3), 1), new Cook(new Vector2(64 * 5, 64 * 5), 2), new Cook(new Vector2(64 * 5, 64 * 7), 3)};
+			cooks = cooks_after;
+			subScore(500);
+		}
 	}
 
 
