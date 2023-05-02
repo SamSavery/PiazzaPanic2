@@ -2,7 +2,7 @@ img {
     border: 5px solid black;
 }
 body {
-    background-color:  #9edc7d;
+    background-color:  #e2e0df;
 }
 h1 {
     font-family: Arial;
@@ -27,16 +27,4 @@ button{
 }
 button:hover{
     background-color: rgb(129, 0, 0);
-}
-
-table, th, td {
-    border: 1px solid #9edc7d;
-    border-collapse: collapse;
-}
-th, td {
-    background-color: #9edc7d;
-}
-
-.center {
-    text-align: center;
 }
