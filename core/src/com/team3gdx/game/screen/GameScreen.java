@@ -53,6 +53,7 @@ public class GameScreen implements Screen {
     public static long accumulatedScore;
     public static int scenarioLimit;
     public static String gameMode;
+    public static String difficulty;
     public static int customersServed;
     public static int CUSTOMER_SPAWNCAP;
     final MainGameClass game;
@@ -167,6 +168,7 @@ public class GameScreen implements Screen {
     public GameScreen(MainGameClass game, MainScreen ms, int lateLoadSlot) {
         accumulatedScore = 0;
         gameMode = "";
+        difficulty = "";
         scenarioLimit = 1;
         CUSTOMER_SPAWNCAP = 0;
         customersServed = 0;
@@ -280,9 +282,18 @@ public class GameScreen implements Screen {
         ss1 = new TextButton("Save Slot 1", tbStyle);
         ss2 = new TextButton("Save Slot 2", tbStyle);
         ss3 = new TextButton("Save Slot 3", tbStyle);
-        ls1 = new TextButton("Load Slot 1\n" + ((int) slot1.getLong("score")) + " Score / " + slot1.getInteger("reputation") + " Rep", tbStyle);
-        ls2 = new TextButton("Load Slot 2\n" + ((int) slot2.getLong("score")) + " Score / " + slot2.getInteger("reputation") + " Rep", tbStyle);
-        ls3 = new TextButton("Load Slot 3\n" + ((int) slot3.getLong("score")) + " Score / " + slot3.getInteger("reputation") + " Rep", tbStyle);
+        if ((int) slot1.getLong("score") == 0 && slot1.getInteger("reputation") == 0)
+            ls1 = new TextButton("Load Slot 1\nEMPTY", tbStyle);
+        else
+            ls1 = new TextButton("Load Slot 1\n" + ((int) slot1.getLong("score")) + " Score / " + slot1.getInteger("reputation") + " Rep", tbStyle);
+        if ((int) slot2.getLong("score") == 0 && slot2.getInteger("reputation") == 0)
+            ls2 = new TextButton("Load Slot 2\nEMPTY", tbStyle);
+        else
+            ls2 = new TextButton("Load Slot 2\n" + ((int) slot2.getLong("score")) + " Score / " + slot2.getInteger("reputation") + " Rep", tbStyle);
+        if ((int) slot3.getLong("score") == 0 && slot3.getInteger("reputation") == 0)
+            ls3 = new TextButton("Load Slot 3\nEMPTY", tbStyle);
+        else
+            ls3 = new TextButton("Load Slot 3\n" + ((int) slot3.getLong("score")) + " Score / " + slot3.getInteger("reputation") + " Rep", tbStyle);
         btms = new Button(new TextureRegionDrawable(BACKTOMAINSCREEN));
         lowRep = new Image(new TextureRegionDrawable(oneRep));
         medRep = new Image(new TextureRegionDrawable(twoRep));
@@ -418,14 +429,22 @@ public class GameScreen implements Screen {
         //fullscreen button handler
         fs.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (Gdx.graphics.isFullscreen()) {
+                    Gdx.graphics.setWindowedMode(gameResolutionX, gameResolutionY);
+                } else {
+                    Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                }
                 super.touchUp(event, x, y, pointer, button);
             }
+
         });
         //Save and Load button handlers
         ss1.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 saveGame(1);
                 state1 = STATE.Continue;
+                slot1 = Gdx.app.getPreferences("slot1");
+                ls1.setText("Load Slot 1\n" + ((int) slot1.getLong("score")) + " Score / " + slot1.getInteger("reputation") + " Rep");
                 super.touchUp(event, x, y, pointer, button);
             }
         });
@@ -433,6 +452,8 @@ public class GameScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 saveGame(2);
                 state1 = STATE.Continue;
+                slot2 = Gdx.app.getPreferences("slot2");
+                ls2.setText("Load Slot 2\n" + ((int) slot2.getLong("score")) + " Score / " + slot2.getInteger("reputation") + " Rep");
                 super.touchUp(event, x, y, pointer, button);
             }
         });
@@ -440,24 +461,35 @@ public class GameScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 saveGame(3);
                 state1 = STATE.Continue;
+                slot3 = Gdx.app.getPreferences("slot3");
+                ls3.setText("Load Slot 3\n" + ((int) slot3.getLong("score")) + " Score / " + slot3.getInteger("reputation") + " Rep");
                 super.touchUp(event, x, y, pointer, button);
             }
         });
         ls1.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                loadGame(1);
+                if ((int) slot1.getLong("score") > 0 && slot1.getInteger("reputation") > 0) {
+                    loadGame(1);
+                    state1 = STATE.Continue;
+                }
                 super.touchUp(event, x, y, pointer, button);
             }
         });
         ls2.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                loadGame(2);
+                if ((int) slot2.getLong("score") > 0 && slot2.getInteger("reputation") > 0) {
+                    loadGame(2);
+                    state1 = STATE.Continue;
+                }
                 super.touchUp(event, x, y, pointer, button);
             }
         });
         ls3.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                loadGame(3);
+                if ((int) slot3.getLong("score") > 0 && slot3.getInteger("reputation") > 0) {
+                    loadGame(3);
+                    state1 = STATE.Continue;
+                }
                 super.touchUp(event, x, y, pointer, button);
             }
         });

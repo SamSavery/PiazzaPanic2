@@ -25,6 +25,7 @@ public class OrderCard {
 
     /**
      * OrderCard constructor
+     *
      * @param name - name of the dish represented in the order card
      */
     public OrderCard(String name) {
