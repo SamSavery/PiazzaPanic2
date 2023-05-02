@@ -248,6 +248,7 @@ public class MainScreen implements Screen {
                 //Easy mode has customers generating ~25% slower, similarly ~25% more patient in waiting
                 //and only individually- no groups. The required number of orders served in scenario
                 // mode is lowered by 5.
+                GameScreen.difficulty = "Easy";
                 GameScreen.scenarioLimit = 5;
                 GameScreen.CUSTOMER_SPAWNCAP = 1;
                 GameScreen.cc.reInitCustArr();
@@ -264,6 +265,7 @@ public class MainScreen implements Screen {
                 //Moderate mode has customers generating and waiting at the base rate
                 //and allows for pairs of customers to spawn at any given time.
                 //The required number of orders served in scenario mode is 10.
+                GameScreen.difficulty = "Moderate";
                 GameScreen.scenarioLimit = 10;
                 GameScreen.CUSTOMER_SPAWNCAP = 2;
                 GameScreen.cc.reInitCustArr();
@@ -276,6 +278,7 @@ public class MainScreen implements Screen {
                 //Hard mode has customers generating ~50% faster and allows for groups of up to 3 customers
                 //to spawn at any given time. Customers are ~25% less patient in waiting to be served also.
                 //The required number of orders served in scenario mode is the raised by 5.
+                GameScreen.difficulty = "Hard";
                 GameScreen.scenarioLimit = 15;
                 GameScreen.CUSTOMER_SPAWNCAP = 3;
                 GameScreen.cc.reInitCustArr();

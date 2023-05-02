@@ -53,6 +53,7 @@ public class GameScreen implements Screen {
     public static long accumulatedScore;
     public static int scenarioLimit;
     public static String gameMode;
+    public static String difficulty;
     public static int customersServed;
     public static int CUSTOMER_SPAWNCAP;
     final MainGameClass game;
@@ -167,6 +168,7 @@ public class GameScreen implements Screen {
     public GameScreen(MainGameClass game, MainScreen ms, int lateLoadSlot) {
         accumulatedScore = 0;
         gameMode = "";
+        difficulty = "";
         scenarioLimit = 1;
         CUSTOMER_SPAWNCAP = 0;
         customersServed = 0;
