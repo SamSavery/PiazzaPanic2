@@ -258,6 +258,7 @@ public class Power {
         }
         slot.putInteger("max", max);
         slot.putInteger("speedmultiplier", speedmultiplier);
+        slot.flush();
     }
 
     public static void loadPower(int slotNo) {
