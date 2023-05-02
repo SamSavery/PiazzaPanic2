@@ -416,8 +416,14 @@ public class GameScreen implements Screen {
         //fullscreen button handler
         fs.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (Gdx.graphics.isFullscreen()) {
+                    Gdx.graphics.setWindowedMode(gameResolutionX, gameResolutionY);
+                } else {
+                    Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                }
                 super.touchUp(event, x, y, pointer, button);
             }
+
         });
         //Save and Load button handlers
         ss1.addListener(new ClickListener() {
