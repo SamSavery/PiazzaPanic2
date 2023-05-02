@@ -171,9 +171,18 @@ public class MainScreen implements Screen {
         TextButton.TextButtonStyle tbStyle = new TextButton.TextButtonStyle();
         tbStyle.font = game.font;
         tbStyle.up = new TextureRegionDrawable(loadData);
-        ls1 = new TextButton("Load Slot 1\n" + ((int) slot1.getLong("score")) + " Score / " + slot1.getInteger("reputation") + " Rep", tbStyle);
-        ls2 = new TextButton("Load Slot 2\n" + ((int) slot2.getLong("score")) + " Score / " + slot2.getInteger("reputation") + " Rep", tbStyle);
-        ls3 = new TextButton("Load Slot 3\n" + ((int) slot3.getLong("score")) + " Score / " + slot3.getInteger("reputation") + " Rep", tbStyle);
+        if ((int) slot1.getLong("score") == 0 && slot1.getInteger("reputation") == 0)
+            ls1 = new TextButton("Load Slot 1\nEMPTY", tbStyle);
+        else
+            ls1 = new TextButton("Load Slot 1\n" + ((int) slot1.getLong("score")) + " Score / " + slot1.getInteger("reputation") + " Rep", tbStyle);
+        if ((int) slot2.getLong("score") == 0 && slot2.getInteger("reputation") == 0)
+            ls2 = new TextButton("Load Slot 2\nEMPTY", tbStyle);
+        else
+            ls2 = new TextButton("Load Slot 2\n" + ((int) slot2.getLong("score")) + " Score / " + slot2.getInteger("reputation") + " Rep", tbStyle);
+        if ((int) slot3.getLong("score") == 0 && slot3.getInteger("reputation") == 0)
+            ls3 = new TextButton("Load Slot 3\nEMPTY", tbStyle);
+        else
+            ls3 = new TextButton("Load Slot 3\n" + ((int) slot3.getLong("score")) + " Score / " + slot3.getInteger("reputation") + " Rep", tbStyle);
 
         sb.setPosition(gameResolutionX / 10.0f, 6 * gameResolutionY / 7.0f - buttonheight / 2);
         eb.setPosition(gameResolutionX / 10.0f, 5 * gameResolutionY / 7.0f - buttonheight / 2);
@@ -314,25 +323,31 @@ public class MainScreen implements Screen {
         //Load button handlers
         ls1.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                MainGameClass.lateLoadSlot = 1;
-                game.resetGameScreen();
-                state = STATE.new_game;
+                if ((int) slot1.getLong("score") > 0 && slot1.getInteger("reputation") > 0) {
+                    MainGameClass.lateLoadSlot = 1;
+                    game.resetGameScreen();
+                    state = STATE.new_game;
+                }
                 super.touchUp(event, x, y, pointer, button);
             }
         });
         ls2.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                MainGameClass.lateLoadSlot = 2;
-                game.resetGameScreen();
-                state = STATE.new_game;
+                if ((int) slot2.getLong("score") > 0 && slot2.getInteger("reputation") > 0) {
+                    MainGameClass.lateLoadSlot = 2;
+                    game.resetGameScreen();
+                    state = STATE.new_game;
+                }
                 super.touchUp(event, x, y, pointer, button);
             }
         });
         ls3.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                MainGameClass.lateLoadSlot = 3;
-                game.resetGameScreen();
-                state = STATE.new_game;
+                if ((int) slot3.getLong("score") > 0 && slot3.getInteger("reputation") > 0) {
+                    MainGameClass.lateLoadSlot = 3;
+                    game.resetGameScreen();
+                    state = STATE.new_game;
+                }
                 super.touchUp(event, x, y, pointer, button);
             }
         });
