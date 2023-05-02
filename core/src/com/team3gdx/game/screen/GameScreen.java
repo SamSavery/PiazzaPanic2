@@ -466,6 +466,7 @@ public class GameScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if ((int) slot1.getLong("score") > 0 && slot1.getInteger("reputation") > 0) {
                     loadGame(1);
+                    state1 = STATE.Continue;
                 }
                 super.touchUp(event, x, y, pointer, button);
             }
@@ -474,6 +475,7 @@ public class GameScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if ((int) slot2.getLong("score") > 0 && slot2.getInteger("reputation") > 0) {
                     loadGame(2);
+                    state1 = STATE.Continue;
                 }
                 super.touchUp(event, x, y, pointer, button);
             }
@@ -482,6 +484,7 @@ public class GameScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if ((int) slot3.getLong("score") > 0 && slot3.getInteger("reputation") > 0) {
                     loadGame(3);
+                    state1 = STATE.Continue;
                 }
                 super.touchUp(event, x, y, pointer, button);
             }
