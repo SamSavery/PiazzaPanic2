@@ -125,6 +125,7 @@ public class CustomerController {
 
     /**
      * Deletes a customer from the customer list
+     *
      * @param num - index of customer to delete
      */
     public void delCustomer(int num) {
@@ -137,6 +138,7 @@ public class CustomerController {
 
     /**
      * Deletes a customer from the customer list
+     *
      * @param customer - customer to delete
      */
     public void delCustomer(Customer customer) {
